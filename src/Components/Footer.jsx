@@ -48,10 +48,10 @@ const CONTENT = {
   ],
   
   contact: {
-    phone: {
-      label: 'Call us',
-      value: '(555) 123-4567'
-    },
+    // phone: {
+    //   label: 'Call us',
+    //   value: '(555) 123-4567'
+    // },
     email: {
       label: 'Email',
       value: 'info@quantumhandyman.com'
@@ -166,13 +166,13 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-4">{CONTENT.sections.contactInfo}</h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm">
+              {/* <li className="flex items-start gap-3 text-sm">
                 <Phone className="w-4 h-4 text-primary mt-0.5" />
                 <div>
                   <p className="text-gray-400">{CONTENT.contact.phone.label}</p>
                   <p className="text-white">{CONTENT.contact.phone.value}</p>
                 </div>
-              </li>
+              </li> */}
               <li className="flex items-start gap-3 text-sm">
                 <Mail className="w-4 h-4 text-primary mt-0.5" />
                 <div>

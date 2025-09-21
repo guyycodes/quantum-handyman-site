@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import BookingCTA from '../components/BookingCTA'
-import QuantumSphere from '../components/QuantumSphere'
-import FloatingServiceCard from '../components/FloatingServiceCard'
+import QuantumSphere from '../Components/QuantumSphere'
+import FloatingVideo from '../Components/FloatingVideo'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -89,7 +89,7 @@ const CONTENT = {
     credentials: [
       {
         title: '10+ Years of Craftsmanship',
-        description: 'Built & sold first company. 75,000+ jobs completed as cross-functional team.'
+        description: 'Built & sold first company. 15,000+ jobs completed as cross-functional team.'
       },
       {
         title: 'CS Degree',
@@ -143,7 +143,7 @@ const CONTENT = {
     subtitle: 'Hire a handyman who can solve problems at every level.',
     buttons: {
       bookNow: 'Book Now',
-      call: 'Call (555) 123-4567',
+      // call: 'Call (555) 123-4567',
       helperText: 'Secure booking via Dandymen.io'
     },
     badges: {
@@ -240,7 +240,7 @@ const PORTFOLIO_DATA = [
 
 const STATS_DATA = [
   { label: 'Years Experience', value: '10+' },
-  { label: 'Jobs Completed', value: '75,000+' },
+  { label: 'Jobs Completed', value: '15,000+' },
   { label: 'Happy Customers', value: '100+' },
   { label: 'Services Offered', value: '10+' }
 ]
@@ -322,7 +322,7 @@ const Home = () => {
               <div className="lg:hidden mt-8" style={{ height: '400px' }}>
                 <QuantumSphere>
                   <div className="animate-float">
-                    <FloatingServiceCard />
+                    <FloatingVideo />
                   </div>
                 </QuantumSphere>
               </div>
@@ -332,7 +332,7 @@ const Home = () => {
             <div className="relative hidden lg:block">
               <QuantumSphere>
                 <div className="animate-float">
-                  <FloatingServiceCard />
+                  <FloatingVideo />
                 </div>
               </QuantumSphere>
             </div>
@@ -689,13 +689,13 @@ const Home = () => {
               showHelperText={true}
               helperText={CONTENT.cta.buttons.helperText}
             />
-            <a 
+            {/* <a 
               href={`tel:${CONTENT.phone}`}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
             >
               <Phone className="w-5 h-5" />
               {CONTENT.cta.buttons.call}
-            </a>
+            </a> */}
           </div>
 
           <div className="flex justify-center gap-8 mt-8 text-sm">

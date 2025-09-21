@@ -106,8 +106,8 @@ class QuantumCloud {
         rotationMatrix[2][1] * y +
         rotationMatrix[2][2] * z
 
-      const translateX = this.size * transformedX / 2
-      const translateY = this.size * transformedY / 2
+      const translateX = this.size * transformedX / 1.55 +20
+      const translateY = this.size * transformedY / 2.25
       const scale = (transformedZ + 2) / 3
       const transform = `translateX(${translateX}px) translateY(${translateY}px) scale(${scale})`
       const opacity = (transformedZ + 1.5) / 2.5

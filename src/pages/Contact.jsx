@@ -61,8 +61,8 @@ const CONTENT = {
       {
         icon: Mail,
         label: 'Email',
-        value: 'info@quantumhandyman.com',
-        link: 'mailto:info@quantumhandyman.com'
+        value: 'hello@quantumhandyman.com',
+        link: 'mailto:hello@quantumhandyman.com'
       },
       {
         icon: MapPin,

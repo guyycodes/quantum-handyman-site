@@ -34,7 +34,7 @@ const CONTENT = {
     title: 'By The Numbers',
     items: [
       { value: '10+', label: 'Years Experience' },
-      { value: '75,000+', label: 'Jobs Complete' },
+      { value: '15,000+', label: 'Jobs Complete' },
       { value: '100+', label: 'Happy Customers' },
       { value: '10+', label: 'Services Offered' }
     ]
