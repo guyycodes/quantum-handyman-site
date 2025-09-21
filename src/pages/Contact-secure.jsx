@@ -1,5 +1,11 @@
+// This is a more secure version of Contact.jsx that uses environment variables
+// To use this version:
+// 1. Create a .env.local file in your project root
+// 2. Add your EmailJS credentials to .env.local
+// 3. Replace Contact.jsx with this file
+
 import React, { useState } from 'react'
-import { sendContactEmail } from '../services/emailService'
+import emailjs from 'emailjs-com'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import BookingCTA from '../components/BookingCTA'
@@ -57,7 +63,12 @@ const CONTENT = {
   contactInfo: {
     title: 'Contact Information',
     items: [
-
+      {
+        icon: Phone,
+        label: 'Phone',
+        value: '(555) 123-4567',
+        link: 'tel:555-123-4567'
+      },
       {
         icon: Mail,
         label: 'Email',
@@ -146,11 +157,25 @@ const Contact = () => {
     setSubmitStatus(null)
     setErrorMessage('')
     
+    // Prepare template parameters to match EmailJS template variables
+    const templateParams = {
+      from_name: formData.name,           // {{from_name}} in template
+      reply_to: formData.email,           // {{reply_to}} in template  
+      phone: formData.phone || "Not provided", // {{phone}} in template
+      service_type: formData.service || "Not specified",     // {{service_type}} in template
+      message: formData.message            // {{message}} in template
+    }
+
     try {
-      // Send email using the email service
-      const result = await sendContactEmail(formData)
-      
-      if (result.success) {
+      // Send email using EmailJS with environment variables
+      const response = await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      )
+
+      if (response.status === 200) {
         setSubmitStatus('success')
         // Reset form after successful submission
         setFormData({
@@ -164,10 +189,10 @@ const Contact = () => {
         setTimeout(() => setSubmitStatus(null), 5000)
       } else {
         setSubmitStatus('error')
-        setErrorMessage(result.error || 'Failed to send message. Please try again.')
+        setErrorMessage('Failed to send message. Please try again.')
       }
     } catch (error) {
-      console.error('Contact Form Error:', error)
+      console.error('EmailJS Error:', error)
       setSubmitStatus('error')
       setErrorMessage('An error occurred while sending your message. Please try again or call us directly.')
       // Reset error after 5 seconds
@@ -345,7 +370,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Contact Info Sidebar */}
+            {/* Contact Info Sidebar - same as original */}
             <div className="space-y-6">
               {/* Contact Details */}
               <div 

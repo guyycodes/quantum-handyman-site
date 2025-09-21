@@ -3,42 +3,53 @@ import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, Wrench, Code } from 'lucide-react'
 import BookingCTA from './BookingCTA'
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const location = useLocation()
-
-  const navigation = [
+// Content Management - All text content in one place
+const CONTENT = {
+  logo: {
+    text: 'Quantum',
+    highlight: 'Handyman',
+    ariaLabel: 'Quantum Handyman Home'
+  },
+  navigation: [
     { name: 'Home', href: '/' },
     { name: 'Services', href: '/services' },
     { name: 'About', href: '/about' },
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Contact', href: '/contact' },
-  ]
+  ],
+  mobileMenu: {
+    ariaLabel: 'Toggle mobile menu'
+  }
+}
+
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
 
   const isActive = (href) => location.pathname === href
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-lines">
+    <header className="sticky top-0 z-[1000] bg-white/95 backdrop-blur-md border-b border-lines">
       <nav className="container-max mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link 
             to="/" 
             className="flex items-center gap-2 group"
-            aria-label="Quantum Handyman Home"
+            aria-label={CONTENT.logo.ariaLabel}
           >
             <div className="relative">
               <Wrench className="w-8 h-8 text-primary transition-transform group-hover:rotate-12" />
               <Code className="w-4 h-4 text-secondary absolute -bottom-1 -right-1" />
             </div>
             <span className="text-xl font-bold text-near-black">
-              Quantum<span className="text-primary">Handyman</span>
+              {CONTENT.logo.text}<span className="text-primary">{CONTENT.logo.highlight}</span>
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            {navigation.map((item) => (
+            {CONTENT.navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
@@ -67,7 +78,7 @@ const Header = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="Toggle mobile menu"
+            aria-label={CONTENT.mobileMenu.ariaLabel}
             aria-expanded={isMenuOpen}
           >
             {isMenuOpen ? (
@@ -90,7 +101,7 @@ const Header = () => {
           `}
         >
           <div className="px-6 py-4 space-y-1">
-            {navigation.map((item) => (
+            {CONTENT.navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}

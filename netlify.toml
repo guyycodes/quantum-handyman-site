@@ -3,12 +3,23 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "22"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Build settings
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Environment variables can be set here (but it's better to use Netlify dashboard)
+# [build.environment]
+#   VITE_EMAILJS_SERVICE_ID = "your_service_id"
+#   VITE_EMAILJS_TEMPLATE_ID = "your_template_id"
+#   VITE_EMAILJS_PUBLIC_KEY = "your_public_key"
 
 [dev]
   command = "npm run dev"

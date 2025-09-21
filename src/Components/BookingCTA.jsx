@@ -1,15 +1,26 @@
 import React from 'react'
 import { Calendar } from 'lucide-react'
 
+// Content Management - All text content in one place
+const CONTENT = {
+  defaultButtonText: 'Book Service',
+  defaultHelperText: 'Powered by Dandymen.io booking platform',
+  ariaLabel: 'Book {service} with Quantum Handyman',
+  defaultService: 'a service'
+}
+
 const BookingCTA = ({
   service = null,
-  buttonText = "Book Service",
+  buttonText = CONTENT.defaultButtonText,
   buttonStyle = 'primary',
   size = 'md',
   referralCode = null,
-  className = ''
+  className = '',
+  showHelperText = true,
+  helperText = CONTENT.defaultHelperText,
+  helperTextStyle = 'text-xs text-black italic'
 }) => {
-  const BOOKING_URL = 'https://dandymen.io/book/quantum-handyman'
+  const BOOKING_URL = 'https://www.dandymen.io//book?package=THE_TRIM'
   
   const buildBookingURL = () => {
     const url = new URL(BOOKING_URL)
@@ -37,23 +48,30 @@ const BookingCTA = ({
     // Track click event if needed in the future
     window.open(buildBookingURL(), '_blank')
   }
-
+  
   return (
-    <button
-      onClick={handleClick}
-      className={`
-        inline-flex items-center justify-center gap-2
-        font-semibold rounded-lg transition-all duration-200
-        transform hover:scale-105 active:scale-95
-        ${sizeClasses[size]}
-        ${styleClasses[buttonStyle]}
-        ${className}
-      `}
-      aria-label={`Book ${service || 'a service'} with Quantum Handyman`}
-    >
-      <Calendar className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />
-      <span>{buttonText}</span>
-    </button>
+    <div className={showHelperText ? 'inline-flex flex-col items-center gap-1' : ''}>
+      <button
+        onClick={handleClick}
+        className={`
+          inline-flex items-center justify-center gap-2
+          font-semibold rounded-lg transition-all duration-200
+          transform hover:scale-105 active:scale-95
+          ${sizeClasses[size]}
+          ${styleClasses[buttonStyle]}
+          ${className}
+        `}
+        aria-label={CONTENT.ariaLabel.replace('{service}', service || CONTENT.defaultService)}
+      >
+        <Calendar className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />
+        <span>{buttonText}</span>
+      </button>
+      {showHelperText && (
+        <span className={helperTextStyle}>
+          {helperText}
+        </span>
+      )}
+    </div>
   )
 }
 

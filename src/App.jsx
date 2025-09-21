@@ -7,19 +7,23 @@ import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
+import ChatBot from './Components/ChatBot'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/portfolio" element={<Portfolio />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <ChatBot />
+    </>
   )
 }
 
