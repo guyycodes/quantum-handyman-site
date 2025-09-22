@@ -1,6 +1,5 @@
-import axios from 'axios';
-
 // Google Calendar Service for Quantum Handyman
+// Using fetch instead of axios to avoid CORS issues with Google Apps Script
 class GoogleCalendarService {
   constructor() {
     this.scriptUrl = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
@@ -47,31 +46,35 @@ class GoogleCalendarService {
   // Check calendar availability for a specific date
   async checkAvailability(date, duration = 2) {
     if (!this.validateConfiguration()) {
-      // Return mock data if not configured
-      this.log('Using mock data - Google Calendar not configured');
-      return this.getMockAvailability(date, duration);
+      console.error('Google Calendar service not configured');
+      return [];
     }
 
     try {
       this.log('Checking availability for:', date, 'Duration:', duration);
       
-      const response = await axios.post(this.scriptUrl, {
-        action: 'checkAvailability',
-        date: date,
-        duration: duration
+      // Use fetch instead of axios to avoid CORS preflight
+      const response = await fetch(this.scriptUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'checkAvailability',
+          date: date,
+          duration: duration
+        })
       });
+      
+      const data = await response.json();
 
-      if (response.data.success) {
-        this.log('Availability response:', response.data);
-        return response.data.availableSlots || [];
+      if (data.success) {
+        this.log('Availability response:', data);
+        return data.availableSlots || [];
       } else {
-        console.error('Availability check failed:', response.data.error);
-        return this.getMockAvailability(date, duration);
+        console.error('Availability check failed:', data.error);
+        return [];
       }
     } catch (error) {
       console.error('Error checking availability:', error);
-      // Fallback to mock data
-      return this.getMockAvailability(date, duration);
+      return [];
     }
   }
 
@@ -84,76 +87,40 @@ class GoogleCalendarService {
     try {
       this.log('Creating booking:', bookingData);
       
-      const response = await axios.post(this.scriptUrl, {
-        action: 'createBooking',
-        booking: {
-          name: bookingData.customerInfo.name,
-          email: bookingData.customerInfo.email,
-          phone: bookingData.customerInfo.phone,
-          address: bookingData.customerInfo.address,
-          service: bookingData.service.name,
-          price: bookingData.service.price,
-          duration: bookingData.service.duration,
-          date: bookingData.date,
-          time: bookingData.timeSlot.value,
-          description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
-          images: bookingData.customerInfo.images || ''
-        }
+      // Use fetch instead of axios to avoid CORS preflight
+      const response = await fetch(this.scriptUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'createBooking',
+          booking: {
+            name: bookingData.customerInfo.name,
+            email: bookingData.customerInfo.email,
+            phone: bookingData.customerInfo.phone,
+            address: bookingData.customerInfo.address,
+            service: bookingData.service.name,
+            price: bookingData.service.price,
+            duration: bookingData.service.duration,
+            date: bookingData.date,
+            time: bookingData.timeSlot.value,
+            description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
+            images: bookingData.customerInfo.images || '',
+            bookingRef: bookingData.bookingRef
+          }
+        })
       });
+      
+      const data = await response.json();
 
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Booking failed');
+      if (!data.success) {
+        throw new Error(data.error || 'Booking failed');
       }
 
-      this.log('Booking created successfully:', response.data);
-      return response.data;
+      this.log('Booking created successfully:', data);
+      return data;
     } catch (error) {
       console.error('Error creating booking:', error);
       throw error;
     }
-  }
-
-  // Generate mock availability (fallback when API not configured)
-  getMockAvailability(date, duration) {
-    console.warn('Using mock availability data - Google Calendar not connected');
-    const slots = [];
-    
-    // Check if it's a weekend
-    const dayOfWeek = new Date(date + 'T00:00:00').getDay();
-    if (dayOfWeek === 0) { // Sunday - no availability except for emergency
-      return slots;
-    }
-
-    // Saturday has limited hours (9 AM - 4 PM)
-    const startHour = dayOfWeek === 6 ? 9 : 8;
-    const endHour = dayOfWeek === 6 ? 16 : 18;
-    
-    for (let hour = startHour; hour <= endHour - duration; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        // Skip lunch hour (12-1 PM) on weekdays
-        if (dayOfWeek !== 6 && hour === 12) continue;
-        
-        const startTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        const endHour = hour + duration;
-        const endTime = `${endHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        
-        // Simulate some slots being unavailable (but predictably, not randomly!)
-        // Make morning slots more available
-        const isAvailable = hour < 12 ? true : hour % 2 === 0;
-        
-        if (isAvailable && endHour <= endHour) {
-          slots.push({
-            value: startTime,
-            display: this.formatTimeRange(startTime, endTime),
-            start: `${date}T${startTime}:00`,
-            end: `${date}T${endTime}:00`,
-            isAvailable: true
-          });
-        }
-      }
-    }
-    
-    return slots;
   }
 
   // Format time range for display
