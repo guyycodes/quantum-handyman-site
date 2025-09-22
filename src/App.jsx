@@ -8,7 +8,7 @@ import Payment from './pages/Payment'
 import NotFound from './pages/NotFound'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
-import ChatBot from './components/ChatBot'
+import ChatBot from './Components/ChatBot'
 
 function App() {
   return (
