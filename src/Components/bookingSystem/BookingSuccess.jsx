@@ -66,7 +66,10 @@ Booking Reference: ${data.bookingRef}`
 const BookingSuccess = ({ bookingData, onClose }) => {
   const { service, date, timeSlot, customerInfo, bookingRef } = bookingData;
   
-  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-US', CONTENT.details.dateFormat);
+  // Parse date properly to avoid timezone issues
+  const [year, month, day] = date.split('-').map(Number);
+  const localDate = new Date(year, month - 1, day);
+  const formattedDate = localDate.toLocaleDateString('en-US', CONTENT.details.dateFormat);
 
   // Use the booking reference from bookingData (generated in BookingModal)
   const displayBookingRef = bookingRef || `QH-${Date.now().toString().slice(-6)}`;
@@ -76,9 +79,13 @@ const BookingSuccess = ({ bookingData, onClose }) => {
   };
 
   const handleAddToCalendar = () => {
-    // Create calendar event details
-    const startDate = new Date(date + 'T' + timeSlot.start);
-    const endDate = new Date(date + 'T' + timeSlot.end);
+    // Create calendar event details with proper date parsing
+    const [year, month, day] = date.split('-').map(Number);
+    const [startHour, startMinute] = timeSlot.start.split(':').map(Number);
+    const [endHour, endMinute] = timeSlot.end.split(':').map(Number);
+    
+    const startDate = new Date(year, month - 1, day, startHour, startMinute);
+    const endDate = new Date(year, month - 1, day, endHour, endMinute);
     
     // Format dates for Google Calendar
     const formatDate = (date) => {

@@ -59,7 +59,10 @@ const CONTENT = {
 const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting }) => {
   const { service, date, timeSlot, customerInfo } = bookingData;
   
-  const formattedDate = new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+  // Parse date properly to avoid timezone issues
+  const [year, month, day] = date.split('-').map(Number);
+  const localDate = new Date(year, month - 1, day);
+  const formattedDate = localDate.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
