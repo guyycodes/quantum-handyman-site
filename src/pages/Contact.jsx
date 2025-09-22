@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { sendContactEmail } from '../services/emailService'
-import Header from '../components/Header'
+import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-import BookingCTA from '../components/BookingCTA'
+import BookingCTA from '../Components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Phone, Mail, MapPin, Clock, 
