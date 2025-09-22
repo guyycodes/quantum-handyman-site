@@ -281,6 +281,14 @@
     -webkit-box-orient: vertical;
   }
 
+  /* Ensure modal portal renders on top */
+  #modal-root {
+    position: relative;
+    z-index: 9999;
+  }
 
-  
+  /* Ensure body doesn't scroll when modal is open */
+  body.modal-open {
+    overflow: hidden;
+  }
 }

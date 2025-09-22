@@ -8,14 +8,14 @@ import React, { useState } from 'react'
 import emailjs from 'emailjs-com'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import BookingCTA from '../components/BookingCTA'
+import BookingCTA from '../Components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Phone, Mail, MapPin, Clock, 
   Send, CheckCircle, AlertCircle,
   Facebook, Instagram
 } from 'lucide-react'
-import TikTokIcon from '../components/TikTokIcon'
+import TikTokIcon from '../Components/TikTokIcon'
 
 // Content Management - All text content in one place
 const CONTENT = {

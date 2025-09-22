@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import BookingCTA from '../components/BookingCTA'
+import BookingCTA from '../Components/BookingCTA'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'

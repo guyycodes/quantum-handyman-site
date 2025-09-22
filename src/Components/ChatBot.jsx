@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import chatbotResponses from '../utils/chatbotResponses';
 import { sendSupportTicketEmail } from '../services/emailService';
+import BookingModal from './BookingModal';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,7 @@ const ChatBot = () => {
   const [isEmergency, setIsEmergency] = useState(false);
   const [isComplaintTicket, setIsComplaintTicket] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
@@ -245,8 +247,11 @@ const ChatBot = () => {
 
   const handleRedirect = (path) => {
     if (path) {
-      // Check if it's an external URL
-      if (path.startsWith('http://') || path.startsWith('https://')) {
+      // Check for booking-related paths
+      if (path.includes('dandymen') || path.includes('book')) {
+        setIsBookingModalOpen(true);
+      } else if (path.startsWith('http://') || path.startsWith('https://')) {
+        // Open external URLs in new tab
         window.open(path, '_blank', 'noopener,noreferrer');
       } else {
         navigate(path);
@@ -494,15 +499,13 @@ const ChatBot = () => {
       return (
         <div key={index} className="flex justify-start mb-2 chatbot-animate-fade-in">
           <div className="flex gap-2 flex-wrap">
-            <a
-              href={msg.service.redirectPath}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => setIsBookingModalOpen(true)}
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
             >
               <FaBolt className="text-sm" />
-              {msg.service.buttonText}
-            </a>
+              Book Service
+            </button>
             <button
               onClick={resetConversation}
               className="border border-gray-500 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-800/50 transition-colors duration-300 flex items-center gap-2"
@@ -524,11 +527,18 @@ const ChatBot = () => {
             </div>
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => handleRedirect(msg.service.redirectPath)}
+                onClick={() => {
+                  // Check if this is a booking service
+                  if (msg.service.id === 'booking' || msg.service.redirectPath?.includes('dandymen')) {
+                    setIsBookingModalOpen(true);
+                  } else {
+                    handleRedirect(msg.service.redirectPath);
+                  }
+                }}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
               >
                 <FaWrench className="text-sm" />
-                {msg.service.buttonText}
+                {msg.service.id === 'booking' ? 'Book Service' : msg.service.buttonText}
               </button>
               <button
                 onClick={resetConversation}
@@ -731,6 +741,12 @@ const ChatBot = () => {
           )}
         </div>
       )}
+      
+      {/* Booking Modal */}
+      <BookingModal 
+        isOpen={isBookingModalOpen} 
+        onClose={() => setIsBookingModalOpen(false)} 
+      />
     </div>
   );
 };

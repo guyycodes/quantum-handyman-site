@@ -48,13 +48,12 @@ const CONTENT = {
   ],
   
   contact: {
-    // phone: {
-    //   label: 'Call us',
-    //   value: '(555) 123-4567'
-    // },
+    payNow: {
+      label: 'Pay Now',
+    },
     email: {
       label: 'Email',
-      value: 'info@quantumhandyman.com'
+      value: 'hello@quantumhandyman.com'
     },
     hours: {
       label: 'Hours',
@@ -68,12 +67,12 @@ const CONTENT = {
   
   footer: {
     copyright: '© {year} Quantum Handyman. All rights reserved.',
-    booking: {
-      emoji: '📅',
-      text: 'Online booking powered by',
-      partner: 'Dandymen.io',
-      description: '- our trusted scheduling partner'
-    },
+    // booking: {
+    //   emoji: '📅',
+    //   text: 'Online booking powered by',
+    //   partner: 'Dandymen.io',
+    //   description: '- our trusted scheduling partner'
+    // },
     credit: {
       text: 'Built from scratch by',
       company: 'Quantum Handyman'
@@ -195,6 +194,18 @@ const Footer = () => {
                 </div>
               </li>
             </ul>
+            
+            {/* Pay Now Button - Prominent Placement */}
+            <div className="mt-6">
+              <Link 
+                to="/payment"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] text-base"
+              >
+                <span className="text-lg">💳</span>
+                <span>{CONTENT.contact.payNow.label}</span>
+              </Link>
+              <p className="text-xs text-gray-400 mt-2">Secure payment for your booking</p>
+            </div>
           </div>
         </div>
 
@@ -206,7 +217,7 @@ const Footer = () => {
             </p>
             <div className="flex flex-col md:flex-row items-center gap-4 text-sm">
               <p className="text-gray-400 text-center">
-                <span className="inline-flex items-center gap-1">
+                {/* <span className="inline-flex items-center gap-1">
                   {CONTENT.footer.booking.emoji} {CONTENT.footer.booking.text} 
                   <a 
                     href="https://dandymen.io" 
@@ -217,7 +228,7 @@ const Footer = () => {
                     {CONTENT.footer.booking.partner}
                   </a>
                   {CONTENT.footer.booking.description}
-                </span>
+                </span> */}
               </p>
               <span className="hidden md:inline text-gray-600">|</span>
               <p className="text-gray-400">

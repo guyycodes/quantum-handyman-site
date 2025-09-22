@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import BookingCTA from '../components/BookingCTA'
+import BookingCTA from '../Components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,

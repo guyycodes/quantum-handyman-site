@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Calendar } from 'lucide-react'
+import BookingModal from './BookingModal'
 
 // Content Management - All text content in one place
 const CONTENT = {
   defaultButtonText: 'Book Service',
-  defaultHelperText: 'Powered by Dandymen.io booking platform',
   ariaLabel: 'Book {service} with Quantum Handyman',
   defaultService: 'a service'
 }
@@ -14,22 +14,10 @@ const BookingCTA = ({
   buttonText = CONTENT.defaultButtonText,
   buttonStyle = 'primary',
   size = 'md',
-  referralCode = null,
   className = '',
-  showHelperText = true,
-  helperText = CONTENT.defaultHelperText,
-  helperTextStyle = 'text-xs text-black italic'
+  onClick = null // Optional callback when button is clicked
 }) => {
-  const BOOKING_URL = 'https://www.dandymen.io//book?package=THE_TRIM'
-  
-  const buildBookingURL = () => {
-    const url = new URL(BOOKING_URL)
-    url.searchParams.set('utm_source', 'website')
-    url.searchParams.set('utm_medium', 'cta')
-    if (service) url.searchParams.set('service', service)
-    if (referralCode) url.searchParams.set('ref', referralCode)
-    return url.toString()
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm',
@@ -45,12 +33,16 @@ const BookingCTA = ({
   }
 
   const handleClick = () => {
-    // Track click event if needed in the future
-    window.open(buildBookingURL(), '_blank')
+    if (onClick) onClick() // Call optional callback
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
   }
   
   return (
-    <div className={showHelperText ? 'inline-flex flex-col items-center gap-1' : ''}>
+    <>
       <button
         onClick={handleClick}
         className={`
@@ -66,12 +58,13 @@ const BookingCTA = ({
         <Calendar className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />
         <span>{buttonText}</span>
       </button>
-      {showHelperText && (
-        <span className={helperTextStyle}>
-          {helperText}
-        </span>
-      )}
-    </div>
+      
+      <BookingModal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal}
+        initialService={service}
+      />
+    </>
   )
 }
 

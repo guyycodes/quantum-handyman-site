@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { sendContactEmail } from '../services/emailService'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
+import Footer from '../Components/Footer'
 import BookingCTA from '../components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
@@ -9,7 +9,7 @@ import {
   Send, CheckCircle, AlertCircle,
   Facebook, Instagram
 } from 'lucide-react'
-import TikTokIcon from '../components/TikTokIcon'
+import TikTokIcon from '../Components/TikTokIcon'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -96,7 +96,7 @@ const CONTENT = {
   
   responseTime: {
     title: 'Response Time',
-    message: 'We typically respond within 24 hours during business days. For urgent matters, please call directly.'
+    message: 'For urgent matters we typically respond right away. Otherwise, we typically respond within 24 hours.'
   },
   
   serviceOptions: [
