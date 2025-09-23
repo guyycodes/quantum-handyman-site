@@ -298,10 +298,11 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           });
         }
         
-        // Add compressed images to booking data
+        // Add compressed images and booking reference to booking data
         const bookingDataWithImages = {
           ...bookingData,
-          imageDataBase64: imageDataBase64
+          imageDataBase64: imageDataBase64,
+          bookingRef: bookingRef  // Add the booking reference here
         };
         
         // Try to create booking in Google Calendar and Sheets
