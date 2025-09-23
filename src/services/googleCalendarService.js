@@ -31,12 +31,16 @@ class GoogleCalendarService {
 
     try {
       this.log('Testing connection to Apps Script...');
-      const response = await axios.post(this.scriptUrl, {
-        action: 'testConnection'
+      const response = await fetch(this.scriptUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'testConnection'
+        })
       });
       
-      this.log('Connection test response:', response.data);
-      return response.data;
+      const data = await response.json();
+      this.log('Connection test response:', data);
+      return data;
     } catch (error) {
       console.error('Connection test failed:', error);
       return { success: false, error: error.message };
