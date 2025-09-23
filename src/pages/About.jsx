@@ -36,7 +36,14 @@ const CONTENT = {
       { value: '10+', label: 'Years Experience' },
       { value: '15,000+', label: 'Jobs Complete' },
       { value: '100+', label: 'Happy Customers' },
-      { value: '10+', label: 'Services Offered' }
+      { value: (
+      <>
+        <span className="inline-flex items-center">
+          <span>⭐⭐⭐⭐</span>
+          <span className="inline-block" style={{ clipPath: 'inset(0 50% 0 0)' }}>⭐</span>
+        </span>{' '}
+      </>
+    ), label: 'Average Rating' }
     ]
   },
   
@@ -44,6 +51,7 @@ const CONTENT = {
     title: 'Credentials & Certifications',
     items: [
       'Experienced Craftsman',
+      'Deep Property & Finance Background',
       'B.A. Computer Science Degree + Business Minor',
       'Certified Full-Stack Devloper',
       'Smart Home Professional',
@@ -84,20 +92,21 @@ const CONTENT = {
   
   timeline: {
     title: 'Our Journey',
-    subtitle: 'From college side hustle to comprehensive service provider',
+    subtitle: 'From side hustle -> service provider',
     milestones: [
-      { year: '2015', event: 'Started entrapanuer journey with auto repair services as a side hustle' },
-      { year: '2018', event: 'Returned to college for Computer Science & Minor in Business' },
+      { year: '2011-2015', event: 'Employed as a Multi-Disciplinary trade worker covered Irrigation, Landscape, Property Repair and Automotive.' },
+      { year: '2015', event: 'Started entrapanuer journey with auto repair services as a side hustle.' },
+      { year: '2018', event: 'Returned to college for Computer Science & Minor in Business.' },
       { year: '2019', event: 'Began offering home serive to offset education expenses.' },
       { year: '2020', event: 'Took on lanscaping & sprinkler projects expanding services' },
-      { year: '2021', event: 'Took 16 months off of college during Covid-19, took on smart home automation projects & expanded services.' },
+      { year: '2021', event: 'Took 16 months off of college during Covid-19, Went to Mortgage/Real Estate School & Worked as a Mortgage Loan Officer for ICG in New York City.' },
       { year: '2022', event: 'Built outdoor patio with full landscaping, masonry, stamped concrete, drywalling & decking expanded services.' },
-      { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework' },
-      { year: '2023', event: 'Graduated from University of Denver Certified in Full Stack Development, added web development services' },
-      { year: '2024', event: 'Began building a custom website for Quantum Handyman, built custom Natural Language Processing pipline, patched open source LLM (2000+ downloads).' },
+      { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework.' },
+      { year: '2023', event: 'Graduated from University of Denver Certified in Full Stack Development, added web development services.' },
+      { year: '2024', event: 'Began building a custom website for Quantum Handyman, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
       { year: '2024', event: 'Built a custom Web SaaS platform, integrated LLM agents to handle booking & estimates.' },
       { year: '2025', event: 'Graduate CS Degree + Business Minor 3.95 GPA, Deeloper custom open source Ai package and Recieved over 2000+ downloads.' },
-      { year: '2025', event: 'Integrated Quantum Handyman into Dandymen.io, to enhance the booking, estimation, and job management process.' },
+      { year: '2025', event: 'Began building Dandymen.io, to enhance the booking, estimation, and job management process for all users.'},
     ]
   },
   

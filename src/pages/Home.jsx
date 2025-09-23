@@ -5,6 +5,7 @@ import BookingCTA from '../Components/BookingCTA'
 import BookingModal from '../Components/BookingModal'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
+import FramedImage from '../components/FramedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -94,8 +95,8 @@ const CONTENT = {
           description: 'CS degree + Full-Stack problem solving applied to every project'
         },
         {
-          title: 'Dual-Stack Solutions',
-          description: 'Fix your tech stack AND your property'
+          title: 'Multi-Stack Solutions',
+          description: 'Fix your property OR your tech - powered by my custom AI property maintenance estimator'
         },
         {
           title: 'Systematic Approach',
@@ -103,30 +104,35 @@ const CONTENT = {
         },
         {
           title: 'Modern-local Problem-Solver',
-          description: 'Quick response times, community focused.'
+          description: 'Quick response times, community focused, Colorado Native.'
         }
       ]
     },
     credentials: [
       {
-        title: '10+ Years of Craftsmanship',
-        description: 'Built & sold first company. 15,000+ jobs completed as cross-functional team.'
+        title: '10+ Yrs as a Craftsman',
+        description: (
+          <>
+            Built & sold first company. 15,000+ jobs completed average{' '}
+            <span className="inline-flex items-center">
+              <span>⭐⭐⭐⭐</span>
+              <span className="inline-block" style={{ clipPath: 'inset(0 50% 0 0)' }}>⭐</span>
+            </span>{' '}
+            rating.
+          </>
+        )
       },
       {
         title: 'CS Degree',
-        description: 'B.A. Computer Science + Business Minor 3.95 GPA + 3 years experience.'
+        description: '+ 3 years experience. B.A. Computer Science + Business Minor'
       },
       {
-        title: 'Certified Full-Stack Dev',
-        description: 'React, Node.js, SQL, No-SQL, etc.'
+        title: 'Certified Full-Stack Developer',
+        description: 'React, Node.js, Python, SQL, No-SQL, Java, Hibernate, Spring, Swift, Xcode, AWS, Vercel, iOS, Android etc.'
       },
       {
-        title: 'Certified Java Dev',
-        description: 'Java, Spring Boot, Hibernate, etc.'
-      },
-      {
-        title: 'Certified AWS',
-        description: 'Cloud Architecture'
+        title: 'Property Finance Background',
+        description: 'Former mortgage officer (NMLS #2318525) + Real Estate School. Deep property knowledge.'
       },
       {
         title: 'Certified ITIL 4',
@@ -136,7 +142,6 @@ const CONTENT = {
         title: 'Certified Project Management',
         description: 'Comptia Project+ & Project management experience.'
       },
-
     ],
     cta: 'Get Free Quote'
   },
@@ -563,7 +568,7 @@ const Home = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 {CONTENT.about.credentials.map((cred, index) => (
-                  <div key={index} className="bg-white p-4 rounded-lg shadow-md">
+                  <div key={index} className={`bg-white p-4 rounded-lg shadow-md ${index === 0 ? 'border-2 border-green-500' : index === 3 ? 'border-2 border-blue-500' : ''}`}>
                     {index === 0 && <Award className="w-8 h-8 text-primary mb-2" />}
                     {index === 1 && <Clock className="w-8 h-8 text-secondary mb-2" />}
                     {index === 2 && <Shield className="w-8 h-8 text-accent mb-2" />}
@@ -588,27 +593,50 @@ const Home = () => {
               />
             </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-2xl opacity-20"></div>
-              <div className="relative bg-white rounded-2xl shadow-xl p-8">
-                <h3 className="text-2xl font-bold mb-6 text-center">{CONTENT.about.whyChoose.title}</h3>
-                
-                <div className="space-y-4">
-                  {CONTENT.about.whyChoose.items.map((item, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        {index === 0 && <Settings className="w-6 h-6 text-primary" />}
-                        {index === 1 && <Lightbulb className="w-6 h-6 text-secondary" />}
-                        {index === 2 && <Award className="w-6 h-6 text-accent" />}
-                        {index === 3 && <Gauge className="w-6 h-6 text-purple-600" />}
+            <div className="space-y-8">
+              {/* Why Choose Us Card */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-2xl blur-2xl opacity-20"></div>
+                <div className="relative bg-white rounded-2xl shadow-xl p-8">
+                  <h3 className="text-2xl font-bold mb-6 text-center">{CONTENT.about.whyChoose.title}</h3>
+                  
+                  <div className="space-y-4">
+                    {CONTENT.about.whyChoose.items.map((item, index) => (
+                      <div key={index} className="flex gap-4">
+                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          {index === 0 && <Settings className="w-6 h-6 text-primary" />}
+                          {index === 1 && <Lightbulb className="w-6 h-6 text-secondary" />}
+                          {index === 2 && <Award className="w-6 h-6 text-accent" />}
+                          {index === 3 && <Gauge className="w-6 h-6 text-purple-600" />}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-near-black">{item.title}</h4>
+                          <p className="text-sm text-muted">{item.description}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-near-black">{item.title}</h4>
-                        <p className="text-sm text-muted">{item.description}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
+              </div>
+              
+              {/* Personal Photo */}
+              <div className="relative">
+                <FramedImage
+                  src="/Me&Pops.png"
+                  alt="Morgan B. - Quantum Handyman"
+                  frameStyle="modern"
+                  aspectRatio="portrait"
+                  objectFit="cover"
+                  rounded="2xl"
+                  shadow={true}
+                  hover={true}
+                  maxWidth="max-w-sm"
+                  maxHeight="max-h-md"
+                  width="w-full"
+                  caption="Morgan B. - Quantum Handyman"
+                  captionPosition="bottom"
+                  className="mx-auto"
+                />
               </div>
             </div>
           </div>
