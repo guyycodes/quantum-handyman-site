@@ -115,6 +115,55 @@ export const compressMultipleImages = async (images, options = {}) => {
 };
 
 /**
+ * Test if a single image can be compressed successfully
+ * @param {File} file - The image file to test
+ * @returns {Promise<{success: boolean, error?: string}>} Test result
+ */
+export const testImageCompression = async (file) => {
+  try {
+    if (!file || !(file instanceof File)) {
+      return { success: false, error: 'Invalid file provided' };
+    }
+    
+    // Test compression with same settings as actual compression
+    const base64 = await compressImage(file, {
+      scaleFactor: 0.6,  // 60% of original size
+      quality: 0.5       // 50% JPEG quality
+    });
+    
+    // Check if compression actually worked (not empty or too small)
+    if (!base64 || base64.length < 100) {
+      console.error('Compression resulted is empty or invalid output');
+      return { 
+        success: false, 
+        error: 'Image could not be processed. Please try a smaller or different image.'
+      };
+    }
+    
+    // Check if compressed size is reasonable (under 45KB for single image)
+    const compressedSize = base64.length;
+    const maxSingleImageSize = 45000; // 45KB limit per image
+    
+    if (compressedSize > maxSingleImageSize) {
+      const sizeInKB = Math.round(compressedSize / 1024);
+      return { 
+        success: false, 
+        error: `Image is too large even after compression (${sizeInKB}KB). Please use a smaller image.`
+      };
+    }
+    
+    return { success: true };
+    
+  } catch (error) {
+    console.error('Image compression test failed:', error);
+    return { 
+      success: false, 
+      error: 'Failed to process image. Please try a different image.'
+    };
+  }
+};
+
+/**
  * Check if images need compression based on total size
  * @param {File[]} images - Array of image files
  * @returns {Promise<boolean>} True if compression is needed

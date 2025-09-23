@@ -9,6 +9,7 @@ import {
   sanitizeEstimateRef,
   sanitizeCustomerFormData 
 } from '../../utils/dataSanitization';
+import { testImageCompression } from '../../utils/imageCompression';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -239,6 +240,13 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
       
       if (!file.type.startsWith('image/')) {
         alert(CONTENT.validation.notImage(file.name));
+        continue;
+      }
+      
+      // Test if image can be compressed successfully
+      const compressionTest = await testImageCompression(file);
+      if (!compressionTest.success) {
+        alert(`❌ ${file.name}\n\n${compressionTest.error}\n\nTip: Try a smaller resolution image or crop the image before uploading.`);
         continue;
       }
       
