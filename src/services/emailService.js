@@ -268,7 +268,7 @@ export const sendBookingEmail = async (bookingData) => {
     };
     
     const calendarDateRange = `${formatCalendarDate(calendarStartDate)}/${formatCalendarDate(calendarEndDate)}`;
-    const calendarDetails = `Service: ${service.name}%0APrice: ${service.price}%0AAddress: ${customerInfo.address}%0APhone: ${customerInfo.phone}%0ADescription: ${customerInfo.description || 'No description provided'}`;
+    const calendarDetails = `Service: ${service.name}%0APrice: ${service.price}%0AAddress: ${customerInfo.address || 'TBD'}%0APhone: ${customerInfo.phone}%0ADescription: ${encodeURIComponent((customerInfo.description || 'No description provided').substring(0, 200)).replace(/%20/g, '+')}`;
 
     // Create the email content - MUST match EmailJS template variables exactly
     const templateParams = {
@@ -282,6 +282,7 @@ export const sendBookingEmail = async (bookingData) => {
       // Booking details - these MUST match your EmailJS template variables
       booking_ref: finalBookingRef,
       customer_name: customerInfo.name,
+      request_type: 'Appointment',
       service_name: service.name,
       booking_date: formattedDate,
       booking_time: timeSlot.display,
@@ -291,13 +292,18 @@ export const sendBookingEmail = async (bookingData) => {
       customer_email: customerInfo.email,
       customer_phone: customerInfo.phone,
       project_description: customerInfo.description || 'No description provided',
+      estimate_ref: customerInfo.estimateRef || '', // Include estimate reference if this booking came from an estimate
       
       // Calendar link variables
       calendar_date: calendarDateRange,
       calendar_details: calendarDetails,
       
-      // Additional tracking
-      has_images: customerInfo.images && customerInfo.images.length > 0 ? 'Yes' : 'No'
+      // Image tracking (if any)
+      has_images: customerInfo.images && customerInfo.images.length > 0 ? 'Yes' : 'No',
+      image_count: customerInfo.images?.length || 0,
+      image_note: customerInfo.images && customerInfo.images.length > 0 
+        ? `${customerInfo.images.length} image(s) uploaded - Available in booking system`
+        : 'No images uploaded'
     };
 
     // Use booking template if available, otherwise use contact template
@@ -328,11 +334,150 @@ export const sendBookingEmail = async (bookingData) => {
   }
 };
 
+/**
+ * Send an estimate request email
+ * @param {Object} estimateData - The estimate request data
+ * @param {Object} estimateData.service - Selected service (estimate)
+ * @param {Object} estimateData.customerInfo - Customer information
+ * @returns {Promise} EmailJS response
+ */
+export const sendEstimateRequestEmail = async (estimateData) => {
+  try {
+    // Initialize EmailJS if not already done
+    initEmailJS();
+
+    const { service, customerInfo, estimateRef, isAiEstimate, aiEstimateResult } = estimateData;
+
+    // Format the current date for estimate request
+    const formattedDate = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Format the current time
+    const bookingTime = new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    // Use the estimate reference passed in (generated in BookingModal)
+    const finalEstimateRef = estimateRef || `EST-${Date.now().toString().slice(-6)}`;
+
+    // Create calendar event details for estimates
+    // For estimates, we'll create an all-day reminder to review the estimate
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(9, 0, 0, 0); // Set to 9 AM tomorrow
+    const dayAfter = new Date(tomorrow);
+    dayAfter.setHours(10, 0, 0, 0); // 1 hour duration
+    
+    // Format dates for Google Calendar URL (YYYYMMDDTHHmmSS)
+    const formatCalendarDate = (date) => {
+      return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    };
+    
+    // Create calendar date range for tomorrow 9-10 AM (review estimate time)
+    const calendarDateRange = `${formatCalendarDate(tomorrow)}/${formatCalendarDate(dayAfter)}`;
+    
+    // Create detailed calendar description with estimate info
+    const calendarDetails = isAiEstimate && aiEstimateResult?.success ? 
+      `Estimate Ref: ${finalEstimateRef}%0A` +
+      `Type: AI Generated Estimate%0A` +
+      `Price Range: ${aiEstimateResult.price}%0A` +
+      `Customer: ${customerInfo.name}%0A` +
+      `Phone: ${customerInfo.phone}%0A` +
+      `Email: ${customerInfo.email}%0A` +
+      `Address: ${customerInfo.address || 'TBD'}%0A` +
+      `%0AProject Description:%0A${encodeURIComponent((customerInfo.description || '').substring(0, 200)).replace(/%20/g, '+')}%0A` +
+      `%0AAction Required:%0A` +
+      `- Review this estimate%0A` +
+      `- Contact customer to discuss%0A` +
+      `- Schedule service if approved%0A` +
+      `%0AView full details at: quantumhandyman.com/portal`
+      : 
+      `Estimate Ref: ${finalEstimateRef}%0A` +
+      `Type: Manual Estimate Request%0A` +
+      `Customer: ${customerInfo.name}%0A` +
+      `Phone: ${customerInfo.phone}%0A` +
+      `Email: ${customerInfo.email}%0A` +
+      `Address: ${customerInfo.address || 'TBD'}%0A` +
+      `%0AProject Description:%0A${encodeURIComponent((customerInfo.description || '').substring(0, 200)).replace(/%20/g, '+')}%0A` +
+      `%0AAction Required:%0A` +
+      `- Prepare manual estimate%0A` +
+      `- Contact customer with pricing%0A` +
+      `- Schedule service if approved%0A` +
+      `%0AView full details at: quantumhandyman.com/portal`;
+
+    // Create the base template parameters
+    const templateParams = {
+      // Standard EmailJS fields
+      from_name: customerInfo.name,
+      to_email: EMAIL_CONFIG.toEmail,
+      to_name: customerInfo.name, 
+      user_email: customerInfo.email, 
+      reply_to: customerInfo.email,
+      
+      // Estimate details - these MUST match your EmailJS template variables
+      booking_ref: finalEstimateRef,
+      customer_name: customerInfo.name,
+      request_type: isAiEstimate && aiEstimateResult.success ? 'Ai Generated Estimate' : 'Service Estimate',
+      service_name: "Estimate",
+      // Request timestamp
+      booking_date: formattedDate,
+      booking_time: bookingTime,
+      service_duration: 'Estimate',
+      service_price: isAiEstimate && aiEstimateResult.success ? 
+        `${aiEstimateResult.price}` : `(Pending...)`,
+      customer_address: customerInfo.address || 'Not provided',
+      customer_email: customerInfo.email,
+      customer_phone: customerInfo.phone,
+      project_description: isAiEstimate && aiEstimateResult.success ? 
+        `${aiEstimateResult.jobDescription}\n(Disclaimer:\nThis AI-generated description is based on provided details & can vary ±(60%). AI can miss nuance. We recomend A comprehensive review & discussion with your service provider. Final pricing may vary based on material choices, job complexity, unforseen conditions, permitting & other factors AI may not account for.)` 
+        : customerInfo.description || 'No description provided',
+
+      // Calendar link variables
+      calendar_date: calendarDateRange,
+      calendar_details: calendarDetails,
+      
+      // Image tracking (if any)
+      has_images: customerInfo.images && customerInfo.images.length > 0 ? 'Yes' : 'No',
+      image_count: customerInfo.images?.length || 0,
+      image_note: customerInfo.images && customerInfo.images.length > 0 
+        ? `${customerInfo.images.length} image(s) uploaded - Available in Project Portal`
+        : 'No images uploaded'
+    };
+
+    // Always use the booking template (as per user requirement)
+    const templateId = EMAIL_CONFIG.templates.booking;
+
+    const response = await emailjs.send(
+      EMAIL_CONFIG.serviceId,
+      templateId,
+      templateParams,
+      EMAIL_CONFIG.publicKey
+    );
+
+    return {
+      success: true,
+      response,
+      estimateRef: finalEstimateRef
+    };
+  } catch (error) {
+    console.error('Estimate Request Email Error:', error);
+    return {
+      success: false,
+      error: error.message || 'Failed to send estimate request'
+    };
+  }
+};
+
 // Export everything as a service object as well
 const emailService = {
   sendContactEmail,
   sendSupportTicketEmail,
   sendBookingEmail,
+  sendEstimateRequestEmail,
   validateEmailConfig,
   formatPhoneNumber,
   isValidEmail,

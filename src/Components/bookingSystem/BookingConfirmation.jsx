@@ -30,7 +30,8 @@ const CONTENT = {
         name: 'Name',
         email: 'Email',
         phone: 'Phone',
-        address: 'Address'
+        address: 'Address',
+        estimateRef: 'Estimate Reference'
       }
     },
     project: {
@@ -159,6 +160,15 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting }) => {
               <p className="font-medium text-gray-900 whitespace-pre-wrap">{customerInfo.address}</p>
             </div>
           </div>
+          {customerInfo.estimateRef && (
+            <div className="flex items-start gap-3">
+              <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
+              <div className="flex-1">
+                <span className="text-gray-600 text-sm">{CONTENT.sections.customer.labels.estimateRef}</span>
+                <p className="font-medium text-blue-600">{customerInfo.estimateRef}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

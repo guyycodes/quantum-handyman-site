@@ -66,7 +66,7 @@ const STRIPE_CONFIG = {
   publicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY || '',
 };
 
-const Payment = () => {
+const Portal = () => {
   const [bookingRef, setBookingRef] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -357,4 +357,4 @@ const Payment = () => {
   );
 };
 
-export default Payment;
+export default Portal;

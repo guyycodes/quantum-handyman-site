@@ -15,47 +15,52 @@ const CONTENT = {
       id: 'estimate',
       name: 'Free Estimate',
       price: 'Free',
-      duration: 1,
+      materials: true,
+      duration: -2, // -2 for blank
       icon: Calculator,
       color: 'bg-green-500',
-      description: 'Get a free consultation and estimate for your project',
-      features: ['No obligation', 'Professional assessment', 'Written quote']
+      description: 'Get an estimate for your project',
+      features: ['No obligation', 'Professional or AI assessment', 'Written quote w/range & Project Breakdown']
     },
     {
       id: 'package195',
-      name: 'Essential Package',
+      name: 'Turnover Package',
       price: '$195',
+      materials: false,
       duration: 2,
       icon: Wrench,
       color: 'bg-blue-500',
-      description: '3 small jobs completed in up to 2 hours total',
+      description: '3 small jobs completed in up to 2.5 hours total',
       features: ['Perfect for quick fixes', 'Multiple small tasks', 'Same day completion']
     },
     {
       id: 'package295',
-      name: 'Standard Package',
+      name: 'Make-Ready Package',
       price: '$295',
+      materials: false,
       duration: 3,
       icon: Star,
       color: 'bg-purple-500',
-      description: '3 medium jobs completed in up to 3 hours total',
+      description: '3 medium jobs completed in up to 3.5 hours total',
       features: ['Most popular choice', 'Mix of tasks', 'Comprehensive service']
     },
     {
       id: 'package395',
       name: 'Premium Package',
       price: '$395',
+      materials: false,
       duration: 4,
       icon: Zap,
       color: 'bg-orange-500',
-      description: '3 larger jobs completed in up to 4 hours total',
+      description: '3 larger jobs completed in up to 4.5 hours total',
       features: ['Complex projects', 'Extended time', 'Priority scheduling']
     },
     {
       id: 'custom',
       name: 'Custom Project',
       price: 'Quote',
-      duration: 2,
+      materials: false,
+      duration: -1, // -1 for infinity
       icon: Clock,
       color: 'bg-gray-600',
       description: 'Custom project with detailed estimate',
@@ -98,16 +103,16 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
                   </span>
                 </div>
               )}
-
               <div className="flex items-start gap-4 mb-0">
                 <div className={`${service.color} p-1 rounded-lg text-white`}>
                   <Icon className="w-6 h-6" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-lg font-bold text-gray-900">{service.name}</h4>
+                  <h4 className="text-md mt-1 font-bold text-gray-900">{service.name === 'Make-Ready Package' ? 'Make-Ready Pkg' : service.name}</h4>
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-2xl font-bold text-blue-600">{service.price}</span>
-                    <span className="text-sm text-gray-500">/ {service.duration}hr{service.duration > 1 ? 's' : ''}</span>
+                    <span className="text-xs text-gray-500">{service.materials ? 'or 🤖 AI - (Beta)' : (service.duration !== -1) ? '+mat\'ls' : ''}</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '' : '/'}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration !== -2) ? '∞' : ''}</span>
                   </div>
                 </div>
               </div>

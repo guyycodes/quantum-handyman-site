@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
+import BookingModal from '../Components/BookingModal'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
@@ -37,14 +38,34 @@ const CONTENT = {
   },
   
   booking: {
-    title: 'Easy Online Booking',
-    description: 'We\'ve partnered with Dandymen.io to provide you with a seamless, secure booking experience. When you click "Book Service", you\'ll be directed to the scheduling platform where you can:',
-    steps: {
-      choose: 'Choose Your Service',
-      pickTime: 'Pick a Time Slot',
-      payment: 'Secure Payment'
+    title: 'Easy Online Booking & Estimates',
+    description: 'Book instantly or get a free estimate in seconds',
+    bookingSteps: {
+      title: 'Book Service',
+      steps: [
+        { icon: '📦', text: 'Choose Package' },
+        { icon: '📅', text: 'Pick Time' },
+        { icon: '✅', text: 'Instant Confirm' },
+      ]
     },
-    tip: '💡 Tip: Create a Dandymen.io account to track all your bookings and receive service updates'
+    estimateSteps: {
+      title: 'Free Estimate',
+      steps: [
+        { icon: '📋', text: 'Select Estimate' },
+        { icon: '📸', text: 'Upload Photos' },
+        { icon: '⚡', text: '24hr Quote' }
+      ]
+    },
+    cta: {
+      primary: 'Get Started',
+      secondary: 'Learn More'
+    },
+    features: [
+      { icon: '🔒', text: 'Secure' },
+      { icon: '⚡', text: 'Instant' },
+      { icon: '🎯', text: 'No Login' },
+      { icon: '🤖', text: 'Optional AI Estimate' }
+    ]
   },
   
   services: {
@@ -247,6 +268,7 @@ const STATS_DATA = [
 
 const Home = () => {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
   // Intersection observers for different sections
   const heroSection = useIntersectionObserver({ threshold: 0.2 })
@@ -355,37 +377,77 @@ const Home = () => {
       </section>
 
       {/* Booking Info Section */}
-      <section className="py-12 bg-gradient-to-r from-primary/5 to-secondary/5">
+      <section className="py-8 bg-gradient-to-r from-primary/5 to-secondary/5">
         <div className="container-max mx-auto px-6">
           <div 
             ref={bookingSection.ref}
-            className={`bg-white rounded-2xl shadow-lg p-8 text-center max-w-3xl mx-auto animate-scale ${bookingSection.isVisible ? 'visible' : ''}`}>
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-              <Calendar className="w-8 h-8 text-primary" />
+            className={`bg-white rounded-2xl shadow-lg p-6 max-w-3xl mx-auto animate-scale ${bookingSection.isVisible ? 'visible' : ''}`}>
+            {/* Header */}
+            <div className="text-center mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full mb-3">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">{CONTENT.booking.title}</h3>
+              <p className="text-gray-600 text-lg">{CONTENT.booking.description}</p>
             </div>
-            <h3 className="text-2xl font-bold mb-3">{CONTENT.booking.title}</h3>
-            <p className="text-muted mb-6">
-              {CONTENT.booking.description.split('Dandymen.io')[0]}
-              <span className="font-semibold text-primary">Dandymen.io</span>
-              {CONTENT.booking.description.split('Dandymen.io')[1]}
-            </p>
-            <div className="grid sm:grid-cols-3 gap-4 mb-6">
-              <div className="flex flex-col items-center">
-                <CheckCircle className="w-6 h-6 text-green-500 mb-2" />
-                <span className="text-sm font-medium">{CONTENT.booking.steps.choose}</span>
+            
+            {/* Streamlined Two-column layout */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              {/* Booking Steps */}
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg p-4 border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                  <span className="text-lg">🎯</span> {CONTENT.booking.bookingSteps.title}
+                </h4>
+                <div className="space-y-2">
+                  {CONTENT.booking.bookingSteps.steps.map((step, index) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <span className="text-lg">{step.icon}</span>
+                      <span className="text-gray-700">{step.text}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-col items-center">
-                <Clock className="w-6 h-6 text-blue-500 mb-2" />
-                <span className="text-sm font-medium">{CONTENT.booking.steps.pickTime}</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <Shield className="w-6 h-6 text-purple-500 mb-2" />
-                <span className="text-sm font-medium">{CONTENT.booking.steps.payment}</span>
+              
+              {/* Estimate Steps */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-lg p-4 border border-green-200">
+                <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                  <span className="text-lg">💰</span> {CONTENT.booking.estimateSteps.title}
+                </h4>
+                <div className="space-y-2">
+                  {CONTENT.booking.estimateSteps.steps.map((step, index) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <span className="text-lg">{step.icon}</span>
+                      <span className="text-gray-700">{step.text}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-            <p className="text-sm text-gray-500 italic">
-              {CONTENT.booking.tip}
-            </p>
+            
+            {/* Features Bar */}
+            <div className="flex justify-center gap-6 mb-6 py-3 bg-gray-50 rounded-lg">
+              {CONTENT.booking.features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  <span className="text-sm">{feature.icon}</span>
+                  <span className="text-xs font-medium text-gray-600">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* CTA Button */}
+            <div className="text-center">
+              <button 
+                onClick={() => setIsBookingModalOpen(true)}
+                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              >
+                <Calendar className="w-5 h-5" />
+                {CONTENT.booking.cta.primary}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <p className="text-xs text-gray-500 mt-3">
+                💡 Not sure? Start with a <span className="font-medium">Free Estimate</span>
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -720,6 +782,12 @@ const Home = () => {
       </section>
 
       <Footer />
+      
+      {/* Booking Modal */}
+      <BookingModal 
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </div>
   )
 }

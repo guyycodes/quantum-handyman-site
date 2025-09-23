@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, MapPin, FileText, Camera, AlertCircle } from 'lucide-react';
+import { 
+  sanitizeName, 
+  sanitizeEmail, 
+  sanitizePhone, 
+  sanitizeAddress, 
+  sanitizeProjectDescription,
+  sanitizeEstimateRef,
+  sanitizeCustomerFormData 
+} from '../../utils/dataSanitization';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -30,11 +39,17 @@ const CONTENT = {
       placeholder: 'Please describe what needs to be done. Include any specific requirements or concerns...',
       error: 'Please describe your project (minimum 10 characters)'
     },
+    estimateRef: {
+      label: 'Estimate Reference Number',
+      placeholder: 'EST-123456 (if you have one)',
+      helpText: 'Enter the estimate reference number here. Note: AI Generated estimates can vary.'
+    },
     photos: {
       label: 'Photos (Optional)',
       uploadText: 'Click to upload photos',
-      maxSizeText: 'Max 5MB per image',
-      uploadButton: 'Upload'
+      maxSizeText: 'Max 5MB per image • Max 3 photos',
+      uploadButton: 'Upload',
+      maxImagesReached: 'Maximum 3 images allowed'
     }
   },
   validation: {
@@ -53,6 +68,7 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
     phone: '',
     address: '',
     description: '',
+    estimateRef: '',
     images: []
   });
   
@@ -62,32 +78,46 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Name validation
-    if (!formData.name || formData.name.length < 2) {
-      newErrors.name = CONTENT.fields.name.error;
+    // Name validation with sanitization
+    const nameResult = sanitizeName(formData.name);
+    if (!nameResult.isValid) {
+      newErrors.name = nameResult.error || CONTENT.fields.name.error;
     }
     
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email || !emailRegex.test(formData.email)) {
-      newErrors.email = CONTENT.fields.email.error;
+    // Email validation with sanitization
+    const emailResult = sanitizeEmail(formData.email);
+    if (!emailResult.isValid) {
+      newErrors.email = emailResult.error || CONTENT.fields.email.error;
     }
     
-    // Phone validation
-    const phoneRegex = /^[\d\s()+-]+$/;
-    const cleanedPhone = formData.phone.replace(/\D/g, '');
-    if (!formData.phone || cleanedPhone.length < 10) {
-      newErrors.phone = CONTENT.fields.phone.error;
+    // Phone validation with sanitization
+    const phoneResult = sanitizePhone(formData.phone);
+    if (!phoneResult.isValid) {
+      newErrors.phone = phoneResult.error || CONTENT.fields.phone.error;
     }
     
-    // Address validation
-    if (!formData.address || formData.address.length < 10) {
-      newErrors.address = CONTENT.fields.address.error;
+    // Address validation with sanitization
+    const addressResult = sanitizeAddress(formData.address);
+    if (!addressResult.isValid) {
+      newErrors.address = addressResult.error || CONTENT.fields.address.error;
+    }
+    if (addressResult.isPOBox && service?.id !== 'estimate') {
+      // Optionally warn about PO Box for service appointments
+      newErrors.address = 'Service address cannot be a PO Box';
     }
     
-    // Description validation
-    if (!formData.description || formData.description.length < 10) {
-      newErrors.description = CONTENT.fields.description.error;
+    // Description validation with sanitization
+    const descResult = sanitizeProjectDescription(formData.description);
+    if (!descResult.isValid) {
+      newErrors.description = descResult.error || CONTENT.fields.description.error;
+    }
+    
+    // Estimate ref validation if present
+    if (formData.estimateRef) {
+      const refResult = sanitizeEstimateRef(formData.estimateRef);
+      if (!refResult.isValid) {
+        newErrors.estimateRef = refResult.error || 'Invalid estimate reference';
+      }
     }
     
     return newErrors;
@@ -95,9 +125,37 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let processedValue = value;
+    
+    // Apply field-specific sanitization for real-time feedback
+    switch(name) {
+      case 'name':
+        const nameResult = sanitizeName(value);
+        processedValue = nameResult.sanitized;
+        break;
+      case 'email':
+        // For email, we'll sanitize on blur instead of real-time
+        processedValue = value.trim();
+        break;
+      case 'address':
+        // Light sanitization for address during typing
+        processedValue = value.replace(/[<>{}]/g, '');
+        break;
+      case 'description':
+        // Light sanitization for description during typing
+        processedValue = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        break;
+      case 'estimateRef':
+        // Convert to uppercase and remove invalid chars
+        processedValue = value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+        break;
+      default:
+        processedValue = value;
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
     
     // Clear error for this field when user starts typing
@@ -112,10 +170,26 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxImages = 3; // Maximum 3 images allowed
+    
+    // Check if we already have 3 images
+    if (formData.images.length >= maxImages) {
+      alert(CONTENT.fields.photos.maxImagesReached);
+      e.target.value = ''; // Reset file input
+      return;
+    }
+    
+    const remainingSlots = maxImages - formData.images.length;
+    const filesToProcess = files.slice(0, remainingSlots);
+    
+    if (files.length > remainingSlots) {
+      alert(`You can only upload ${remainingSlots} more image${remainingSlots === 1 ? '' : 's'}. Maximum 3 images allowed.`);
+    }
+    
     const validFiles = [];
     const previews = [...imagePreview];
     
-    for (const file of files) {
+    for (const file of filesToProcess) {
       if (file.size > maxSize) {
         alert(CONTENT.validation.fileTooLarge(file.name));
         continue;
@@ -144,6 +218,9 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
       ...prev,
       images: [...prev.images, ...validFiles]
     }));
+    
+    // Reset file input
+    e.target.value = '';
   };
 
   const removeImage = (index) => {
@@ -157,32 +234,36 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    // Sanitize all form data before validation and submission
+    const sanitizationResult = sanitizeCustomerFormData(formData);
+    
+    if (!sanitizationResult.isValid) {
+      setErrors(sanitizationResult.errors);
       // Scroll to first error
-      const firstErrorField = Object.keys(newErrors)[0];
+      const firstErrorField = Object.keys(sanitizationResult.errors)[0];
       document.getElementById(firstErrorField)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     
-    onSubmit(formData);
-  };
-
-  const formatPhoneNumber = (value) => {
-    const cleaned = value.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      return `(${match[1]}) ${match[2]}-${match[3]}`;
-    }
-    return value;
+    // Update form data with sanitized values
+    const sanitizedData = {
+      ...sanitizationResult.sanitized,
+      images: formData.images // Keep images as-is
+    };
+    
+    // Submit the sanitized data
+    onSubmit(sanitizedData);
   };
 
   const handlePhoneChange = (e) => {
-    const formatted = formatPhoneNumber(e.target.value);
+    const phoneResult = sanitizePhone(e.target.value);
+    
+    // Use the formatted phone if valid, otherwise keep what user typed
+    const phoneValue = phoneResult.isValid ? phoneResult.formatted : e.target.value;
+    
     setFormData(prev => ({
       ...prev,
-      phone: formatted
+      phone: phoneValue
     }));
     
     if (errors.phone) {
@@ -245,6 +326,16 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
+              onBlur={(e) => {
+                // Sanitize email on blur
+                const emailResult = sanitizeEmail(e.target.value);
+                if (emailResult.sanitized !== e.target.value) {
+                  setFormData(prev => ({
+                    ...prev,
+                    email: emailResult.sanitized
+                  }));
+                }
+              }}
               className={`
                 w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
                 ${errors.email 
@@ -306,6 +397,16 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               name="address"
               value={formData.address}
               onChange={handleInputChange}
+              onBlur={(e) => {
+                // Fully sanitize address on blur
+                const addressResult = sanitizeAddress(e.target.value);
+                if (addressResult.sanitized !== e.target.value) {
+                  setFormData(prev => ({
+                    ...prev,
+                    address: addressResult.sanitized
+                  }));
+                }
+              }}
               rows={3}
               className={`
                 w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
@@ -337,6 +438,16 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               name="description"
               value={formData.description}
               onChange={handleInputChange}
+              onBlur={(e) => {
+                // Fully sanitize description on blur
+                const descResult = sanitizeProjectDescription(e.target.value);
+                if (descResult.sanitized !== e.target.value) {
+                  setFormData(prev => ({
+                    ...prev,
+                    description: descResult.sanitized
+                  }));
+                }
+              }}
               rows={4}
               className={`
                 w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
@@ -356,10 +467,39 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
           )}
         </div>
 
+        {/* Estimate Reference Number - Only show for bookings, not for estimate requests */}
+        {service && service.id !== 'estimate' && (
+          <div>
+            <label htmlFor="estimateRef" className="block text-sm font-medium text-gray-700 mb-2">
+              {CONTENT.fields.estimateRef.label}
+            </label>
+            <div className="relative">
+              <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                id="estimateRef"
+                name="estimateRef"
+                value={formData.estimateRef}
+                onChange={handleInputChange}
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder={CONTENT.fields.estimateRef.placeholder}
+              />
+            </div>
+            <p className="mt-1 text-xs text-gray-500">
+              {CONTENT.fields.estimateRef.helpText}
+            </p>
+          </div>
+        )}
+
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {CONTENT.fields.photos.label}
+            {formData.images.length > 0 && (
+              <span className="ml-2 text-xs text-gray-500">
+                ({formData.images.length}/3 uploaded)
+              </span>
+            )}
           </label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
             <input
@@ -369,37 +509,57 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               accept="image/*"
               onChange={handleImageUpload}
               className="hidden"
+              disabled={formData.images.length >= 3}
             />
             <label
               htmlFor="images"
-              className="cursor-pointer flex flex-col items-center justify-center py-4 hover:bg-gray-50 rounded-lg transition-colors"
+              className={`
+                flex flex-col items-center justify-center py-4 rounded-lg transition-colors
+                ${formData.images.length >= 3 
+                  ? 'cursor-not-allowed bg-gray-100' 
+                  : 'cursor-pointer hover:bg-gray-50'
+                }
+              `}
             >
-              <Camera className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm text-gray-600">{CONTENT.fields.photos.uploadText}</span>
+              <Camera className={`w-8 h-8 mb-2 ${formData.images.length >= 3 ? 'text-gray-300' : 'text-gray-400'}`} />
+              <span className={`text-sm ${formData.images.length >= 3 ? 'text-gray-400' : 'text-gray-600'}`}>
+                {formData.images.length >= 3 ? CONTENT.fields.photos.maxImagesReached : CONTENT.fields.photos.uploadText}
+              </span>
               <span className="text-xs text-gray-500 mt-1">{CONTENT.fields.photos.maxSizeText}</span>
             </label>
             
             {/* Image Previews */}
             {imagePreview.length > 0 && (
-              <div className="mt-4 grid grid-cols-3 gap-3">
-                {imagePreview.map((preview, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={preview.url}
-                      alt={`Upload ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {imagePreview.map((preview, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={preview.url}
+                        alt={`Upload ${index + 1}`}
+                        className="w-full h-24 object-cover rounded-lg border-2 border-gray-200"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 rounded-b-lg">
+                        Image {index + 1}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                        aria-label={`Remove image ${index + 1}`}
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {formData.images.length < 3 && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    You can add {3 - formData.images.length} more image{3 - formData.images.length === 1 ? '' : 's'}
+                  </p>
+                )}
               </div>
             )}
           </div>

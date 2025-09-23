@@ -48,8 +48,9 @@ const CONTENT = {
   ],
   
   contact: {
-    payNow: {
-      label: 'Pay Now',
+    portal: {
+      label: 'Project Portal',
+      value: 'Observability & Payments'
     },
     email: {
       label: 'Email',
@@ -198,13 +199,13 @@ const Footer = () => {
             {/* Pay Now Button - Prominent Placement */}
             <div className="mt-6">
               <Link 
-                to="/payment"
+                to="/portal"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] text-base"
               >
-                <span className="text-lg">💳</span>
-                <span>{CONTENT.contact.payNow.label}</span>
+                <span className="text-lg">📊</span>
+                <span>{CONTENT.contact.portal.label}</span>
               </Link>
-              <p className="text-xs text-gray-400 mt-2">Secure payment for your booking</p>
+              <p className="text-xs text-gray-400 mt-2">{CONTENT.contact.portal.value}</p>
             </div>
           </div>
         </div>

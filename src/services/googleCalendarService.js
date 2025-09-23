@@ -103,8 +103,9 @@ class GoogleCalendarService {
             date: bookingData.date,
             time: bookingData.timeSlot.value,
             description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
-            images: bookingData.customerInfo.images || '',
-            bookingRef: bookingData.bookingRef
+            images: bookingData.imageDataBase64 || '', // Use compressed base64 images
+            bookingRef: bookingData.bookingRef,
+            hasImages: bookingData.customerInfo.images && bookingData.customerInfo.images.length > 0
           }
         })
       });
@@ -140,6 +141,84 @@ class GoogleCalendarService {
     const period = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
     return `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
+  }
+
+  // Save estimate to Google Sheets
+  async saveEstimate(estimateData) {
+    if (!this.validateConfiguration()) {
+      console.warn('Google Sheets service not configured - estimate will only be sent via email');
+      return { success: false, error: 'Not configured' };
+    }
+
+    try {
+      this.log('Saving estimate to Google Sheets:', estimateData);
+      
+      const { 
+        estimateRef, 
+        isAiEstimate, 
+        aiEstimateResult,
+        customerInfo,
+        service,
+        paymentRequired,
+        paymentStatus,
+        promoCode,
+        imageDataBase64  // Add this to destructuring
+      } = estimateData;
+
+      // Prepare the estimate data for Google Sheets
+      const estimatePayload = {
+        estimateRef: estimateRef,
+        isAiEstimate: isAiEstimate || false,
+        // Customer Info
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone || '',
+        customerAddress: customerInfo.address || '',
+        // Project Details
+        serviceName: service?.name || 'Get Estimate',
+        projectDescription: customerInfo.description || '',
+        hasImages: customerInfo.images && customerInfo.images.length > 0,
+        imageData: imageDataBase64 || '',  // CHANGED from imageCount to imageData with base64 strings
+        // AI Analysis (if applicable)
+        aiPrice: aiEstimateResult?.price || '',
+        aiLaborHours: aiEstimateResult?.laborHours || '',
+        aiComplexity: aiEstimateResult?.complexity || '',
+        aiJobDescription: aiEstimateResult?.jobDescription || '',
+        aiNotes: aiEstimateResult?.notes || '',
+        // Payment info
+        paymentRequired: paymentRequired || false,
+        paymentStatus: paymentStatus || 'N/A',
+        promoCode: promoCode || '',
+        amountPaid: paymentRequired ? 3.95 : 0
+      };
+
+      // Send to Google Apps Script
+      const response = await fetch(this.scriptUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'saveEstimate',
+          estimate: estimatePayload
+        })
+      });
+      
+      const data = await response.json();
+
+      if (!data.success) {
+        console.error('Failed to save estimate to sheets:', data.error);
+        return data;
+      }
+
+      this.log('Estimate saved to Google Sheets successfully:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Error saving estimate to sheets:', error);
+      // Don't throw - let the email still be sent even if sheet save fails
+      return { 
+        success: false, 
+        error: error.message || 'Failed to save to sheets'
+      };
+    }
   }
 }
 
