@@ -5,6 +5,7 @@ import { CheckCircle, Mail, Clock, Phone, ArrowRight, Calculator } from 'lucide-
 const CONTENT = {
   title: '✅ Estimate Request Submitted!',
   subtitle: 'Thank you for your interest in our services',
+  reminder: 'Reminder: Please check your spam folder for the confirmation email.',
   referenceNumber: 'Your reference number:',
   aiResults: {
     title:'🤖 AI Estimate Results',
@@ -74,6 +75,7 @@ const EstimateSuccess = ({ estimateData, onClose, aiResultText, onNewEstimate })
       {estimateRef && (
         <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-8">
           <p className="text-sm text-gray-600 mb-1">{CONTENT.referenceNumber}</p>
+          <p className="text-sm text-green-600 mb-1">{CONTENT.reminder}</p>
           <p className="text-2xl font-bold text-blue-600">{estimateRef}</p>
         </div>
       )}

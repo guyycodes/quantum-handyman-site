@@ -10,6 +10,12 @@ import {
   Facebook, Instagram
 } from 'lucide-react'
 import TikTokIcon from '../Components/TikTokIcon'
+import { 
+  sanitizeName,
+  sanitizeEmail,
+  sanitizePhone,
+  sanitizeText
+} from '../utils/dataSanitization'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -129,14 +135,143 @@ const Contact = () => {
     message: ''
   })
 
+  const [fieldErrors, setFieldErrors] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  })
+
+  const [fieldTouched, setFieldTouched] = useState({
+    name: false,
+    email: false,
+    phone: false,
+    message: false
+  })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
 
+  const validateField = (name, value, isBlur = false) => {
+    let error = ''
+    
+    switch(name) {
+      case 'name':
+        // For typing, allow spaces without immediate sanitization
+        if (!isBlur) {
+          // Basic validation during typing - allow letters, spaces, hyphens, apostrophes
+          const basicSanitized = value.replace(/[^a-zA-Z\s\-'.]/g, '')
+          if (basicSanitized.length < 2 && value.length >= 2) {
+            error = 'Name must contain valid characters'
+          }
+          return { sanitized: basicSanitized, error }
+        }
+        // Full sanitization on blur
+        const nameResult = sanitizeName(value)
+        if (!nameResult.isValid) {
+          error = nameResult.error
+        }
+        return { sanitized: nameResult.sanitized, error }
+        
+      case 'email':
+        const emailResult = sanitizeEmail(value)
+        if (!emailResult.isValid) {
+          error = emailResult.error
+        }
+        return { sanitized: emailResult.sanitized, error }
+        
+      case 'phone':
+        if (value) { // Phone is optional
+          const phoneResult = sanitizePhone(value)
+          if (!phoneResult.isValid) {
+            error = phoneResult.error
+          }
+          return { sanitized: phoneResult.formatted || phoneResult.sanitized, error }
+        }
+        return { sanitized: value, error }
+        
+      case 'message':
+        const sanitized = sanitizeText(value, {
+          allowNewlines: true,
+          maxLength: 1000,
+          trimWhitespace: false // Don't trim while typing
+        })
+        if (sanitized.length < 10 && value.length >= 10) {
+          error = 'Message contains invalid characters'
+        } else if (value.length > 0 && value.length < 10) {
+          error = 'Message must be at least 10 characters'
+        }
+        return { sanitized, error }
+        
+      case 'service':
+        // Service is a dropdown, no sanitization needed
+        return { sanitized: value, error }
+        
+      default:
+        return { sanitized: value, error }
+    }
+  }
+
   const handleChange = (e) => {
+    const { name, value } = e.target
+    const { sanitized, error } = validateField(name, value, false)
+    
+    // Update form data with sanitized value
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: name === 'phone' && !value ? value : sanitized // Keep raw empty phone
+    })
+    
+    // Update field error if field has been touched
+    if (fieldTouched[name]) {
+      setFieldErrors({
+        ...fieldErrors,
+        [name]: error
+      })
+    }
+  }
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target
+    
+    // Mark field as touched
+    setFieldTouched({
+      ...fieldTouched,
+      [name]: true
+    })
+    
+    // Validate and show error with full sanitization
+    const { sanitized, error } = validateField(name, value, true)
+    
+    // Update with fully sanitized/formatted value on blur
+    if (name === 'message') {
+      const trimmedSanitized = sanitizeText(value, {
+        allowNewlines: true,
+        maxLength: 1000,
+        trimWhitespace: true
+      })
+      setFormData({
+        ...formData,
+        [name]: trimmedSanitized
+      })
+    } else if (name === 'phone' && value) {
+      // Format phone number on blur
+      setFormData({
+        ...formData,
+        [name]: sanitized
+      })
+    } else if (name === 'name') {
+      // Apply full name formatting on blur (capitalization, etc.)
+      setFormData({
+        ...formData,
+        [name]: sanitized
+      })
+    }
+    
+    setFieldErrors({
+      ...fieldErrors,
+      [name]: error
     })
   }
 
@@ -146,9 +281,56 @@ const Contact = () => {
     setSubmitStatus(null)
     setErrorMessage('')
     
+    // Validate all fields
+    const errors = {}
+    const sanitizedData = {}
+    
+    // Validate and sanitize each field with full sanitization (isBlur = true)
+    Object.keys(formData).forEach(key => {
+      if (key === 'service') {
+        sanitizedData[key] = formData[key]
+      } else {
+        const { sanitized, error } = validateField(key, formData[key], true)
+        sanitizedData[key] = sanitized
+        if (error && (key !== 'phone' || formData[key])) { // Phone is optional
+          errors[key] = error
+        }
+      }
+    })
+    
+    // Check for required fields
+    if (!sanitizedData.name) errors.name = 'Name is required'
+    if (!sanitizedData.email) errors.email = 'Email is required'
+    if (!sanitizedData.message) errors.message = 'Message is required'
+    
+    // If there are validation errors, show them and stop submission
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      setFieldTouched({
+        name: true,
+        email: true,
+        phone: true,
+        message: true
+      })
+      setIsSubmitting(false)
+      setSubmitStatus('error')
+      setErrorMessage('Please fix the errors in the form before submitting.')
+      return
+    }
+    
     try {
-      // Send email using the email service
-      const result = await sendContactEmail(formData)
+      // Final sanitization with trimming for submission
+      const finalData = {
+        ...sanitizedData,
+        message: sanitizeText(sanitizedData.message, {
+          allowNewlines: true,
+          maxLength: 1000,
+          trimWhitespace: true
+        })
+      }
+      
+      // Send email using the email service with sanitized data
+      const result = await sendContactEmail(finalData)
       
       if (result.success) {
         setSubmitStatus('success')
@@ -159,6 +341,19 @@ const Contact = () => {
           phone: '',
           service: '',
           message: ''
+        })
+        // Reset field states
+        setFieldErrors({
+          name: '',
+          email: '',
+          phone: '',
+          message: ''
+        })
+        setFieldTouched({
+          name: false,
+          email: false,
+          phone: false,
+          message: false
         })
         // Reset status after 5 seconds
         setTimeout(() => setSubmitStatus(null), 5000)
@@ -239,10 +434,15 @@ const Contact = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-lines focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        className={`w-full px-4 py-3 rounded-lg border ${fieldErrors.name && fieldTouched.name ? 'border-red-500' : 'border-lines'} focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`}
                         placeholder={CONTENT.form.fields.name.placeholder}
+                        maxLength={100}
                       />
+                      {fieldErrors.name && fieldTouched.name && (
+                        <p className="mt-1 text-sm text-red-600">{fieldErrors.name}</p>
+                      )}
                     </div>
 
                     <div>
@@ -255,10 +455,15 @@ const Contact = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        onBlur={handleBlur}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-lines focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        className={`w-full px-4 py-3 rounded-lg border ${fieldErrors.email && fieldTouched.email ? 'border-red-500' : 'border-lines'} focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`}
                         placeholder={CONTENT.form.fields.email.placeholder}
+                        maxLength={254}
                       />
+                      {fieldErrors.email && fieldTouched.email && (
+                        <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+                      )}
                     </div>
                   </div>
 
@@ -273,9 +478,14 @@ const Contact = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-lines focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        onBlur={handleBlur}
+                        className={`w-full px-4 py-3 rounded-lg border ${fieldErrors.phone && fieldTouched.phone ? 'border-red-500' : 'border-lines'} focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`}
                         placeholder={CONTENT.form.fields.phone.placeholder}
+                        maxLength={17}
                       />
+                      {fieldErrors.phone && fieldTouched.phone && (
+                        <p className="mt-1 text-sm text-red-600">{fieldErrors.phone}</p>
+                      )}
                     </div>
 
                     <div>
@@ -308,11 +518,21 @@ const Contact = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 rounded-lg border border-lines focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                      className={`w-full px-4 py-3 rounded-lg border ${fieldErrors.message && fieldTouched.message ? 'border-red-500' : 'border-lines'} focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none`}
                       placeholder={CONTENT.form.fields.message.placeholder}
+                      maxLength={1000}
                     />
+                    {fieldErrors.message && fieldTouched.message && (
+                      <p className="mt-1 text-sm text-red-600">{fieldErrors.message}</p>
+                    )}
+                    {formData.message.length > 0 && (
+                      <p className="mt-1 text-sm text-muted text-right">
+                        {formData.message.length}/1000 characters
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex gap-4">

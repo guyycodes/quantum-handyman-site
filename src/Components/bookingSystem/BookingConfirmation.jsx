@@ -58,7 +58,7 @@ const CONTENT = {
 };
 
 const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting }) => {
-  const { service, date, timeSlot, customerInfo } = bookingData;
+  const { service, date, timeSlot, customerInfo, isUrgent } = bookingData;
   
   // Parse date properly to avoid timezone issues
   const [year, month, day] = date.split('-').map(Number);
@@ -75,6 +75,11 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting }) => {
       <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
         <CheckCircle className="w-6 h-6 text-green-600" />
         {CONTENT.title}
+        {isUrgent && (
+          <span className="ml-auto bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
+            🚨 URGENT
+          </span>
+        )}
       </h3>
 
       <div className="bg-gray-50 rounded-xl p-6 mb-6">
@@ -96,7 +101,14 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting }) => {
           </div>
           <div className="flex justify-between items-start">
             <span className="text-gray-600">{CONTENT.sections.service.labels.price}</span>
-            <span className="font-bold text-blue-600 text-xl">{service.price}</span>
+            <div className="text-right">
+              <span className="font-bold text-blue-600 text-xl">{service.price}</span>
+              {isUrgent && (
+                <div className="text-sm text-red-600 font-semibold mt-1">
+                  + $35 Urgent Service Premium
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex justify-between items-start">
             <span className="text-gray-600">{CONTENT.sections.service.labels.duration}</span>

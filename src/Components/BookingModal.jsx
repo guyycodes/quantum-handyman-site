@@ -5,6 +5,7 @@ import { sendBookingEmail, sendEstimateRequestEmail } from '../services/emailSer
 import googleCalendarService from '../services/googleCalendarService';
 import { generateAIEstimate } from '../services/aiEstimateService';
 import { compressMultipleImages } from '../utils/imageCompression';
+import { generateEstimateRef, generateBookingRef } from '../utils/uniqueIdGenerator';
 import CalendarStep from './bookingSystem/CalendarStep';
 import ServiceSelection from './bookingSystem/ServiceSelection';
 import TimeSlotSelection from './bookingSystem/TimeSlotSelection';
@@ -49,7 +50,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     date: null,
     timeSlot: null,
     customerInfo: null,
-    useAIEstimate: false
+    useAIEstimate: false,
+    isUrgent: false
   });
   const [isEstimateFlow, setIsEstimateFlow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -124,8 +126,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     }
   };
 
-  const handleDateSelect = (date) => {
-    setBookingData(prev => ({ ...prev, date }));
+  const handleDateSelect = (date, isUrgent = false) => {
+    setBookingData(prev => ({ ...prev, date, isUrgent }));
     setCurrentStep(3);
   };
 
@@ -139,9 +141,14 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     setCurrentStep(5);
   };
 
-  const handleBookingConfirm = async (useAI = false, hasValidPromo = false) => {
-    // Update booking data with AI preference
-    setBookingData(prev => ({ ...prev, useAIEstimate: useAI }));
+  const handleBookingConfirm = async (useAI = false, hasValidPromo = false, promoCode = '') => {
+    // Update booking data with AI preference and promo code
+    setBookingData(prev => ({ 
+      ...prev, 
+      useAIEstimate: useAI,
+      promoCode: promoCode,
+      hasValidPromo: hasValidPromo 
+    }));
     
     // If AI estimate is selected and NO valid promo, show payment modal
     if (isEstimateFlow && useAI && !hasValidPromo) {
@@ -153,7 +160,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     if (isEstimateFlow && useAI && hasValidPromo) {
       setIsProcessingAI(true);
       setAIProcessingMessage('Processing your FREE AI estimate...');
-      await submitEstimateRequest(true);
+      await submitEstimateRequest(true, hasValidPromo, promoCode);
       return;
     }
     
@@ -167,15 +174,15 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     setAIProcessingMessage('Payment confirmed. Analyzing your project...');
     
     // Process AI estimate after successful payment
-    await submitEstimateRequest(true);
+    await submitEstimateRequest(true, false, '');
   };
 
-  const submitEstimateRequest = async (withAI = false) => {
+  const submitEstimateRequest = async (withAI = false, hasValidPromo = false, promoCode = '') => {
     setIsSubmitting(true);
     try {
       if (isEstimateFlow) {
         // Handle estimate request submission
-        const estimateRef = `EST-${Date.now().toString().slice(-6)}`;
+        const estimateRef = generateEstimateRef();
         let aiEstimateResult = {
           success: false,
           error: null,
@@ -239,9 +246,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           aiEstimateResult,
           imageDataBase64: imageDataBase64, // Add processed base64 image data
           // Add payment information for Google Sheets tracking
-          paymentRequired: withAI && !bookingData.hasValidPromo,
-          paymentStatus: withAI ? (bookingData.hasValidPromo ? 'Waived (Promo)' : 'Completed') : 'N/A',
-          promoCode: bookingData.promoCode || ''
+          paymentRequired: withAI && !hasValidPromo,
+          paymentStatus: withAI ? (hasValidPromo ? 'Waived (Promo)' : 'Completed') : 'N/A',
+          promoCode: promoCode || bookingData.promoCode || ''
         };
         
         // Save to Google Sheets BEFORE sending email
@@ -278,7 +285,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           }
       } else {
         // Handle regular booking submission
-        const bookingRef = `QH-${Date.now().toString().slice(-6)}`;
+        const bookingRef = generateBookingRef();
         
         // Compress images for regular bookings too (if any)
         let imageDataBase64 = '';
@@ -301,7 +308,12 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         let calendarResult = null;
         
         try {
-          calendarResult = await googleCalendarService.createBooking(bookingDataWithImages);
+          // Include urgent flag in booking data for Google Sheets
+          const bookingWithUrgent = {
+            ...bookingDataWithImages,
+            isUrgent: bookingData.isUrgent || false
+          };
+          calendarResult = await googleCalendarService.createBooking(bookingWithUrgent);
           console.log('Calendar booking created:', calendarResult);
         } catch (calendarError) {
           console.warn('Google Calendar booking failed, will proceed with email only:', calendarError);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle, Calendar, Clock, Mail, Phone, Home, Printer, Download } from 'lucide-react';
+import { generateBookingRef } from '../../utils/uniqueIdGenerator';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -72,7 +73,7 @@ const BookingSuccess = ({ bookingData, onClose }) => {
   const formattedDate = localDate.toLocaleDateString('en-US', CONTENT.details.dateFormat);
 
   // Use the booking reference from bookingData (generated in BookingModal)
-  const displayBookingRef = bookingRef || `QH-${Date.now().toString().slice(-6)}`;
+  const displayBookingRef = bookingRef || generateBookingRef();
 
   const handlePrint = () => {
     window.print();

@@ -243,7 +243,7 @@ export const sendBookingEmail = async (bookingData) => {
     // Initialize EmailJS if not already done
     initEmailJS();
 
-    const { service, date, timeSlot, customerInfo, bookingRef } = bookingData;
+    const { service, date, timeSlot, customerInfo, bookingRef, isUrgent } = bookingData;
     
     // Format the date
     const bookingDate = new Date(date + 'T00:00:00');
@@ -282,12 +282,12 @@ export const sendBookingEmail = async (bookingData) => {
       // Booking details - these MUST match your EmailJS template variables
       booking_ref: finalBookingRef,
       customer_name: customerInfo.name,
-      request_type: 'Appointment',
+      request_type: isUrgent ? 'URGENT Appointment' : 'Appointment',
       service_name: service.name,
       booking_date: formattedDate,
       booking_time: timeSlot.display,
       service_duration: `${service.duration} hour${service.duration > 1 ? 's' : ''}`,
-      service_price: service.price,
+      service_price: isUrgent ? `${service.price} + $35 Urgent Premium` : service.price,
       customer_address: customerInfo.address,
       customer_email: customerInfo.email,
       customer_phone: customerInfo.phone,
@@ -302,7 +302,7 @@ export const sendBookingEmail = async (bookingData) => {
       has_images: customerInfo.images && customerInfo.images.length > 0 ? 'Yes' : 'No',
       image_count: customerInfo.images?.length || 0,
       image_note: customerInfo.images && customerInfo.images.length > 0 
-        ? `${customerInfo.images.length} image(s) uploaded - Available in booking system`
+        ? `${customerInfo.images.length} image(s) uploaded - Available in Project Portal`
         : 'No images uploaded'
     };
 
@@ -362,7 +362,7 @@ export const sendEstimateRequestEmail = async (estimateData) => {
       minute: '2-digit'
     });
     // Use the estimate reference passed in (generated in BookingModal)
-    const finalEstimateRef = estimateRef || `EST-${Date.now().toString().slice(-6)}`;
+    const finalEstimateRef = estimateRef
 
     // Create calendar event details for estimates
     // For estimates, we'll create an all-day reminder to review the estimate
@@ -433,7 +433,7 @@ export const sendEstimateRequestEmail = async (estimateData) => {
       customer_email: customerInfo.email,
       customer_phone: customerInfo.phone,
       project_description: isAiEstimate && aiEstimateResult.success ? 
-        `${aiEstimateResult.jobDescription}\n(Disclaimer:\nThis AI-generated description is based on provided details & can vary ±(60%). AI can miss nuance. We recomend A comprehensive review & discussion with your service provider. Final pricing may vary based on material choices, job complexity, unforseen conditions, permitting & other factors AI may not account for.)` 
+        `${aiEstimateResult.jobDescription}\n\n(Disclaimer:\nThis AI-generated estimate is based on provided details & can vary ±(60%). AI can miss nuance—consult your service provider for comprehensive review. Final pricing varies based on materials, complexity, permits, and unforeseen conditions.)` 
         : customerInfo.description || 'No description provided',
 
       // Calendar link variables

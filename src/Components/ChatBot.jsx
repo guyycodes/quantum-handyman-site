@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import chatbotResponses from '../utils/chatbotResponses';
 import { sendSupportTicketEmail } from '../services/emailService';
+import { generateTicketRef } from '../utils/uniqueIdGenerator';
 import BookingModal from './BookingModal';
 
 const ChatBot = () => {
@@ -277,7 +278,7 @@ const ChatBot = () => {
 
     try {
       // Generate ticket ID
-      const ticketId = 'QH-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      const ticketId = generateTicketRef();
       
       // Determine ticket type
       let ticketType = 'normal';

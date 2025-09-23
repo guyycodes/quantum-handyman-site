@@ -105,7 +105,8 @@ class GoogleCalendarService {
             description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
             images: bookingData.imageDataBase64 || '', // Use compressed base64 images
             bookingRef: bookingData.bookingRef,
-            hasImages: bookingData.customerInfo.images && bookingData.customerInfo.images.length > 0
+            hasImages: bookingData.customerInfo.images && bookingData.customerInfo.images.length > 0,
+            isUrgent: bookingData.isUrgent || false // Pass urgent flag
           }
         })
       });

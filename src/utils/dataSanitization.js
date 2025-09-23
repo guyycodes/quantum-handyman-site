@@ -53,7 +53,7 @@ export const sanitizeText = (text, options = {}) => {
 };
 
 /**
- * Validate and format email address
+ * Validate and format email address with strict RFC-compliant validation
  * @param {string} email - Email to validate
  * @returns {Object} { isValid: boolean, sanitized: string, error?: string }
  */
@@ -68,38 +68,176 @@ export const sanitizeEmail = (email) => {
   // Remove any obviously dangerous characters
   sanitized = sanitized.replace(/[<>'"]/g, '');
   
-  // Validate email format
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const isValid = emailRegex.test(sanitized);
+  // More strict email validation regex
+  // Ensures proper format with all required components
+  const emailRegex = /^[a-z0-9][a-z0-9._%-+]*[a-z0-9]@[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/;
   
-  // Additional checks
-  if (isValid) {
-    // Check for reasonable length
-    if (sanitized.length > 254) { // Max email length per RFC
-      return { isValid: false, sanitized, error: 'Email address is too long' };
-    }
-    
-    // Check for double dots
-    if (sanitized.includes('..')) {
-      return { isValid: false, sanitized, error: 'Email contains invalid characters' };
-    }
-    
-    // Check domain has at least one dot after @
-    const [, domain] = sanitized.split('@');
-    if (!domain || !domain.includes('.')) {
-      return { isValid: false, sanitized, error: 'Invalid email domain' };
+  // First check basic structure
+  if (!sanitized.includes('@')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email must include @ symbol'
+    };
+  }
+  
+  const parts = sanitized.split('@');
+  if (parts.length !== 2) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email can only contain one @ symbol'
+    };
+  }
+  
+  const [localPart, domainPart] = parts;
+  
+  if (localPart.length === 0) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email must have username before @'
+    };
+  }
+  
+  if (domainPart.length === 0) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email must have domain after @'
+    };
+  }
+  
+  if (!domainPart.includes('.')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email domain must include extension (e.g., .com)'
+    };
+  }
+  
+  // Check for invalid patterns
+  if (sanitized.includes('..')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email cannot contain consecutive dots'
+    };
+  }
+  
+  if (localPart.startsWith('.') || localPart.endsWith('.')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email username cannot start or end with a dot'
+    };
+  }
+  
+  if (domainPart.startsWith('.') || domainPart.endsWith('.')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Invalid email domain format'
+    };
+  }
+  
+  if (domainPart.startsWith('-') || domainPart.endsWith('-')) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Domain cannot start or end with hyphen'
+    };
+  }
+  
+  // Length checks
+  if (sanitized.length > 254) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email address is too long (max 254 characters)'
+    };
+  }
+  
+  if (localPart.length > 64) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Email username is too long (max 64 characters)'
+    };
+  }
+  
+  // Domain extension check
+  const domainExtension = domainPart.split('.').pop();
+  if (domainExtension.length < 2) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Invalid domain extension'
+    };
+  }
+  
+  // Check for common typos
+  const commonTypos = {
+    'gmial.com': 'gmail.com',
+    'gmai.com': 'gmail.com',  
+    'gamil.com': 'gmail.com',
+    'yahooo.com': 'yahoo.com',
+    'yaho.com': 'yahoo.com',
+    'hotmial.com': 'hotmail.com',
+    'outlok.com': 'outlook.com',
+    'iclod.com': 'icloud.com'
+  };
+  
+  for (const [typo, correct] of Object.entries(commonTypos)) {
+    if (domainPart === typo) {
+      return {
+        isValid: false,
+        sanitized,
+        error: `Did you mean ${localPart}@${correct}?`
+      };
     }
   }
   
+  // Check for test/fake emails
+  const fakePatterns = [
+    /^test@test/,
+    /^admin@admin/,
+    /^user@user/,
+    /^email@email/,
+    /^nobody@/,
+    /^noreply@/,
+    /^fake@/,
+    /^xxx/
+  ];
+  
+  for (const pattern of fakePatterns) {
+    if (pattern.test(sanitized)) {
+      return {
+        isValid: false,
+        sanitized,
+        error: 'Please enter your actual email address'
+      };
+    }
+  }
+  
+  // Final regex validation
+  if (!emailRegex.test(sanitized)) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Please enter a valid email address (e.g., name@example.com)'
+    };
+  }
+  
   return {
-    isValid,
+    isValid: true,
     sanitized,
-    error: isValid ? undefined : 'Please enter a valid email address'
+    error: undefined
   };
 };
 
 /**
- * Validate and format phone number (US format)
+ * Validate and format phone number (US format) with strict validation
  * @param {string} phone - Phone number to validate
  * @returns {Object} { isValid: boolean, sanitized: string, formatted: string, error?: string }
  */
@@ -117,42 +255,131 @@ export const sanitizePhone = (phone) => {
   // Remove country code if present
   if (sanitized.length === 11 && sanitized.startsWith('1')) {
     sanitized = sanitized.substring(1);
-  }
-  
-  // Validate length
-  if (sanitized.length !== 10) {
+  } else if (sanitized.length === 11) {
     return {
       isValid: false,
       sanitized,
       formatted: phone,
-      error: 'Please enter a valid 10-digit phone number'
+      error: 'Invalid country code (US numbers start with 1 if 11 digits)'
     };
   }
   
-  // Check for valid area code and exchange (not starting with 0 or 1)
+  // Validate length
+  if (sanitized.length !== 10) {
+    if (sanitized.length < 10) {
+      return {
+        isValid: false,
+        sanitized,
+        formatted: phone,
+        error: `Phone number too short (${sanitized.length}/10 digits)`
+      };
+    }
+    return {
+      isValid: false,
+      sanitized,
+      formatted: phone,
+      error: 'Phone number too long (US numbers are 10 digits)'
+    };
+  }
+  
+  // Parse components
   const areaCode = sanitized.substring(0, 3);
   const exchange = sanitized.substring(3, 6);
+  const subscriber = sanitized.substring(6, 10);
   
+  // Area code validation (NANP rules)
   if (areaCode[0] === '0' || areaCode[0] === '1') {
     return {
       isValid: false,
       sanitized,
       formatted: phone,
-      error: 'Invalid area code'
+      error: 'Invalid area code (cannot start with 0 or 1)'
     };
   }
   
+  // Exchange validation (NANP rules)
   if (exchange[0] === '0' || exchange[0] === '1') {
     return {
       isValid: false,
       sanitized,
       formatted: phone,
-      error: 'Invalid phone number format'
+      error: 'Invalid exchange (middle 3 digits cannot start with 0 or 1)'
+    };
+  }
+  
+  // Check for N11 service codes (reserved numbers)
+  if (areaCode[1] === '1' && areaCode[2] === '1') {
+    return {
+      isValid: false,
+      sanitized,
+      formatted: phone,
+      error: 'Invalid area code (N11 codes are reserved for services)'
+    };
+  }
+  
+  if (exchange[1] === '1' && exchange[2] === '1') {
+    return {
+      isValid: false,
+      sanitized,
+      formatted: phone,
+      error: 'Invalid exchange (N11 codes are reserved)'
+    };
+  }
+  
+  // Check for fake/invalid patterns
+  const invalidPatterns = [
+    /^(\d)\1{9}$/,           // All same digit (e.g., 5555555555)
+    /^(012|123|234|345|456|567|678|789|890|901)/,  // Sequential at start
+    /^555(01\d{2})$/         // Hollywood numbers (555-0100 to 555-0199)
+  ];
+  
+  for (const pattern of invalidPatterns) {
+    if (pattern.test(sanitized)) {
+      return {
+        isValid: false,
+        sanitized,
+        formatted: phone,
+        error: 'Please enter a real phone number (not a test/fake number)'
+      };
+    }
+  }
+  
+  // Check for known fake area codes
+  const fakeAreaCodes = ['555', '123', '000', '999', '111'];
+  if (fakeAreaCodes.includes(areaCode)) {
+    return {
+      isValid: false,
+      sanitized,
+      formatted: phone,
+      error: 'Invalid area code (not assigned)'
+    };
+  }
+  
+  // Check for 555 exchange (except 555-0100 through 555-0199 which are fictional)
+  if (exchange === '555') {
+    const lastFour = parseInt(subscriber);
+    if (lastFour < 100 || lastFour > 199) {
+      return {
+        isValid: false,
+        sanitized,
+        formatted: phone,
+        error: 'Invalid phone number (555 exchange is reserved)'
+      };
+    }
+  }
+  
+  // Check for patterns that are likely fake
+  if (subscriber === '0000' || subscriber === '1234' || subscriber === '1111') {
+    return {
+      isValid: false,
+      sanitized,
+      formatted: phone,
+      error: 'Please enter a valid phone number'
     };
   }
   
   // Format as (XXX) XXX-XXXX
-  const formatted = `(${areaCode}) ${exchange}-${sanitized.substring(6)}`;
+  const formatted = `(${areaCode}) ${exchange}-${subscriber}`;
   
   return {
     isValid: true,
@@ -164,8 +391,9 @@ export const sanitizePhone = (phone) => {
 
 /**
  * Validate and sanitize address (Google Maps compatible format)
+ * Requires: Street Address, City, State, ZIP
  * @param {string} address - Address to validate
- * @returns {Object} { isValid: boolean, sanitized: string, error?: string }
+ * @returns {Object} { isValid: boolean, sanitized: string, error?: string, components?: Object }
  */
 export const sanitizeAddress = (address) => {
   if (!address || typeof address !== 'string') {
@@ -186,11 +414,11 @@ export const sanitizeAddress = (address) => {
   sanitized = sanitized.replace(/\n{2,}/g, '\n');
   
   // Check minimum length
-  if (sanitized.length < 10) {
+  if (sanitized.length < 20) {
     return {
       isValid: false,
       sanitized,
-      error: 'Please enter a complete address'
+      error: 'Please enter a complete address including street, city, state, and ZIP'
     };
   }
   
@@ -199,32 +427,101 @@ export const sanitizeAddress = (address) => {
     sanitized = sanitized.substring(0, 200);
   }
   
-  // Check for basic address components (very loose check)
-  // Should have at least a number or street name and some additional info
-  const hasNumber = /\d/.test(sanitized);
-  const hasLetters = /[a-zA-Z]{3,}/.test(sanitized); // At least 3 consecutive letters
-  const hasMultipleWords = sanitized.split(/\s+/).length >= 3; // At least 3 words
+  // Parse address components (strict validation)
+  const addressUpper = sanitized.toUpperCase();
   
-  // For US addresses, check for state abbreviation or zip code patterns
-  const hasStateOrZip = /\b[A-Z]{2}\b|\b\d{5}\b/.test(sanitized.toUpperCase());
+  // Check for street address (must have number and street name)
+  const hasStreetNumber = /^\d+/.test(sanitized) || /\b\d+\b/.test(sanitized.split(/[\n,]/)[0]);
+  const hasStreetName = /\d+\s+[a-zA-Z]+/.test(sanitized) || /[a-zA-Z]+\s+\d+/.test(sanitized); // Handles both "123 Main" and "Main 123"
   
-  const isValid = hasLetters && hasMultipleWords;
-  
-  if (!isValid) {
+  if (!hasStreetNumber || !hasStreetName) {
     return {
       isValid: false,
       sanitized,
-      error: 'Please enter a complete address including street and city'
+      error: 'Please include a valid street number and street name'
     };
   }
   
-  // Check for common PO Box formats (if you want to restrict them)
+  // Check for US state (2-letter abbreviation or full state name)
+  const stateAbbreviations = [
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+    'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+    'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+    'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+    'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+  ];
+  
+  const stateNames = [
+    'ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO',
+    'CONNECTICUT', 'DELAWARE', 'FLORIDA', 'GEORGIA', 'HAWAII', 'IDAHO',
+    'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA',
+    'MAINE', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA',
+    'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA',
+    'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK',
+    'NORTH CAROLINA', 'NORTH DAKOTA', 'OHIO', 'OKLAHOMA', 'OREGON',
+    'PENNSYLVANIA', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA',
+    'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGINIA', 'WASHINGTON',
+    'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'
+  ];
+  
+  // Check for state abbreviation or full name
+  const hasStateAbbr = stateAbbreviations.some(state => 
+    new RegExp(`\\b${state}\\b`).test(addressUpper)
+  );
+  
+  const hasStateName = stateNames.some(state => 
+    addressUpper.includes(state)
+  );
+  
+  if (!hasStateAbbr && !hasStateName) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Please include a valid US state (e.g., CO or Colorado)'
+    };
+  }
+  
+  // Check for ZIP code (5 digits or 5+4 format)
+  const hasZipCode = /\b\d{5}(?:-\d{4})?\b/.test(sanitized);
+  
+  if (!hasZipCode) {
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Please include a valid 5-digit ZIP code'
+    };
+  }
+  
+  // Check for city (at least 2 letters together that aren't part of state/street)
+  // This is a basic check - hard to validate city names precisely
+  const wordCount = sanitized.split(/[\s,]+/).filter(w => w.length > 0).length;
+  if (wordCount < 5) { // Minimum: number, street, city, state, zip
+    return {
+      isValid: false,
+      sanitized,
+      error: 'Please include city name in your address'
+    };
+  }
+  
+  // Check for common PO Box formats
   const isPOBox = /^(p\.?o\.?\s?box|post\s?office\s?box)/i.test(sanitized);
+  
+  // Extract components for reference
+  const zipMatch = sanitized.match(/\b(\d{5}(?:-\d{4})?)\b/);
+  const stateMatch = stateAbbreviations.find(state => 
+    new RegExp(`\\b${state}\\b`).test(addressUpper)
+  );
   
   return {
     isValid: true,
     sanitized,
-    isPOBox, // Include this info in case you want to handle PO Boxes differently
+    isPOBox,
+    components: {
+      hasStreetAddress: hasStreetNumber && hasStreetName,
+      hasCity: true, // Assumed if word count is sufficient
+      state: stateMatch || 'Found',
+      zipCode: zipMatch ? zipMatch[1] : null
+    },
     error: undefined
   };
 };

@@ -74,6 +74,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   
   const [errors, setErrors] = useState({});
   const [imagePreview, setImagePreview] = useState([]);
+  const [touched, setTouched] = useState({});  // Track which fields have been interacted with
+  const [realtimeErrors, setRealtimeErrors] = useState({});  // Real-time validation errors
 
   const validateForm = () => {
     const newErrors = {};
@@ -126,28 +128,62 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     let processedValue = value;
+    let realtimeError = '';
     
-    // Apply field-specific sanitization for real-time feedback
+    // Mark field as touched
+    if (!touched[name]) {
+      setTouched(prev => ({ ...prev, [name]: true }));
+    }
+    
+    // Apply field-specific sanitization and real-time validation
     switch(name) {
       case 'name':
         const nameResult = sanitizeName(value);
         processedValue = nameResult.sanitized;
+        // Show error after user starts typing (minimum 1 character)
+        if (value.length > 0 && !nameResult.isValid) {
+          realtimeError = nameResult.error;
+        }
         break;
       case 'email':
-        // For email, we'll sanitize on blur instead of real-time
+        // For email, light processing but validate format
         processedValue = value.trim();
+        // Show error after @ is typed or complete email
+        if (value.includes('@') || value.length > 5) {
+          const emailResult = sanitizeEmail(value);
+          if (!emailResult.isValid) {
+            realtimeError = emailResult.error;
+          }
+        }
         break;
       case 'address':
         // Light sanitization for address during typing
         processedValue = value.replace(/[<>{}]/g, '');
+        // Show validation hint after enough content (15+ chars)
+        if (value.length > 15) {
+          const addressResult = sanitizeAddress(value);
+          if (!addressResult.isValid) {
+            realtimeError = addressResult.error;
+          }
+        }
         break;
       case 'description':
         // Light sanitization for description during typing
         processedValue = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        if (value.length > 0 && value.length < 10) {
+          realtimeError = 'Description must be at least 10 characters';
+        }
         break;
       case 'estimateRef':
         // Convert to uppercase and remove invalid chars
         processedValue = value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+        // Only validate if they've typed something
+        if (value.length > 0) {
+          const refResult = sanitizeEstimateRef(processedValue);
+          if (!refResult.isValid) {
+            realtimeError = 'Format: EST-XXXXXX (6 digits)';
+          }
+        }
         break;
       default:
         processedValue = value;
@@ -158,7 +194,13 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
       [name]: processedValue
     }));
     
-    // Clear error for this field when user starts typing
+    // Update real-time validation error
+    setRealtimeErrors(prev => ({
+      ...prev,
+      [name]: realtimeError
+    }));
+    
+    // Clear submit error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -258,6 +300,11 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const handlePhoneChange = (e) => {
     const phoneResult = sanitizePhone(e.target.value);
     
+    // Mark as touched
+    if (!touched.phone) {
+      setTouched(prev => ({ ...prev, phone: true }));
+    }
+    
     // Use the formatted phone if valid, otherwise keep what user typed
     const phoneValue = phoneResult.isValid ? phoneResult.formatted : e.target.value;
     
@@ -265,6 +312,19 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
       ...prev,
       phone: phoneValue
     }));
+    
+    // Update real-time error for phone
+    if (!phoneResult.isValid && e.target.value.length > 0) {
+      setRealtimeErrors(prev => ({
+        ...prev,
+        phone: phoneResult.error
+      }));
+    } else {
+      setRealtimeErrors(prev => ({
+        ...prev,
+        phone: ''
+      }));
+    }
     
     if (errors.phone) {
       setErrors(prev => ({
@@ -296,8 +356,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               value={formData.name}
               onChange={handleInputChange}
               className={`
-                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
-                ${errors.name 
+                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                ${(errors.name || realtimeErrors.name)
                   ? 'border-red-300 focus:ring-red-500' 
                   : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                 }
@@ -305,10 +365,10 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               placeholder={CONTENT.fields.name.placeholder}
             />
           </div>
-          {errors.name && (
+          {(errors.name || realtimeErrors.name) && (
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              {errors.name}
+              {errors.name || realtimeErrors.name}
             </p>
           )}
         </div>
@@ -337,8 +397,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
                 }
               }}
               className={`
-                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
-                ${errors.email 
+                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                ${(errors.email || realtimeErrors.email)
                   ? 'border-red-300 focus:ring-red-500' 
                   : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                 }
@@ -346,10 +406,10 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               placeholder={CONTENT.fields.email.placeholder}
             />
           </div>
-          {errors.email && (
+          {(errors.email || realtimeErrors.email) && (
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              {errors.email}
+              {errors.email || realtimeErrors.email}
             </p>
           )}
         </div>
@@ -368,8 +428,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               value={formData.phone}
               onChange={handlePhoneChange}
               className={`
-                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
-                ${errors.phone 
+                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                ${(errors.phone || realtimeErrors.phone)
                   ? 'border-red-300 focus:ring-red-500' 
                   : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                 }
@@ -377,10 +437,10 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               placeholder={CONTENT.fields.phone.placeholder}
             />
           </div>
-          {errors.phone && (
+          {(errors.phone || realtimeErrors.phone) && (
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              {errors.phone}
+              {errors.phone || realtimeErrors.phone}
             </p>
           )}
         </div>
@@ -409,8 +469,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               }}
               rows={3}
               className={`
-                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
-                ${errors.address 
+                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                ${(errors.address || realtimeErrors.address)
                   ? 'border-red-300 focus:ring-red-500' 
                   : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                 }
@@ -418,10 +478,10 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               placeholder={CONTENT.fields.address.placeholder}
             />
           </div>
-          {errors.address && (
+          {(errors.address || realtimeErrors.address) && (
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              {errors.address}
+              {errors.address || realtimeErrors.address}
             </p>
           )}
         </div>
@@ -450,8 +510,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               }}
               rows={4}
               className={`
-                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2
-                ${errors.description 
+                w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                ${(errors.description || realtimeErrors.description)
                   ? 'border-red-300 focus:ring-red-500' 
                   : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
                 }
@@ -459,10 +519,10 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               placeholder={CONTENT.fields.description.placeholder}
             />
           </div>
-          {errors.description && (
+          {(errors.description || realtimeErrors.description) && (
             <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
               <AlertCircle className="w-4 h-4" />
-              {errors.description}
+              {errors.description || realtimeErrors.description}
             </p>
           )}
         </div>
@@ -481,13 +541,26 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
                 name="estimateRef"
                 value={formData.estimateRef}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={`
+                  w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
+                  ${realtimeErrors.estimateRef
+                    ? 'border-red-300 focus:ring-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                  }
+                `}
                 placeholder={CONTENT.fields.estimateRef.placeholder}
               />
             </div>
-            <p className="mt-1 text-xs text-gray-500">
-              {CONTENT.fields.estimateRef.helpText}
-            </p>
+            {realtimeErrors.estimateRef ? (
+              <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                <AlertCircle className="w-4 h-4" />
+                {realtimeErrors.estimateRef}
+              </p>
+            ) : (
+              <p className="mt-1 text-xs text-gray-500">
+                {CONTENT.fields.estimateRef.helpText}
+              </p>
+            )}
           </div>
         )}
 

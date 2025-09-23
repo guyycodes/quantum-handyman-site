@@ -221,7 +221,7 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
 
       {/* Confirm Button */}
       <button
-        onClick={() => onConfirm(useAIEstimate, isPromoValid)}
+        onClick={() => onConfirm(useAIEstimate, isPromoValid, promoCode)}
         disabled={isSubmitting}
         className={`
           w-full py-3 px-4 font-semibold rounded-lg shadow-lg transform transition-all
