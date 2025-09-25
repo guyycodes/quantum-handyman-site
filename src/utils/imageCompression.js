@@ -126,10 +126,7 @@ export const testImageCompression = async (file) => {
     }
     
     // Test compression with same settings as actual compression
-    const base64 = await compressImage(file, {
-      scaleFactor: 0.6,  // 60% of original size
-      quality: 0.5       // 50% JPEG quality
-    });
+    const base64 = await compressImage(file, 0.6, 0.5);
     
     // Check if compression actually worked (not empty or too small)
     if (!base64 || base64.length < 100) {
@@ -156,9 +153,16 @@ export const testImageCompression = async (file) => {
     
   } catch (error) {
     console.error('Image compression test failed:', error);
+    // Provide more specific error message for debugging
+    let errorMessage = 'Failed to process image. ';
+    if (error.message) {
+      errorMessage += error.message;
+    } else {
+      errorMessage += 'Please try a different image or smaller file size.';
+    }
     return { 
       success: false, 
-      error: 'Failed to process image. Please try a different image.'
+      error: errorMessage
     };
   }
 };
