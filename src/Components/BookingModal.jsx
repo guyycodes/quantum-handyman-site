@@ -12,11 +12,11 @@ import TimeSlotSelection from './bookingSystem/TimeSlotSelection';
 import CustomerInfo from './bookingSystem/CustomerInfo';
 import BookingConfirmation from './bookingSystem/BookingConfirmation';
 import BookingSuccess from './bookingSystem/BookingSuccess';
-import EstimateConfirmation from '../components/bookingSystem/EstimateConfirmation';
-import EstimateSuccess from '../components/bookingSystem/EstimateSuccess';
-import StripePaymentModal from '../components/StripePaymentModal';
-import TypewriterDisplay from '../components/TypewriterDisplay';
-import ConfirmModal from '../components/ConfirmModal';
+import EstimateConfirmation from '../Components/bookingSystem/EstimateConfirmation';
+import EstimateSuccess from '../Components/bookingSystem/EstimateSuccess';
+import StripePaymentModal from '../Components/StripePaymentModal';
+import TypewriterDisplay from '../Components/TypewriterDisplay';
+import ConfirmModal from '../Components/ConfirmModal';
 
 // Content Management - All text content in one place
 const CONTENT = {
