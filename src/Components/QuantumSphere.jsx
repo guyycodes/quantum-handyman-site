@@ -165,7 +165,7 @@ const QuantumSphere = ({ children, className = '' }) => {
   const quantumElements = [
     { icon: Code, label: 'Web Design', color: '#a855f7' },
     { icon: Plane, label: 'Creator Sites', color: '#eab308' },
-    { icon: Settings, label: 'Home+Tech', color: '#ec4899' },
+    { icon: Settings, label: 'Property+Tech', color: '#ec4899' },
     { icon: Wifi, label: 'SEO/SMB Support', color: '#06b6d4' },
     { icon: Home, label: 'Home Automation', color: '#10b981' },
     { icon: Wrench, label: 'Property Maintenance', color: '#3b82f6' },
