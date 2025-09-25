@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { 
   Phone, Mail, MapPin, Clock, 
   Facebook, Instagram,
-  Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi
+  Wrench, Code, Home as HomeIcon, TreePine, Wifi
 } from 'lucide-react'
 import TikTokIcon from './TikTokIcon'
 
@@ -23,10 +23,9 @@ const CONTENT = {
   
   services: [
     { name: 'Home Repairs', icon: HomeIcon },
-    { name: 'Web Development', icon: Code },
-    { name: 'Smart Home', icon: Wifi },
     { name: 'Landscaping', icon: TreePine },
-    { name: 'Scratch Repair', icon: Car },
+    { name: 'Web & Digital', icon: Code },
+    { name: 'Smart Home', icon: Wifi },
   ],
   
   navigation: [
@@ -83,6 +82,11 @@ const CONTENT = {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  
+  // Scroll to top function for navigation
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <footer className="bg-near-black text-white">
@@ -125,6 +129,7 @@ const Footer = () => {
                 <li key={service.name}>
                   <Link 
                     to="/services" 
+                    onClick={scrollToTop}
                     className="flex items-center gap-2 text-gray-400 hover:text-primary transition-colors text-sm"
                   >
                     <service.icon className="w-4 h-4" />
@@ -143,6 +148,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link 
                     to={link.href}
+                    onClick={scrollToTop}
                     className="text-gray-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
@@ -153,6 +159,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link 
                     to={link.href}
+                    onClick={scrollToTop}
                     className="text-gray-400 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
@@ -200,6 +207,7 @@ const Footer = () => {
             <div className="mt-6">
               <Link 
                 to="/portal"
+                onClick={scrollToTop}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] text-base"
               >
                 <span className="text-lg">📊</span>

@@ -28,6 +28,11 @@ const Header = () => {
 
   const isActive = (href) => location.pathname === href
 
+  // Scroll to top function for navigation
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <header className="sticky top-0 z-[1000] bg-white/95 backdrop-blur-md border-b border-lines">
       <nav className="container-max mx-auto px-6 py-4">
@@ -35,6 +40,7 @@ const Header = () => {
           {/* Logo */}
           <Link 
             to="/" 
+            onClick={scrollToTop}
             className="flex items-center gap-2 group"
             aria-label={CONTENT.logo.ariaLabel}
           >
@@ -53,6 +59,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
+                onClick={scrollToTop}
                 className={`
                   font-medium transition-colors duration-200 relative
                   ${isActive(item.href) 
@@ -105,7 +112,10 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  scrollToTop()
+                }}
                 className={`
                   block py-3 px-4 rounded-lg font-medium transition-colors
                   ${isActive(item.href)

@@ -4,7 +4,7 @@ import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
-  Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
+  Wrench, Code, Home as HomeIcon, TreePine, Wifi,
   CheckCircle, ArrowRight, Hammer, Paintbrush,
   Zap, Droplets, Lightbulb, Monitor, Smartphone,
   Globe, Database, Server, Leaf, Flower, Scissors,
@@ -16,13 +16,14 @@ import {
 const CONTENT = {
   hero: {
     title: 'Our Services',
-    subtitle: 'Comprehensive solutions for your home, business, and vehicle - all from one trusted provider'
+    subtitle: 'Deliver traditional handyman services, equipped with deep modern tech expertise'
   },
   
   categories: [
-    { id: 'all', name: 'All Services', count: 5 },
-    { id: 'traditional', name: 'Traditional Services', count: 3 },
-    { id: 'tech', name: 'Tech & Digital', count: 2 }
+    { id: 'all', name: 'All Services', count: 4 },
+    { id: 'property', name: 'Property', count: 2 },
+    { id: 'tech', name: 'Tech', count: 1 },
+    { id: 'digital', name: 'Digital Web Services', count: 1 }
   ],
   
   serviceDetails: {
@@ -60,21 +61,21 @@ const CONTENT = {
 const SERVICES_DATA = [
   {
     id: 'home-repairs',
-    category: 'traditional',
+    category: 'property',
     title: 'Home Repairs & Maintenance',
     icon: HomeIcon,
     color: 'bg-blue-500',
-    description: 'Comprehensive home repair services with professional expertise',
-    shortDesc: 'Professional home repair services from plumbing to electrical work',
-    priceRange: '$75 - $500',
-    timeEstimate: '1-4 hours typical',
+    description: 'Professional home repair services from furniture assembly to general maintenance',
+    shortDesc: 'Professional home repair and maintenance services',
+    priceRange: '$195 - $695 + materials',
+    timeEstimate: '1-6 hours typical',
     subServices: [
-      { name: 'Plumbing Repairs', desc: 'Leaks, clogs, fixture installation' },
-      { name: 'Electrical Work', desc: 'Outlets, switches, minor wiring' },
-      { name: 'Drywall & Painting', desc: 'Patches, texture, interior painting' },
-      { name: 'Door & Window Repair', desc: 'Adjustments, weatherstripping, locks' },
-      { name: 'Appliance Installation', desc: 'Dishwashers, disposals, fixtures' },
-      { name: 'General Maintenance', desc: 'Preventive care and minor fixes' }
+      { name: 'Drywall & Painting', desc: 'Repairs, patches, caulking and interior painting' },
+      { name: 'Roofing Repairs', desc: 'Minor roof repairs and maintenance' },
+      { name: 'Doors & Locks', desc: 'Door adjustments, locks, hinges & trim work' },
+      { name: 'Furniture Assembly', desc: 'Professional assembly of all furniture types' },
+      { name: 'General Maintenance', desc: 'No permit-required work' },
+      { name: 'Minor Repairs', desc: 'Non permit-required work' }
     ],
     benefits: [
       'Licensed and insured work',
@@ -85,21 +86,22 @@ const SERVICES_DATA = [
   },
   {
     id: 'landscaping',
-    category: 'traditional',
+    category: 'property',
     title: 'Landscaping & Outdoor',
     icon: TreePine,
     color: 'bg-green-500',
-    description: 'Transform your outdoor spaces into beautiful, functional areas',
-    shortDesc: 'Professional landscaping and outdoor improvement services',
-    priceRange: '$100 - $2000',
-    timeEstimate: '2-8 hours typical',
+    description: 'Upgrade your outdoor spaces with professional landscape services',
+    shortDesc: 'Comprehensive landscaping and outdoor services',
+    priceRange: 'Custom quote + materials',
+    timeEstimate: 'Typical Hours can Vary by Project',
     subServices: [
-      { name: 'Garden Design', desc: 'Layout planning and plant selection' },
-      { name: 'Lawn Care', desc: 'Mowing, edging, fertilization' },
-      { name: 'Irrigation Systems', desc: 'Installation and smart controller setup' },
-      { name: 'Outdoor Lighting', desc: 'Landscape and security lighting' },
-      { name: 'Hardscaping', desc: 'Pavers, retaining walls, pathways' },
-      { name: 'Seasonal Services', desc: 'Spring/fall cleanup, mulching' }
+      { name: 'Decks & Patios', desc: 'Construction, repair and maintenance' },
+      { name: 'Masonry Work', desc: 'Stone work, retaining walls, pathways' },
+      { name: 'Outdoor Lighting', desc: 'Landscape and security lighting installation' },
+      { name: 'Custom Landscaping', desc: 'Design and installation of custom landscapes' },
+      { name: 'Landscape Maintenance', desc: 'Regular maintenance and seasonal services' },
+      { name: 'Sprinkler Systems', desc: 'Installation, repair and smart controller setup' },
+      { name: 'Tree Services', desc: 'Pruning, trimming and tree care' }
     ],
     benefits: [
       'Eco-friendly practices',
@@ -110,21 +112,23 @@ const SERVICES_DATA = [
   },
   {
     id: 'web-dev',
-    category: 'tech',
-    title: 'Web & App Development',
+    category: 'digital',
+    title: 'Web & Digital',
     icon: Code,
     color: 'bg-purple-500',
-    description: 'Custom digital solutions built with modern technology stack',
+    description: 'Digital presence solutions for small businesses, content creators, and social media influencers',
     shortDesc: 'Professional web development and digital solutions',
-    priceRange: '$500 - $5000',
-    timeEstimate: '1-4 weeks typical',
+    priceRange: '$500 - $1300',
+    timeEstimate: '1-2 weeks typical',
     subServices: [
-      { name: 'Custom Websites', desc: 'Responsive, modern web design' },
-      { name: 'E-Commerce Solutions', desc: 'Online stores with payment integration' },
-      { name: 'Web Applications', desc: 'Custom business tools and portals' },
-      { name: 'SEO Optimization', desc: 'Search engine visibility improvement' },
-      { name: 'Website Maintenance', desc: 'Updates, backups, security' },
-      { name: 'API Integration', desc: 'Third-party service connections' }
+      { name: 'Custom Web Development', desc: 'Modern, responsive websites from scratch' },
+      { name: 'Influencer/Creator Studio Starter', desc: 'Instagram, TikTok, Patreon, etc., Ring light + backdrop install etc.' },
+      { name: 'Platform Support', desc: 'WordPress, Wix, Squarespace upgrades & support' },
+      { name: 'E-Commerce Solutions', desc: 'Shopify stores and online selling platforms' },
+      { name: 'Social Media & Branding', desc: 'Instagram, personal branding, content strategy' },
+      { name: 'SEO & Google Services', desc: 'Search optimization and Google My Business' },
+      { name: 'AI Integration', desc: 'Custom AI tools and chatbot integration 🤖' },
+      { name: 'Online Booking Systems', desc: 'Scheduling and appointment booking setup' }
     ],
     benefits: [
       'Mobile-responsive design',
@@ -136,20 +140,21 @@ const SERVICES_DATA = [
   {
     id: 'smart-home',
     category: 'tech',
-    title: 'Smart Home Automation',
+    title: 'Smart Homes & Automation',
     icon: Wifi,
     color: 'bg-cyan-500',
-    description: 'Upgrade your home with intelligent automation systems',
+    description: 'Software engineer expertise applied to home automation. IoT setup & integration',
     shortDesc: 'Professional smart home installation and configuration',
-    priceRange: '$200 - $3000',
+    priceRange: '$200 - $1300',
     timeEstimate: '2-6 hours typical',
     subServices: [
-      { name: 'Smart Thermostats', desc: 'Nest, Ecobee installation & setup' },
-      { name: 'Security Systems', desc: 'Cameras, doorbells, alarms' },
-      { name: 'Smart Lighting', desc: 'Automated schedules and scenes' },
-      { name: 'Voice Control', desc: 'Alexa, Google Home integration' },
-      { name: 'Home Network Setup', desc: 'WiFi optimization and mesh systems' },
-      { name: 'Entertainment Systems', desc: 'Smart TV and audio setup' }
+      { name: 'Home Assistants', desc: 'Alexa, Google Home setup and configuration' },
+      { name: 'Smart Cameras', desc: 'Security camera installation and setup' },
+      { name: 'Smart Thermostats', desc: 'Installation and programming of smart climate control' },
+      { name: 'Custom Lighting', desc: 'Smart lighting systems and automation' },
+      { name: 'PC & Device Support', desc: 'Computer troubleshooting and optimization' },
+      { name: 'Custom Automation', desc: 'Programming custom automation scripts and routines' },
+      { name: 'IoT Integration', desc: 'Connect and integrate smart home devices' }
     ],
     benefits: [
       'Energy savings optimization',
@@ -157,32 +162,8 @@ const SERVICES_DATA = [
       'User training included',
       'Ongoing tech support'
     ]
-  },
-  {
-    id: 'auto-scratch-repair',
-    category: 'traditional',
-    title: 'Automotive Scratch Repair & Paint Correction',
-    icon: Car,
-    color: 'bg-orange-500',
-    description: 'Professional scratch removal, buffing, and paint correction services',
-    shortDesc: 'Expert scratch repair, buffing, and paint restoration',
-    priceRange: '$150 - $800',
-    timeEstimate: '2-6 hours typical',
-    subServices: [
-      { name: 'Paint Correction', desc: 'Remove swirls and imperfections' },
-      { name: 'Scratch Removal', desc: 'Eliminate surface and deep scratches' },
-      { name: 'Buffing & Polishing', desc: 'Restore paint clarity and shine' },
-      { name: 'Clear Coat Restoration', desc: 'Repair damaged clear coat' },
-      { name: 'Headlight Restoration', desc: 'Clear foggy/yellowed headlights' },
-      { name: 'Oxidation Removal', desc: 'Restore faded and chalky paint' }
-    ],
-    benefits: [
-      'Professional-grade compounds',
-      'Mobile service available',
-      'Paint thickness measurement',
-      'Satisfaction guaranteed'
-    ]
   }
+  // Note: Automotive scratch repair service is not currently offered
 ]
 
 const Services = () => {
