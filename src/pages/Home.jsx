@@ -21,26 +21,28 @@ import {
 // Content Management - All text content in one place
 const CONTENT = {
   hero: {
-    badge: '10+ Years Experience/CS Degree meets Master Craftsman',
+    badge: '10+ Years Experience  • Computer Science Degree • Master Craftsman',
     title: {
       line1: 'Quantum',
       line2: 'Handyman'
     },
-    subtitle: 'From debugging code - Smart homes to pipes & custom websites. Your one-stop for solutions on every level of modern living.',
+    subtitle: 'A new kind of handyman for your property & technology needs.',
     cta: {
       bookService: 'Book a Service',
       seeWork: 'See Our Work',
       helperText: '📅 Books through our trusted partner Dandymen.io'
     },
     badges: {
-      licensed: 'Licensed & Insured',
-      quality: 'Quality Guaranteed'
+      fix: 'Property Maintenance & Repairs',
+      tech: 'Tech & Digital',
+      online: 'Show Up Online',
+      offering: 'No plumbing/electrical/permit work.'
     }
   },
   
   booking: {
     title: 'Easy Online Booking & Estimates',
-    description: 'Book instantly or get a free estimate in seconds',
+    description: 'Book instantly or get estimates in seconds',
     bookingSteps: {
       title: 'Book Service',
       steps: [
@@ -50,11 +52,11 @@ const CONTENT = {
       ]
     },
     estimateSteps: {
-      title: 'Free Estimate',
+      title: 'Get an Estimate',
       steps: [
         { icon: '📋', text: 'Select Estimate' },
         { icon: '📸', text: 'Upload Photos' },
-        { icon: '⚡', text: '24hr Quote' }
+        { icon: '⚡', text: 'Instant or 24hr Quote' }
       ]
     },
     cta: {
@@ -71,11 +73,12 @@ const CONTENT = {
   
   services: {
     title: 'Our Services',
-    subtitle: 'From traditional handyman work to cutting-edge tech solutions, we bring expertise across multiple domains',
+    subtitle: 'Deliver a traditional handyman, equipped with deep modern tech expertise.',
     categories: {
       all: 'All Services',
-      traditional: 'Traditional',
-      tech: 'Tech & Digital'
+      property: 'Property',
+      tech: 'Tech',
+      digital: 'Digital Web Services',
     },
     cta: 'Book This Service'
   },
@@ -92,11 +95,11 @@ const CONTENT = {
       items: [
         {
           title: 'Tech-Savvy Craftsman',
-          description: 'CS degree + Full-Stack problem solving applied to every project'
+          description: 'CS degree + business & Full-Stack problem solving for your needs.'
         },
         {
           title: 'Multi-Stack Solutions',
-          description: 'Fix your property OR your tech - powered by my custom AI property maintenance estimator'
+          description: 'Fix your property OR your tech - powered by our custom AI estimation tool.'
         },
         {
           title: 'Systematic Approach',
@@ -110,7 +113,7 @@ const CONTENT = {
     },
     credentials: [
       {
-        title: '10+ Yrs as a Craftsman',
+        title: '10+ Yrs as Craftsman',
         description: (
           <>
             Built & sold first company. 15,000+ jobs completed average{' '}
@@ -147,8 +150,8 @@ const CONTENT = {
   },
   
   portfolio: {
-    title: 'Our Portfolio',
-    subtitle: 'See the quality and range of our work across different service categories',
+    title: ' Portfolio',
+    subtitle: 'Cross discipline quality work.',
     viewFull: 'View Full Portfolio',
     imagePlaceholder: 'Before/After Image'
   },
@@ -191,45 +194,45 @@ const SERVICES_DATA = [
     icon: HomeIcon,
     color: 'bg-blue-500',
     description: 'Professional home repair services from Furniture assembly to General maintenance',
-    features: ['Roofing repairs & Siding', 'Consultation & Planning', 'TV installation'],
-    category: 'traditional'
+    features: ['Drywall, Roofs, Paint & Caulking', 'Doors, locks, hinges & trim work', 'No permit-required work'],
+    category: 'property'
   },
   {
     id: 'landscaping',
     title: 'Landscaping & Outdoor',
     icon: TreePine,
     color: 'bg-green-500',
-    description: 'Transform your outdoor spaces with landscape services',
-    features: ['Garden design', 'Irrigation', 'Outdoor lighting', 'Irrigation systems', 'Seasonal cleanup', 'Tree pruning'],
-    category: 'traditional'
+    description: 'Upgrade your outdoor spaces with landscape services',
+    features: ['Decks, Patios, Masonry & Outdoor lighting', 'Custom Landscaping', 'Landscape Maintenance', 'Irrigation systems', 'Tree pruning'],
+    category: 'property'
   },
   {
     id: 'web-dev',
-    title: 'Web & App Development',
+    title: 'Web & Digital',
     icon: Code,
     color: 'bg-purple-500',
-    description: 'Full-Stack development by a CS graduate & Certified Full-Stack Developer. Built properly & with modern technology.',
-    features: ['React/Next.js/Android & iOS apps', 'AI integrations & Consultation', 'Existing website support & upgrades', 'Web applications', 'Mobile-responsive design', 'SEO optimization', 'Cloud deployment (AWS/Vercel)', 'Existing website maintenance, support & upgrades'],
-    category: 'tech'
+    description: 'Digital presence solutions for small businesses, Content Creators or Social Media Influencers.',
+    features: ['Custom web development or Wordpress, Wix, etc., support & upgrades', 'Shopify, Instagram, Personal Branding, etc.', 'SEO, Google, Online booking or AI integration 🤖'],
+    category: 'digital'
   },
   {
     id: 'smart-home',
-    title: 'Smart Home Automation',
+    title: 'Smart Homes & Automation',
     icon: Wifi,
     color: 'bg-cyan-500',
     description: 'Software engineer expertise applied to home automation. IoT setup & integration.',
-    features: ['Home Assistant setup','Smart thermostats','Automated lighting', 'IoT device programming (C/C++, Python, etc.)', 'Custom automation scripts', 'Computer Troubleshooting'],
+    features: ['Home Assistants & Smart Cameras ','Smart thermostats & Custom Lighting','PC & Device Troubleshooting', 'Custom automation scripts', 'Computer Troubleshooting'],
     category: 'tech'
   },
-  {
-    id: 'auto-scratch-repair',
-    title: 'Automotive Scratch Repair',
-    icon: Car,
-    color: 'bg-orange-500',
-    description: 'Professional automotive scratch repair, buffing, and paint correction',
-    features: ['Paint correction', 'Scratch removal', 'Buffing & polishing', 'Clear coat restoration', 'Headlight restoration'],
-    category: 'traditional'
-  }
+  // {
+  //   id: 'auto-scratch-repair',
+  //   title: 'Automotive Scratch Repair',
+  //   icon: Car,
+  //   color: 'bg-orange-500',
+  //   description: 'Professional automotive scratch repair, buffing, and paint correction',
+  //   features: ['Paint correction', 'Scratch removal', 'Buffing & polishing', 'Clear coat restoration', 'Headlight restoration'],
+  //   category: 'traditional'
+  // }
 ]
 
 
@@ -256,9 +259,9 @@ const PORTFOLIO_DATA = [
     after: '/api/placeholder/400/300'
   },
   {
-    category: 'Auto Paint Correction',
-    title: 'Auto Paint Correction',
-    description: 'Remove years of scratches & swirl marks & oxidation etc.',
+    category: 'Property Maintenance',
+    title: 'Property Repair & Maintenance',
+    description: 'Drywall, Roofs, Paint & Caulking, Doors, locks, hinges & trim work, No permit-required work',
     before: '/api/placeholder/400/300',
     after: '/api/placeholder/400/300'
   }
@@ -334,14 +337,18 @@ const Home = () => {
               </div>
 
               {/* Show badges on desktop only */}
-              <div className="hidden lg:flex gap-8 pt-4">
+              <div className="flex gap-8 pt-4">
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-yellow-300" />
-                  <span className="text-sm">{CONTENT.hero.badges.licensed}</span>
+                  <span className="text-sm">{CONTENT.hero.badges.fix}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5 text-yellow-300" />
-                  <span className="text-sm">{CONTENT.hero.badges.quality}</span>
+                  <span className="text-sm">{CONTENT.hero.badges.tech}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-yellow-300" />
+                  <span className="text-sm">{CONTENT.hero.badges.online}</span>
                 </div>
               </div>
 
@@ -483,14 +490,14 @@ const Home = () => {
               {CONTENT.services.categories.all}
             </button>
             <button
-              onClick={() => setSelectedServiceCategory('traditional')}
+              onClick={() => setSelectedServiceCategory('property')}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedServiceCategory === 'traditional' 
+                selectedServiceCategory === 'property' 
                   ? 'bg-primary text-white' 
                   : 'bg-gray-100 text-muted hover:bg-gray-200'
               }`}
             >
-              {CONTENT.services.categories.traditional}
+              {CONTENT.services.categories.property}
             </button>
             <button
               onClick={() => setSelectedServiceCategory('tech')}
@@ -501,6 +508,16 @@ const Home = () => {
               }`}
             >
               {CONTENT.services.categories.tech}
+            </button>
+            <button
+              onClick={() => setSelectedServiceCategory('digital')}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                selectedServiceCategory === 'digital' 
+                  ? 'bg-primary text-white' 
+                  : 'bg-gray-100 text-muted hover:bg-gray-200'
+              }`}
+            >
+              {CONTENT.services.categories.digital}
             </button>
           </div>
 

@@ -139,11 +139,13 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
     // Apply field-specific sanitization and real-time validation
     switch(name) {
       case 'name':
-        const nameResult = sanitizeName(value);
-        processedValue = nameResult.sanitized;
-        // Show error after user starts typing (minimum 1 character)
-        if (value.length > 0 && !nameResult.isValid) {
-          realtimeError = nameResult.error;
+        // Light sanitization during typing - allow spaces but remove dangerous characters
+        processedValue = value.replace(/[<>{}]/g, '');
+        // Only validate length and basic requirements during typing
+        if (value.length > 0 && value.trim().length === 0) {
+          realtimeError = 'Name cannot be only spaces';
+        } else if (value.length > 0 && value.trim().length < 2) {
+          realtimeError = 'Name must be at least 2 characters';
         }
         break;
       case 'email':
@@ -363,6 +365,28 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
+              onBlur={(e) => {
+                // Fully sanitize name on blur
+                const nameResult = sanitizeName(e.target.value);
+                if (nameResult.sanitized !== e.target.value) {
+                  setFormData(prev => ({
+                    ...prev,
+                    name: nameResult.sanitized
+                  }));
+                }
+                // Update error state if invalid after sanitization
+                if (!nameResult.isValid) {
+                  setRealtimeErrors(prev => ({
+                    ...prev,
+                    name: nameResult.error
+                  }));
+                } else {
+                  setRealtimeErrors(prev => ({
+                    ...prev,
+                    name: ''
+                  }));
+                }
+              }}
               className={`
                 w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 transition-colors
                 ${(errors.name || realtimeErrors.name)

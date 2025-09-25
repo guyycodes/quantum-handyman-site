@@ -161,13 +161,13 @@ const BookingSuccess = ({ bookingData, onClose }) => {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <button
+        {/* <button
           onClick={handleAddToCalendar}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Calendar className="w-5 h-5" />
           {CONTENT.buttons.addToCalendar}
-        </button>
+        </button> */}
         <button
           onClick={handlePrint}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"

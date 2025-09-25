@@ -282,6 +282,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             setIsProcessingAI(false);
             setAIProcessingMessage('');
             setCurrentStep(6); // Success step
+            // Scroll modal to top after success
+            setTimeout(() => {
+              const modalContent = document.getElementById('modal-content');
+              if (modalContent) {
+                modalContent.scrollTop = 0;
+              }
+            }, 250);
           }
       } else {
         // Handle regular booking submission
@@ -342,6 +349,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         }
         
         setCurrentStep(6); // Success step
+        // Scroll modal to top after success
+        setTimeout(() => {
+          const modalContent = document.getElementById('modal-content');
+          if (modalContent) {
+            modalContent.scrollTop = 0;
+          }
+        }, 250);
       }
     } catch (error) {
       console.error('Submission error:', error);
@@ -360,6 +374,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           });
           alert('Estimate request submitted. Our team will review and respond shortly.');
           setCurrentStep(6);
+          // Scroll modal to top after success
+          setTimeout(() => {
+            const modalContent = document.getElementById('modal-content');
+            if (modalContent) {
+              modalContent.scrollTop = 0;
+            }
+          }, 100);
         } catch (emailError) {
           console.error('Email also failed:', emailError);
           alert('There was an error submitting your estimate request. Please try again.');
@@ -378,6 +399,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           });
           alert('Booking submitted via email. Our team will confirm your appointment shortly.');
           setCurrentStep(6);
+          // Scroll modal to top after success
+          setTimeout(() => {
+            const modalContent = document.getElementById('modal-content');
+            if (modalContent) {
+              modalContent.scrollTop = 0;
+            }
+          }, 100);
         } catch (emailError) {
           console.error('Email also failed:', emailError);
           alert(CONTENT.errors.bookingSubmission);
@@ -407,6 +435,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
       // setAIResultText('');
       // setAIProcessingMessage('');
       setCurrentStep(6); // Success step
+      // Scroll modal to top after success
+      setTimeout(() => {
+        const modalContent = document.getElementById('modal-content');
+        if (modalContent) {
+          modalContent.scrollTop = 0;
+        }
+      }, 100);
     }, 2000);
   };
 
@@ -465,6 +500,16 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl transform transition-all"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Loading Overlay - Show when submitting (covers entire modal) */}
+          {isSubmitting && !isProcessingAI && (
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center rounded-2xl">
+              <div className="text-center">
+                <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-3" />
+                <p className="text-gray-700 font-medium text-lg">Processing your booking...</p>
+              </div>
+            </div>
+          )}
+          
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-green-500 text-white p-3 rounded-t-2xl">
             <div className="flex justify-between items-start mb-6">
@@ -544,7 +589,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           </div>
 
           {/* Content */}
-          <div className="p-6 max-h-[60vh] overflow-y-auto">
+          <div className="p-6 max-h-[60vh] overflow-y-auto" id="modal-content">
             {isProcessingAI ? (
               <div className="text-center py-12">
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-6">

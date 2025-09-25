@@ -1,11 +1,17 @@
-import React from 'react';
-import { Calculator, Clock, Wrench, Star, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera } from 'lucide-react';
 
 // Content Management - All text content in one place
 const CONTENT = {
   title: 'Choose Your Service Package',
   subtitle: '💡 Pro Tip: Not sure what to choose? Start with a Free Estimate, we\'ll tailor for your needs!',
   popularBadge: 'MOST POPULAR',
+  categories: {
+    all: 'All',
+    estimates: 'Estimates',
+    property: 'Property',
+    tech: 'Digital/Tech'
+  },
   proTip: {
     label: 'Select the service that best fits your needs.',
     text: 'All packages include our satisfaction guarantee.'
@@ -15,21 +21,35 @@ const CONTENT = {
       id: 'estimate',
       name: 'Free Estimate',
       price: 'Free',
-      materials: true,
+      materials: false,
       duration: -2, // -2 for blank
       icon: Calculator,
       color: 'bg-green-500',
+      category: 'estimates',
       description: 'Get an estimate for your project',
       features: ['No obligation', 'Professional or AI assessment', 'Written quote w/range & Project Breakdown']
+    },
+    {
+      id: 'custom',
+      name: 'Custom Project',
+      price: 'Quote',
+      materials: false,
+      duration: -2, // -1 for infinity
+      icon: Clock,
+      color: 'bg-gray-600',
+      category: 'estimates',
+      description: 'Custom project with detailed estimate',
+      features: ['Tailored solution', 'Flexible timing', 'Detailed proposal']
     },
     {
       id: 'package195',
       name: 'Turnover Package',
       price: '$195',
-      materials: false,
+      materials: true,
       duration: 2,
       icon: Wrench,
       color: 'bg-blue-500',
+      category: 'property',
       description: '3 small jobs completed in up to 2.5 hours total',
       features: ['Perfect for quick fixes', 'Multiple small tasks', 'Same day completion']
     },
@@ -37,10 +57,11 @@ const CONTENT = {
       id: 'package295',
       name: 'Make-Ready Package',
       price: '$295',
-      materials: false,
+      materials: true,
       duration: 3,
       icon: Star,
       color: 'bg-purple-500',
+      category: 'property',
       description: '3 medium jobs completed in up to 3.5 hours total',
       features: ['Most popular choice', 'Mix of tasks', 'Comprehensive service']
     },
@@ -48,37 +69,130 @@ const CONTENT = {
       id: 'package395',
       name: 'Premium Package',
       price: '$395',
-      materials: false,
+      materials: true,
       duration: 4,
       icon: Zap,
       color: 'bg-orange-500',
+      category: 'property',
       description: '3 larger jobs completed in up to 4.5 hours total',
       features: ['Complex projects', 'Extended time', 'Priority scheduling']
     },
+
+    // New Digital/Tech packages
     {
-      id: 'custom',
-      name: 'Custom Project',
-      price: 'Quote',
+      id: 'stream-pro',
+      name: 'Stream Pro + Mount',
+      price: '$349-$549',
       materials: false,
-      duration: -1, // -1 for infinity
-      icon: Clock,
-      color: 'bg-gray-600',
-      description: 'Custom project with detailed estimate',
-      features: ['Tailored solution', 'Flexible timing', 'Detailed proposal']
+      duration: 5,
+      icon: Tv,
+      color: 'bg-cyan-500',
+      category: 'tech',
+      description: 'Up to 5.5 hours for smart devices (cameras, voice assistants, streaming).',
+      features: [
+        'TV mount ≤65″ + apps & soundbar',
+        'OR up to 5hr 30min for smart devices',
+        'Cameras • voice assistants • streaming gear'
+      ]
+    },
+    {
+      id: 'turnover-tech',
+      name: 'Turnover Tech+',
+      price: '$399-$799',
+      materials: false,
+      duration: 4,
+      icon: Wifi,
+      color: 'bg-indigo-500',
+      category: 'tech',
+      description: 'Perfect for Airbnb & property managers, upt to 4.5 hours',
+      features: ['Keypad entry setup', 'Wi-Fi optimization', 'Guest QR codes & streaming ready', 'Touch-ups']
+    },
+    {
+      id: 'business-bundle',
+      name: 'Open-for-Business Bundle',
+      price: '$599-$1299',
+      materials: false,
+      duration: 1,
+      icon: Globe,
+      color: 'bg-emerald-500',
+      category: 'tech',
+      description: 'Full online business presence: Full pay or 2×installments',
+      features: ['Two-page website', 'Google Business Profile', '8 pro photos + booking link', 'Add-ons: AI, hosting, analytics, SEO, Care Plan ($99/mo)']
+    },
+    {
+      id: 'creator-studio',
+      name: 'Creator Studio Starter',
+      price: '$599-$1,199',
+      materials: false,
+      duration: 1,
+      icon: Camera,
+      color: 'bg-pink-500',
+      category: 'tech',
+      description: 'Complete creator setup & optimization',
+      features: ['Ring light & backdrop install', 'Social media optimization (Insta, Patreon, etc.)', 'Monetization setup + brand photos', 'Optional add-ons']
     }
   ]
 };
 
 const ServiceSelection = ({ onServiceSelect, selectedService }) => {
-  const services = CONTENT.services;
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Filter services based on selected category
+  const filteredServices = CONTENT.services.filter(service => 
+    selectedCategory === 'all' || service.category === selectedCategory
+  );
 
   return (
     <div>
       <h3 className="text-xl font-bold text-gray-900 mb-2">{CONTENT.title}</h3>
       <p className="text-gray-600 mb-4">{CONTENT.subtitle}</p>
       
+      {/* Category Filter Buttons */}
+      <div className="flex gap-2 mb-6 flex-wrap">
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            selectedCategory === 'all' 
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          {CONTENT.categories.all}
+        </button>
+        <button
+          onClick={() => setSelectedCategory('estimates')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            selectedCategory === 'estimates' 
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          {CONTENT.categories.estimates}
+        </button>
+        <button
+          onClick={() => setSelectedCategory('property')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            selectedCategory === 'property' 
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          {CONTENT.categories.property}
+        </button>
+        <button
+          onClick={() => setSelectedCategory('tech')}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            selectedCategory === 'tech' 
+              ? 'bg-blue-600 text-white shadow-md' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          {CONTENT.categories.tech}
+        </button>
+      </div>
+      
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => {
+        {filteredServices.map((service) => {
           const Icon = service.icon;
           const isSelected = selectedService?.id === service.id;
           
@@ -111,8 +225,8 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
                   <h4 className="text-md mt-1 font-bold text-gray-900">{service.name === 'Make-Ready Package' ? 'Make-Ready Pkg' : service.name}</h4>
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-2xl font-bold text-blue-600">{service.price}</span>
-                    <span className="text-xs text-gray-500">{service.materials ? 'or 🤖 AI - (Beta)' : (service.duration !== -1) ? '+mat\'ls' : ''}</span>
-                    <span className="text-xs text-gray-500">{service.materials ? '' : '/'}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration !== -2) ? '∞' : ''}</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '+mat\'ls' : (service.duration !== -1) ? '' : (service.duration === 'ai') ? 'or 🤖 AI - (Beta)' : '' }</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '/' : ''}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration === 0) ? '∞' : service.duration === -2 ? '' : 'not -2'}</span>
                   </div>
                 </div>
               </div>
