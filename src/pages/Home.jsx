@@ -21,12 +21,12 @@ import {
 // Content Management - All text content in one place
 const CONTENT = {
   hero: {
-    badge: '10+ Years Experience  • Computer Science Degree • Master Craftsman',
+    badge: '10+ Years Experience • Computer Science Degree • Master Craftsman',
     title: {
       line1: 'Quantum',
       line2: 'Handyman'
     },
-    subtitle: 'A new kind of handyman for your property & technology needs.',
+    subtitle: 'A new kind of handyman for your property & technology needs. No collars. Just capability.',
     cta: {
       bookService: 'Book a Service',
       seeWork: 'See Our Work',
@@ -85,7 +85,7 @@ const CONTENT = {
   
   about: {
     title: 'Mission: Quantum Handyman',
-    description: 'To provide comprehensive solutions, uniquely deep multi-disciplinary skills & a systematic problem solving approach for modern homeowners & businesses, Quantum Handyman acheives this by combining craftsmanship with engineering discipline, delivered with community values & professionalism.',
+    description: 'To provide comprehensive solutions, uniquely deep multidisciplinary skills & a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship with engineering discipline, delivered with community values & professionalism.',
     valueProposition: {
       title: 'Value Proposition',
       text: 'The handyman with a Computer Science degree - solving both physical and digital problems with deep multi-disciplinary expertise.'
@@ -95,7 +95,7 @@ const CONTENT = {
       items: [
         {
           title: 'Tech-Savvy Craftsman',
-          description: 'CS degree + business & Full-Stack problem solving for your needs.'
+          description: 'CS degree + business & Full-Stack problem-solving for your needs.'
         },
         {
           title: 'Multi-Stack Solutions',
@@ -152,8 +152,7 @@ const CONTENT = {
   portfolio: {
     title: ' Portfolio',
     subtitle: 'Cross discipline quality work.',
-    viewFull: 'View Full Portfolio',
-    imagePlaceholder: 'Before/After Image'
+    viewFull: 'View Full Portfolio'
   },
   
   reviews: {
@@ -241,29 +240,31 @@ const PORTFOLIO_DATA = [
     category: 'Web Development',
     title: 'Dandymen.io',
     description: 'Realtime SaaS jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
-    before: '/api/placeholder/400/300',
-    after: '/api/placeholder/400/300'
+    image: '/Dandymen_io.png',
+    link: 'https://dandymen.io' // Optional link to project
   },
   {
     category: 'Smart Home',
     title: 'Smart Home Automation',
-    description: 'Integrated lighting, & home assistants etc.',
-    before: '/api/placeholder/400/300',
-    after: '/api/placeholder/400/300'
+    description: 'Integrated lighting, Security Cameras, home assistants etc.',
+    image: '/smart_home.png',
+    link: null
   },
   {
     category: 'Landscape',
     title: 'Backyard Transformation',
     description: 'Complete backyard renovation with irrigation, stamped concrete, drywalling, decking, landscaping & masonry',
-    before: '/api/placeholder/400/300',
-    after: '/api/placeholder/400/300'
+    before: '/landscape_before.png',
+    after: '/landscape_after.png',
+    // image: '/screenshot2.png', // Fallback single image
+    link: null
   },
   {
     category: 'Property Maintenance',
     title: 'Property Repair & Maintenance',
     description: 'Drywall, Roofs, Paint & Caulking, Doors, locks, hinges & trim work, No permit-required work',
-    before: '/api/placeholder/400/300',
-    after: '/api/placeholder/400/300'
+    image: '/screenshot3.png',
+    link: null
   }
 ]
 
@@ -277,6 +278,7 @@ const STATS_DATA = [
 const Home = () => {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [portfolioSliderPosition, setPortfolioSliderPosition] = useState({})
 
   // Intersection observers for different sections
   const heroSection = useIntersectionObserver({ threshold: 0.2 })
@@ -403,6 +405,15 @@ const Home = () => {
               <p className="text-gray-600 text-lg">{CONTENT.booking.description}</p>
             </div>
             
+            {/* Features Bar */}
+            <div className="flex justify-center gap-6 mb-6 py-3 bg-gray-50 rounded-lg">
+              {CONTENT.booking.features.map((feature, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  <span className="text-sm">{feature.icon}</span>
+                  <span className="text-xs font-medium text-gray-600">{feature.text}</span>
+                </div>
+              ))}
+            </div>
             {/* Streamlined Two-column layout */}
             <div className="grid sm:grid-cols-2 gap-4 mb-6">
               {/* Booking Steps */}
@@ -436,15 +447,6 @@ const Home = () => {
               </div>
             </div>
             
-            {/* Features Bar */}
-            <div className="flex justify-center gap-6 mb-6 py-3 bg-gray-50 rounded-lg">
-              {CONTENT.booking.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-1">
-                  <span className="text-sm">{feature.icon}</span>
-                  <span className="text-xs font-medium text-gray-600">{feature.text}</span>
-                </div>
-              ))}
-            </div>
             
             {/* CTA Button */}
             <div className="text-center">
@@ -675,29 +677,178 @@ const Home = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {PORTFOLIO_DATA.map((item, index) => (
-              <div 
-                key={index}
-                ref={(el) => portfolioStagger.setItemRef(index, el)}
-                data-item-id={index}
-                className={`group cursor-pointer animate-scale delay-${(index + 1) * 100} ${portfolioStagger.visibleItems[index] ? 'visible' : ''}`}>
-                <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow">
-                  <div className="relative h-64 bg-gray-200">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-32 h-32 bg-gray-300 rounded-lg mx-auto mb-2"></div>
-                        <p className="text-muted text-sm">{CONTENT.portfolio.imagePlaceholder}</p>
-                      </div>
+            {PORTFOLIO_DATA.map((item, index) => {
+              const hasBeforeAfter = item.before && item.after;
+              const sliderPos = portfolioSliderPosition[index] || 50;
+              
+              return (
+                <div 
+                  key={index}
+                  ref={(el) => portfolioStagger.setItemRef(index, el)}
+                  data-item-id={index}
+                  className={`group cursor-pointer animate-scale delay-${(index + 1) * 100} ${portfolioStagger.visibleItems[index] ? 'visible' : ''}`}>
+                  <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
+                    {/* Image Container */}
+                    <div className="relative h-64 bg-gray-100 overflow-hidden">
+                      {hasBeforeAfter ? (
+                        // Before/After Layout with FramedImage
+                        <div 
+                          className="relative w-full h-full overflow-hidden cursor-ew-resize bg-gradient-to-br from-gray-50 to-gray-100"
+                          onMouseMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
+                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: percentage }));
+                          }}
+                          onMouseLeave={() => {
+                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: 50 }));
+                          }}
+                          onTouchMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const x = e.touches[0].clientX - rect.left;
+                            const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
+                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: percentage }));
+                          }}
+                        >
+                          {/* Before Image with FramedImage */}
+                          <div className="absolute inset-0 mb-24 flex items-center justify-center">
+                            <div className="w-full h-full max-w-sm max-h-48">
+                              <FramedImage
+                                src={item.before}
+                                alt={`${item.title} - Before`}
+                                frameStyle="modern"
+                                objectFit="contain"
+                                rounded="lg"
+                                shadow={true}
+                                hover={false}
+                                width="w-full"
+                                height="h-full"
+                                className="pointer-events-none select-none bg-white"
+                              />
+                            </div>
+                          </div>
+                          
+                          {/* After Image with FramedImage (revealed by slider) */}
+                          <div 
+                            className="absolute inset-0"
+                            style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
+                          >
+                            <div className="absolute inset-0 mb-20 flex items-center justify-center">
+                              <div className="w-full h-full max-w-sm max-h-48">
+                                <FramedImage
+                                  src={item.after}
+                                  alt={`${item.title} - After`}
+                                  frameStyle="modern"
+                                  objectFit="contain"
+                                  rounded="lg"
+                                  shadow={true}
+                                  hover={false}
+                                  width="w-full"
+                                  height="h-full"
+                                  className="pointer-events-none select-none bg-white"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Slider Line and Handle */}
+                          <div 
+                            className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl pointer-events-none"
+                            style={{ 
+                              left: `${sliderPos}%`,
+                              transform: 'translateX(-50%)'
+                            }}
+                          >
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                              <div className="w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center border-2 border-primary/20">
+                                <div className="flex">
+                                  <ChevronRight className="w-4 h-4 text-primary -mr-2 rotate-180" />
+                                  <ChevronRight className="w-4 h-4 text-primary -ml-2" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Labels */}
+                          <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-lg text-xs font-bold backdrop-blur-sm pointer-events-none">
+                            BEFORE
+                          </div>
+                          <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-lg text-xs font-bold backdrop-blur-sm pointer-events-none">
+                            AFTER
+                          </div>
+                          
+                          {/* Instruction */}
+                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-1.5 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm pointer-events-none">
+                            ↔ Drag to compare
+                          </div>
+                        </div>
+                      ) : (
+                        // Single Image Layout (Original)
+                        <>
+                          {item.image ? (
+                            <img 
+                              src={item.image} 
+                              alt={item.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.nextElementSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style={{ display: item.image ? 'none' : 'flex' }}>
+                            <div className="text-center">
+                              <div className="w-20 h-20 bg-primary/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                                <Hammer className="w-10 h-10 text-primary/50" />
+                              </div>
+                              <p className="text-muted text-sm">Image Coming Soon</p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      
+                      {/* Link overlay */}
+                      {item.link && (
+                        <a 
+                          href={item.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-white z-20"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <ExternalLink className="w-5 h-5 text-primary" />
+                        </a>
+                      )}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="text-sm text-primary font-semibold mb-2 uppercase tracking-wider">{item.category}</div>
+                      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
+                      <p className="text-muted">{item.description}</p>
+                      {hasBeforeAfter && (
+                        <div className="flex items-center gap-2 mt-3 text-sm text-primary/70">
+                          <Sparkles className="w-4 h-4" />
+                          <span className="font-medium">Transformation Project</span>
+                        </div>
+                      )}
+                      {item.link && (
+                        <a 
+                          href={item.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 mt-4 text-primary font-medium hover:gap-3 transition-all"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Visit Site
+                          <ArrowRight className="w-4 h-4" />
+                        </a>
+                      )}
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="text-sm text-primary font-semibold mb-2">{item.category}</div>
-                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className="text-muted">{item.description}</p>
-                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="text-center mt-8">
