@@ -3,8 +3,8 @@ import { ArrowLeft, Search, AlertCircle, Shield, Loader2, Mail, Hash, FileText, 
 import { Link } from 'react-router-dom';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
-import EstimateCard from '../components/portal/EstimateCard';
-import JobCard from '../components/portal/JobCard';
+import EstimateCard from '../Components/portal/EstimateCard';
+import JobCard from '../Components/portal/JobCard';
 
 // Content Management
 const CONTENT = {
