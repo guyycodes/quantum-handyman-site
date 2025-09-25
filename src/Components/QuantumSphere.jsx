@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Code, Wifi, Wrench, Home, Hammer, Settings, Zap, Shield, Car, GlassWater } from 'lucide-react'
+import { Code, Wifi, Wrench, Home, Hammer, Settings, Zap, Shield, Car, GlassWater, Plane } from 'lucide-react'
 
 /**
  * Represents a Fibonacci sphere.
@@ -163,14 +163,14 @@ const QuantumSphere = ({ children, className = '' }) => {
 
   // Service icons and labels for the quantum sphere
   const quantumElements = [
-    { icon: Code, label: 'Web Development', color: '#a855f7' },
-    { icon: Wifi, label: 'Smart Home', color: '#06b6d4' },
-    { icon: Wrench, label: 'Home Repairs', color: '#3b82f6' },
-    { icon: Home, label: 'Landscape', color: '#10b981' },
-    { icon: Hammer, label: 'Furniture', color: '#f97316' },
-    { icon: Settings, label: 'Tech Solutions', color: '#ec4899' },
-    { icon: Car, label: 'Paint Correction', color: '#eab308' },
-    { icon: GlassWater, label: 'Irrigation', color: '#6366f1' }
+    { icon: Code, label: 'Web Design', color: '#a855f7' },
+    { icon: Plane, label: 'Creator Sites', color: '#eab308' },
+    { icon: Settings, label: 'Home+Tech', color: '#ec4899' },
+    { icon: Wifi, label: 'SEO/SMB Support', color: '#06b6d4' },
+    { icon: Home, label: 'Home Automation', color: '#10b981' },
+    { icon: Wrench, label: 'Property Maintenance', color: '#3b82f6' },
+    { icon: Hammer, label: 'Landscaping', color: '#f97316' },
+    { icon: GlassWater, label: 'Sprinklers', color: '#6366f1' }
   ]
 
   useEffect(() => {
