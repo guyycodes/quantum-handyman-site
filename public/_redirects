@@ -1,0 +1,27 @@
+# Netlify redirects configuration
+
+# Domain redirects - Force non-www version (primary domain)
+# Note: quantumhandyman.com is set as primary in Netlify
+http://www.quantumhandyman.com/*     https://quantumhandyman.com/:splat    301!
+https://www.quantumhandyman.com/*    https://quantumhandyman.com/:splat    301!
+http://quantumhandyman.com/*         https://quantumhandyman.com/:splat    301!
+
+# Redirect common typos and variations
+/service              /services              301
+/service/*            /services/:splat       301
+/portfolio/*          /portfolio             301
+/book-now             /                      301
+/booking              /                      301
+/schedule             /                      301
+/appointment          /                      301
+/estimate             /                      301
+/quote                /                      301
+
+# SEO redirects for service pages (if created in future)
+/handyman             /services              301
+/web-development      /services              301
+/smart-home           /services              301
+/landscaping          /services              301
+
+# Handle client-side routing for React Router
+/*                    /index.html            200

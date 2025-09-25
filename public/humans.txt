@@ -1,0 +1,16 @@
+/* TEAM */
+Founder & Master Craftsman: Morgan B.
+Site: hello@quantumhandyman.com
+Location: Greater Metro Area, Colorado
+
+/* THANKS */
+Partner Platform: Dandymen.io
+React Community
+Vite Team
+
+/* SITE */
+Last update: 2024/12/01
+Language: English
+Standards: HTML5, CSS3, ES6+
+Components: React, Tailwind CSS, Vite
+Software: VS Code, Git
