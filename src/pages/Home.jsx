@@ -5,7 +5,7 @@ import BookingCTA from '../Components/BookingCTA'
 import BookingModal from '../Components/BookingModal'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
-import FramedImage from '../components/FramedImage'
+import FramedImage from '../Components/FramedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
