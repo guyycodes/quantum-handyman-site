@@ -24,7 +24,7 @@ const FloatingVideo = () => {
           <>
             <video 
               ref={videoRef}
-              src="https://imgur.com/qWs4DVB.mp4"
+              src="/QH_VID1.mp4"
               alt="Professional handyman service showcase"
               className="w-full h-[320px] object-cover transform scale-110 transition-transform duration-700"
               autoPlay
