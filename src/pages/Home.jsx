@@ -153,7 +153,7 @@ const CONTENT = {
   portfolio: {
     title: ' Portfolio',
     subtitle: 'Cross discipline quality work.',
-    viewFull: 'View Full Portfolio'
+    viewFull: 'View Portfolio'
   },
   
   reviews: {
@@ -233,29 +233,29 @@ const PORTFOLIO_DATA = [
     category: 'Web Development',
     title: 'Dandymen.io',
     description: 'Realtime SaaS jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
-    image: '/Dandymen_io.png',
+    image: '/images/web-dev/Dandymen_io.png',
     link: 'https://dandymen.io' // Optional link to project
   },
   {
     category: 'Smart Home',
     title: 'Smart Home Automation',
     description: 'Integrated lighting, Security Cameras, home assistants etc.',
-    image: '/smart_home_app.png',
+    image: '/images/smart-home/smart_home_app.png',
     link: null
   },
   {
     category: 'Landscape',
     title: 'Backyard Transformation',
     description: 'Stamped concrete Patio • Irrigation • Ceiling drywall • Decking • Sod • Masonry • Roofing',
-    before: '/landscape_before.png',
-    after: '/landscape_after.png',
+    before: '/images/landscaping/landscape_before.png',
+    after: '/images/landscaping/landscape_after.png',
     link: null
   },
   {
     category: 'Property Maintenance',
     title: 'Storage Shed Installation',
     description: 'Storage Shed Installation • No permit-required work • Build • Seal & Paint',
-    image: '/distant_shed.png',
+    image: '/images/home-repair/distant_shed.png',
     link: null
   }
 ]
@@ -632,7 +632,7 @@ const Home = () => {
               {/* Personal Photo */}
               <div className="relative">
                 <FramedImage
-                  src="/Me&Pops.png"
+                  src="/images/profile/Me&Pops.png"
                   alt="Morgan B. - Quantum Handyman"
                   frameStyle="modern"
                   aspectRatio="portrait"

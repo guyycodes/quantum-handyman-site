@@ -63,7 +63,7 @@ const CONTENT = {
   imageLabels: {
     furniture: ['Living Room Setup', 'Modern Sofa Assembly', 'Cabinet Installation', 'Wardrobe Assembly'],
     smartAssistant: ['Google Home Setup', 'Smart Speaker Installation', 'Alexa Device'],
-    securityCameras: ['Ring Doorbell', 'Mounted Security Camera', 'Multiple Camera Setup', 'Indoor Camera'],
+    securityCameras: ['Security Camera', 'Eufy Camera System', 'Solar Panel Installation', 'Ring Doorbell'],
     smartLighting: ['Smart Bulbs', 'Smart Switch Installation', 'LED Strip Lighting', 'Automated Room Lighting'],
     default: 'Project Image'
   },
@@ -156,12 +156,12 @@ const PROJECTS_DATA = [
     location: 'Denver Metro Area',
     duration: 'Various',
     images: [
-      '/living_room.png',
-      '/sofa.png',
-      '/repair.png',
-      '/_lighting.png'
+      '/images/home-repair/living_room.png',
+      '/images/home-repair/sofa.png',
+      '/images/home-repair/repair.png',
+      '/images/home-repair/_lighting.png'
     ],
-    projectImg: '/custom_furniture.png',
+    projectImg: '/images/home-repair/custom_furniture.png',
     testimonial: CONTENT.projects.customAssemblies.testimonial,
     client: CONTENT.projects.customAssemblies.client,
     rating: 5
@@ -174,11 +174,11 @@ const PROJECTS_DATA = [
     date: '2020',
     location: 'Denver Metro',
     duration: '1-2 weeks',
-    images: ['/bathroom_tile.jpeg'],
+    images: ['/images/home-repair/bathroom_tile.jpeg'],
     testimonial: CONTENT.projects.bathroomTile.testimonial,
     client: CONTENT.projects.bathroomTile.client,
     rating: 5,
-    projectImg: '/bathroom.png'
+    projectImg: '/images/home-repair/bathroom.png'
   },
   {
     id: 3,
@@ -190,13 +190,13 @@ const PROJECTS_DATA = [
     duration: '1-2 days',
     images: [
       // 'https://images.unsplash.com/photo-1558089687-7b5831caf48e?w=800&h=600&fit=crop',  // Google Home
-      '/google_home.png',  // Smart speaker setup
+      '/images/smart-home/google_home.png',  // Smart speaker setup
       // 'https://images.unsplash.com/photo-1519558260268-eb878c7418a4?w=800&h=600&fit=crop'   // Alexa device
     ],
     testimonial: CONTENT.projects.smartAssistant.testimonial,
     client: CONTENT.projects.smartAssistant.client,
     rating: 5,
-    projectImg: '/smart_speaker.png'
+    projectImg: '/images/smart-home/smart_speaker.png'
   },
   {
     id: 4,
@@ -206,7 +206,7 @@ const PROJECTS_DATA = [
     date: '2025',
     location: 'North Side',
     duration: '1 week',
-    images: ['/Backyard_b4.jpg', '/Backyard_after.png'],  // Use actual backyard images for before/after
+    images: ['/images/landscaping/Backyard_b4.jpg', '/images/landscaping/Backyard_after.png'],  // Use actual backyard images for before/after
     testimonial: CONTENT.projects.backyardTransform.testimonial,
     client: CONTENT.projects.backyardTransform.client,
     rating: 5
@@ -219,8 +219,8 @@ const PROJECTS_DATA = [
     date: '2024',
     location: 'Open Source',
     duration: 'Ongoing',
-    images: ['/Ai_description.png'],  // Show AI logo and feature description
-    projectImg: '/Ai.png',  // Use AI image as thumbnail
+    images: ['/images/web-dev/Ai_description.png'],  // Show AI logo and feature description
+    projectImg: '/images/web-dev/Ai.png',  // Use AI image as thumbnail
     testimonial: CONTENT.projects.aiIntegration.testimonial,
     client: CONTENT.projects.aiIntegration.client,
     rating: 5,
@@ -235,7 +235,7 @@ const PROJECTS_DATA = [
     location: 'Remote',
     duration: 'in-progress',
     images: [],  // Video will be shown in modal
-    projectImg: '/whealth_app.png',  // Thumbnail image for grid
+    projectImg: '/images/web-dev/whealth_app.png',  // Thumbnail image for grid
     testimonial: CONTENT.projects.whealthApp.testimonial,
     client: CONTENT.projects.whealthApp.client,
     rating: 5,
@@ -250,12 +250,12 @@ const PROJECTS_DATA = [
     date: '2024 - Present',
     location: 'Denver',
     duration: 'In Progress',
-    images: ['/Dandymen_io.png'],  // Use actual Dandymen image
+    images: ['/images/web-dev/Dandymen_io.png'],  // Use actual Dandymen image
     testimonial: CONTENT.projects.dandymen.testimonial,
     client: CONTENT.projects.dandymen.client,
     rating: 5,
     link: 'https://www.dandymen.io/',
-    projectImg: '/Dandymen_io.png'
+    projectImg: '/images/web-dev/Dandymen_io.png'
   },
   {
     id: 8,
@@ -265,11 +265,11 @@ const PROJECTS_DATA = [
     date: '2022',
     location: 'Denver Metro',
     duration: '2 days',
-    images: ['/shed.png'],  // Use actual shed image
+    images: ['/images/home-repair/shed.png'],  // Use actual shed image
     testimonial: CONTENT.projects.storageSheds.testimonial,
     client: CONTENT.projects.storageSheds.client,
     rating: 5,
-    projectImg: '/some_shed.png'
+    projectImg: '/images/home-repair/some_shed.png'
   },
   {
     id: 9,
@@ -279,7 +279,7 @@ const PROJECTS_DATA = [
     date: '2023',
     location: 'Denver Metro',
     duration: '2 weeks',
-    images: ['/landscape_before.png', '/landscape_after.png'],  // Before/after from Home component
+    images: ['/images/landscaping/landscape_before.png', '/images/landscaping/landscape_after.png'],  // Before/after from Home component
     testimonial: CONTENT.projects.backyardRenovation.testimonial,
     client: CONTENT.projects.backyardRenovation.client,
     rating: 5
@@ -293,15 +293,14 @@ const PROJECTS_DATA = [
     location: 'Denver Metro',
     duration: '2-4 hours',
     images: [
-      '/ring_doorbell.png',  // Ring doorbell
-      'many_cameras.png',  // Security camera mounted
-      // '',  // Multiple cameras
-      // ''   // Indoor camera
+      '/images/smart-home/security_cam.png',
+      '/images/smart-home/eufy.png',
+      '/images/smart-home/solar_panel.png',
     ],
     testimonial: CONTENT.projects.securityCameras.testimonial,
     client: CONTENT.projects.securityCameras.client,
     rating: 5,
-    projectImg: '/security_cam.png'
+    projectImg: '/images/smart-home/many_cameras.png'
   },
   {
     id: 11,
@@ -313,14 +312,14 @@ const PROJECTS_DATA = [
     duration: '3-5 hours',
     images: [
       // 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',  // Smart bulbs
-      '/smart_lights.jpeg',  // Smart switch
-      '/lighting.png',  // 
-      '/_lighting.png'   // Room with smart lights
+      '/images/smart-home/smart_lights.jpeg',  // Smart switch
+      '/images/smart-home/lighting.png',  // 
+      '/images/home-repair/_lighting.png'   // Room with smart lights
     ],
     testimonial: CONTENT.projects.smartLighting.testimonial,
     client: CONTENT.projects.smartLighting.client,
     rating: 5,
-    projectImg: '/smart_home_app.png'  // Using smart home image for smart lighting
+    projectImg: '/images/smart-home/smart_home_app.png'  // Using smart home image for smart lighting
   },
   {
     id: 12,
@@ -331,13 +330,13 @@ const PROJECTS_DATA = [
     location: 'Denver Metro',
     duration: '3-5 hours',
     images: [
-      '/sprinkler_b4.png', 
-      '/sprinkler_after.png', 
+      '/images/landscaping/sprinkler_b4.png', 
+      '/images/landscaping/sprinkler_after.png', 
     ],
     testimonial: CONTENT.projects.sprinklerMaintenance.testimonial,
     client: CONTENT.projects.sprinklerMaintenance.client,
     rating: 5,
-    projectImg: '/sprkinkler_head.png'  // Using smart home image for smart lighting
+    projectImg: '/images/landscaping/sprkinkler_head.png'  // Using smart home image for smart lighting
   }
 ]
 
@@ -561,29 +560,41 @@ const Portfolio = () => {
                   // Multiple images grid
                   <div className="space-y-4">
                     <div className={`grid ${selectedProject.images.length === 3 ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
-                      {selectedProject.images.map((img, index) => (
-                        <div key={index} className="rounded-lg overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                          <img 
-                            src={img}
-                            alt={`${selectedProject.title} - ${
-                              selectedProject.id === 1 ? 
-                              CONTENT.imageLabels.furniture[index] || `${CONTENT.imageLabels.default} ${index + 1}` 
-                              : selectedProject.id === 3 ? 
-                              CONTENT.imageLabels.smartAssistant[index] || `${CONTENT.imageLabels.default} ${index + 1}`
-                              : selectedProject.id === 10 ? 
-                              CONTENT.imageLabels.securityCameras[index] || `${CONTENT.imageLabels.default} ${index + 1}`
-                              : selectedProject.id === 11 ? 
-                              CONTENT.imageLabels.smartLighting[index] || `${CONTENT.imageLabels.default} ${index + 1}`
-                              : `${CONTENT.imageLabels.default} ${index + 1}`
-                            }`}
-                            className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = `https://via.placeholder.com/400x300?text=${encodeURIComponent(selectedProject.title)}`;
-                            }}
-                          />
-                        </div>
-                      ))}
+                      {selectedProject.images.map((img, index) => {
+                        // Projects with portrait images that need object-contain
+                        // ID 10: Security Cameras, ID 11: Smart Lighting
+                        const useObjectContain = [10, 11].includes(selectedProject.id);
+                        
+                        return (
+                          <div key={index} className={`rounded-lg overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 ${
+                            useObjectContain ? 'h-64 flex items-center justify-center p-2' : ''
+                          }`}>
+                            <img 
+                              src={img}
+                              alt={`${selectedProject.title} - ${
+                                selectedProject.id === 1 ? 
+                                CONTENT.imageLabels.furniture[index] || `${CONTENT.imageLabels.default} ${index + 1}` 
+                                : selectedProject.id === 3 ? 
+                                CONTENT.imageLabels.smartAssistant[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                                : selectedProject.id === 10 ? 
+                                CONTENT.imageLabels.securityCameras[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                                : selectedProject.id === 11 ? 
+                                CONTENT.imageLabels.smartLighting[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                                : `${CONTENT.imageLabels.default} ${index + 1}`
+                              }`}
+                              className={`${
+                                useObjectContain 
+                                  ? 'max-w-full max-h-full object-contain' 
+                                  : 'w-full h-48 object-cover'
+                              } hover:scale-105 transition-transform duration-300`}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://via.placeholder.com/400x300?text=${encodeURIComponent(selectedProject.title)}`;
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                     {selectedProject.id === 1 && (
                       <p className="text-center text-sm text-gray-600 mt-2">
