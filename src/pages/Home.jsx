@@ -6,6 +6,7 @@ import BookingModal from '../Components/BookingModal'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
 import FramedImage from '../Components/FramedImage'
+import BeforeAfterSlider from '../Components/BeforeAfterSlider'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -223,15 +224,7 @@ const SERVICES_DATA = [
     features: ['Home Assistants & Smart Cameras ','Smart thermostats & Custom Lighting','PC & Device Troubleshooting', 'Custom automation scripts', 'Computer Troubleshooting'],
     category: 'tech'
   },
-  // {
-  //   id: 'auto-scratch-repair',
-  //   title: 'Automotive Scratch Repair',
-  //   icon: Car,
-  //   color: 'bg-orange-500',
-  //   description: 'Professional automotive scratch repair, buffing, and paint correction',
-  //   features: ['Paint correction', 'Scratch removal', 'Buffing & polishing', 'Clear coat restoration', 'Headlight restoration'],
-  //   category: 'traditional'
-  // }
+
 ]
 
 
@@ -247,23 +240,22 @@ const PORTFOLIO_DATA = [
     category: 'Smart Home',
     title: 'Smart Home Automation',
     description: 'Integrated lighting, Security Cameras, home assistants etc.',
-    image: '/smart_home.png',
+    image: '/smart_home_app.png',
     link: null
   },
   {
     category: 'Landscape',
     title: 'Backyard Transformation',
-    description: 'Complete backyard renovation with irrigation, stamped concrete, drywalling, decking, landscaping & masonry',
+    description: 'Stamped concrete Patio • Irrigation • Ceiling drywall • Decking • Sod • Masonry • Roofing',
     before: '/landscape_before.png',
     after: '/landscape_after.png',
-    // image: '/screenshot2.png', // Fallback single image
     link: null
   },
   {
     category: 'Property Maintenance',
-    title: 'Property Repair & Maintenance',
-    description: 'Drywall, Roofs, Paint & Caulking, Doors, locks, hinges & trim work, No permit-required work',
-    image: '/screenshot3.png',
+    title: 'Storage Shed Installation',
+    description: 'Storage Shed Installation • No permit-required work • Build • Seal & Paint',
+    image: '/distant_shed.png',
     link: null
   }
 ]
@@ -278,7 +270,6 @@ const STATS_DATA = [
 const Home = () => {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
-  const [portfolioSliderPosition, setPortfolioSliderPosition] = useState({})
 
   // Intersection observers for different sections
   const heroSection = useIntersectionObserver({ threshold: 0.2 })
@@ -679,7 +670,6 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-8">
             {PORTFOLIO_DATA.map((item, index) => {
               const hasBeforeAfter = item.before && item.after;
-              const sliderPos = portfolioSliderPosition[index] || 50;
               
               return (
                 <div 
@@ -689,99 +679,18 @@ const Home = () => {
                   className={`group cursor-pointer animate-scale delay-${(index + 1) * 100} ${portfolioStagger.visibleItems[index] ? 'visible' : ''}`}>
                   <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300">
                     {/* Image Container */}
-                    <div className="relative h-64 bg-gray-100 overflow-hidden">
+                    <div className="relative h-72 bg-gray-100 overflow-hidden">
                       {hasBeforeAfter ? (
-                        // Before/After Layout with FramedImage
-                        <div 
-                          className="relative w-full h-full overflow-hidden cursor-ew-resize bg-gradient-to-br from-gray-50 to-gray-100"
-                          onMouseMove={(e) => {
-                            const rect = e.currentTarget.getBoundingClientRect();
-                            const x = e.clientX - rect.left;
-                            const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
-                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: percentage }));
-                          }}
-                          onMouseLeave={() => {
-                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: 50 }));
-                          }}
-                          onTouchMove={(e) => {
-                            const rect = e.currentTarget.getBoundingClientRect();
-                            const x = e.touches[0].clientX - rect.left;
-                            const percentage = Math.min(Math.max((x / rect.width) * 100, 0), 100);
-                            setPortfolioSliderPosition(prev => ({ ...prev, [index]: percentage }));
-                          }}
-                        >
-                          {/* Before Image with FramedImage */}
-                          <div className="absolute inset-0 mb-24 flex items-center justify-center">
-                            <div className="w-full h-full max-w-sm max-h-48">
-                              <FramedImage
-                                src={item.before}
-                                alt={`${item.title} - Before`}
-                                frameStyle="modern"
-                                objectFit="contain"
-                                rounded="lg"
-                                shadow={true}
-                                hover={false}
-                                width="w-full"
-                                height="h-full"
-                                className="pointer-events-none select-none bg-white"
-                              />
-                            </div>
-                          </div>
-                          
-                          {/* After Image with FramedImage (revealed by slider) */}
-                          <div 
-                            className="absolute inset-0"
-                            style={{ clipPath: `inset(0 0 0 ${sliderPos}%)` }}
-                          >
-                            <div className="absolute inset-0 mb-20 flex items-center justify-center">
-                              <div className="w-full h-full max-w-sm max-h-48">
-                                <FramedImage
-                                  src={item.after}
-                                  alt={`${item.title} - After`}
-                                  frameStyle="modern"
-                                  objectFit="contain"
-                                  rounded="lg"
-                                  shadow={true}
-                                  hover={false}
-                                  width="w-full"
-                                  height="h-full"
-                                  className="pointer-events-none select-none bg-white"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Slider Line and Handle */}
-                          <div 
-                            className="absolute top-0 bottom-0 w-1 bg-white shadow-2xl pointer-events-none"
-                            style={{ 
-                              left: `${sliderPos}%`,
-                              transform: 'translateX(-50%)'
-                            }}
-                          >
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              <div className="w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center border-2 border-primary/20">
-                                <div className="flex">
-                                  <ChevronRight className="w-4 h-4 text-primary -mr-2 rotate-180" />
-                                  <ChevronRight className="w-4 h-4 text-primary -ml-2" />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
-                          {/* Labels */}
-                          <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-lg text-xs font-bold backdrop-blur-sm pointer-events-none">
-                            BEFORE
-                          </div>
-                          <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-lg text-xs font-bold backdrop-blur-sm pointer-events-none">
-                            AFTER
-                          </div>
-                          
-                          {/* Instruction */}
-                          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-1.5 rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm pointer-events-none">
-                            ↔ Drag to compare
-                          </div>
-                        </div>
+                        // Before/After Layout with BeforeAfterSlider component
+                        <BeforeAfterSlider
+                          beforeImage={item.before}
+                          afterImage={item.after}
+                          beforeAlt={`${item.title} - Before`}
+                          afterAlt={`${item.title} - After`}
+                          height="h-72"
+                          showLabels={true}
+                          showInstruction={true}
+                        />
                       ) : (
                         // Single Image Layout (Original)
                         <>

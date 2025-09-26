@@ -100,8 +100,7 @@ const SERVICES_DATA = [
       { name: 'Outdoor Lighting', desc: 'Landscape and security lighting installation' },
       { name: 'Custom Landscaping', desc: 'Design and installation of custom landscapes' },
       { name: 'Landscape Maintenance', desc: 'Regular maintenance and seasonal services' },
-      { name: 'Sprinkler Systems', desc: 'Installation, repair and smart controller setup' },
-      { name: 'Tree Services', desc: 'Pruning, trimming and tree care' }
+      { name: 'Sprinkler Systems', desc: 'Maintenance, repair, setup and programming' },
     ],
     benefits: [
       'Eco-friendly practices',

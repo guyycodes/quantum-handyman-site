@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
+import BeforeAfterSlider from '../Components/BeforeAfterSlider'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Filter, X, ExternalLink, Calendar,
-  MapPin, Star, ChevronLeft, ChevronRight
+  MapPin, Star, ChevronLeft, ChevronRight, PlayCircle
 } from 'lucide-react'
 
 // Content Management - All text content in one place
@@ -16,12 +17,11 @@ const CONTENT = {
   },
   
   categories: [
-    { id: 'all', name: 'All Projects' },
-    { id: 'home-repair', name: 'Home Repairs' },
-    { id: 'landscaping', name: 'Landscaping' },
-    { id: 'web-dev', name: 'Web Development' },
-    { id: 'smart-home', name: 'Smart Home' },
-    { id: 'automotive', name: 'Automotive' }
+    { id: 'all', name: 'All' },
+    { id: 'home-repair', name: 'Property & Maintenance' },
+    { id: 'landscaping', name: 'Landscape & Outdoor' },
+    { id: 'web-dev', name: 'Web & Digital' },
+    { id: 'smart-home', name: 'Smart Homes & Automation' }
   ],
   
   emptyState: 'No projects found in this category.',
@@ -34,7 +34,8 @@ const CONTENT = {
     duration: 'Duration:',
     bookSimilar: 'Book Similar Service',
     visitSite: 'Visit Site',
-    imagePlaceholder: 'Before/After Gallery'
+    imagePlaceholder: 'Before/After Gallery',
+    watchOnYoutube: 'Watch on YouTube'
   },
   
   projectCard: {
@@ -48,6 +49,99 @@ const CONTENT = {
       startProject: 'Start Your Project',
       getQuote: 'Get Free Quote'
     }
+  },
+  
+  // Helper text for different project types
+  projectHelperText: {
+    furniture: 'Sample furniture assembly projects - We handle all types of furniture from major providers',
+    smartAssistant: 'Professional smart assistant setup - Google Home, Alexa, and other voice control systems',
+    securityCameras: 'Complete security camera installations - Ring, Eufy, Arlo, and other major brands',
+    smartLighting: 'Smart lighting solutions - Automated controls, energy savings, and custom scenes'
+  },
+  
+  // Image alt text labels
+  imageLabels: {
+    furniture: ['Living Room Setup', 'Modern Sofa Assembly', 'Cabinet Installation', 'Wardrobe Assembly'],
+    smartAssistant: ['Google Home Setup', 'Smart Speaker Installation', 'Alexa Device'],
+    securityCameras: ['Ring Doorbell', 'Mounted Security Camera', 'Multiple Camera Setup', 'Indoor Camera'],
+    smartLighting: ['Smart Bulbs', 'Smart Switch Installation', 'LED Strip Lighting', 'Automated Room Lighting'],
+    default: 'Project Image'
+  },
+  
+  // Projects content
+  projects: {
+    customAssemblies: {
+      title: 'Custom Assemblies - Furniture, Cabinets, Wardrobes, Tables, Couches, Closets, etc.',
+      description: 'Professional assembly of wardrobes, couches, closets, and custom furniture solutions',
+      testimonial: 'Expert assembly service - everything fits perfectly and looks amazing!',
+      client: 'Various Clients & Locations'
+    },
+    bathroomTile: {
+      title: 'Custom Bathroom Remodel/Tile Installation',
+      description: 'Custom tile installation for kitchen, bathroom, and flooring',
+      testimonial: 'Loved the brand new look!',
+      client: 'Sunnyside Denver Metro'
+    },
+    smartAssistant: {
+      title: 'Smart Home Assistant Installation',
+      description: 'Professional installation and setup of Google Home and Amazon Alexa smart assistants',
+      testimonial: 'Now I can control most things with voice commands.',
+      client: 'Multiple Residential Clients'
+    },
+    backyardTransform: {
+      title: 'Backyard Transformation',
+      description: 'Complete landscaping overhaul with smart irrigation system',
+      testimonial: 'Completley transformed our backyard into a beautiful outdoor living space.',
+      client: 'Highland, Sunnyside, Bailey, Conifer & More'
+    },
+    aiIntegration: {
+      title: 'AI Integration Tool for Business',
+      description: 'Professional NPM package for Compliant AI integration - @guyycodes/plugin-sdk. Enterprise-ready AI integration tool for businesses.',
+      testimonial: 'Powerful SDK that simplifies plugin development and AI integration for businesses.',
+      client: 'NPM Community'
+    },
+    whealthApp: {
+      title: 'Custom CMS integration',
+      description: 'Custom CMS integration with Whealth App - Mobile health and fitness application',
+      testimonial: 'Seamless integration of content management with health app.',
+      client: 'Whealth App'
+    },
+    dandymen: {
+      title: 'Dandymen.io Platform',
+      description: 'Service dispatch platform for professional services',
+      testimonial: 'Platform for managing professional services efficiently!',
+      client: 'Levelup Apps & Software'
+    },
+    storageSheds: {
+      title: 'Storage Sheds',
+      description: 'Storage Shed Installation • No permit-required work • Seal & Paint',
+      testimonial: 'Perfect shed installation - looks great and nice paint work.',
+      client: 'Denver Residence'
+    },
+    backyardRenovation: {
+      title: 'Backyard Renovation',
+      description: 'Stamped concrete patio • Irrigation system • Ceiling drywall • Decking • Sod installation • Masonry • Roofing',
+      testimonial: 'Transformed our entire backyard into a beautiful outdoor living space!',
+      client: 'Residential Property'
+    },
+    securityCameras: {
+      title: 'Security Camera Installation',
+      description: 'Professional installation of Ring, Eufy, and other smart security camera systems',
+      testimonial: 'Feel so much safer now!',
+      client: 'Residential & Commercial'
+    },
+    smartLighting: {
+      title: 'Smart Lighting Systems',
+      description: 'Installation of smart bulbs, switches, and automated lighting control systems, can integrate with custom networking or existing routers etc.',
+      testimonial: 'Amazing mood lighting and energy savings. Love controlling lights from my phone!',
+      client: 'Residential Properties'
+    },
+    sprinklerMaintenance: {
+      title: 'Sprinkler Maintenance',
+      description: 'Sprinkler systems, seasonal & general maintenance',
+      testimonial: 'Made seasonal prep easy and efficient.',
+      client: 'Residential Properties'
+    }
   }
 }
 
@@ -56,108 +150,194 @@ const PROJECTS_DATA = [
   {
     id: 1,
     category: 'home-repair',
-    title: 'Complete Kitchen Renovation',
-    description: 'Full kitchen remodel including plumbing, electrical, and cabinet installation',
+    title: CONTENT.projects.customAssemblies.title,
+    description: CONTENT.projects.customAssemblies.description,
     date: 'March 2024',
-    location: 'Downtown Area',
-    duration: '2 weeks',
-    images: ['kitchen-before.jpg', 'kitchen-after.jpg'],
-    testimonial: 'Transformed our outdated kitchen into a modern masterpiece!',
-    client: 'Sarah M.',
+    location: 'Denver Metro Area',
+    duration: 'Various',
+    images: [
+      '/living_room.png',
+      '/sofa.png',
+      '/repair.png',
+      '/_lighting.png'
+    ],
+    projectImg: '/custom_furniture.png',
+    testimonial: CONTENT.projects.customAssemblies.testimonial,
+    client: CONTENT.projects.customAssemblies.client,
     rating: 5
   },
   {
     id: 2,
-    category: 'web-dev',
-    title: 'E-Commerce Platform',
-    description: 'Custom online store with inventory management and payment processing',
-    date: 'February 2024',
-    location: 'Remote',
-    duration: '3 weeks',
-    images: ['ecommerce-home.jpg', 'ecommerce-dashboard.jpg'],
-    testimonial: 'Our online sales increased 200% after launching the new site!',
-    client: 'Tech Startup Co.',
+    category: 'home-repair',
+    title: CONTENT.projects.bathroomTile.title,
+    description: CONTENT.projects.bathroomTile.description,
+    date: '2020',
+    location: 'Denver Metro',
+    duration: '1-2 weeks',
+    images: ['/bathroom_tile.jpeg'],
+    testimonial: CONTENT.projects.bathroomTile.testimonial,
+    client: CONTENT.projects.bathroomTile.client,
     rating: 5,
-    link: 'https://example.com'
+    projectImg: '/bathroom.png'
   },
   {
     id: 3,
     category: 'smart-home',
-    title: 'Full Home Automation',
-    description: 'Complete smart home setup with lighting, climate, and security integration',
-    date: 'January 2024',
-    location: 'Suburbs',
-    duration: '3 days',
-    images: ['smart-home-panel.jpg', 'smart-home-app.jpg'],
-    testimonial: 'Now I can control everything from my phone. Amazing!',
-    client: 'Mike T.',
-    rating: 5
+    title: CONTENT.projects.smartAssistant.title,
+    description: CONTENT.projects.smartAssistant.description,
+    date: '2024',
+    location: 'Denver Metro',
+    duration: '1-2 days',
+    images: [
+      // 'https://images.unsplash.com/photo-1558089687-7b5831caf48e?w=800&h=600&fit=crop',  // Google Home
+      '/google_home.png',  // Smart speaker setup
+      // 'https://images.unsplash.com/photo-1519558260268-eb878c7418a4?w=800&h=600&fit=crop'   // Alexa device
+    ],
+    testimonial: CONTENT.projects.smartAssistant.testimonial,
+    client: CONTENT.projects.smartAssistant.client,
+    rating: 5,
+    projectImg: '/smart_speaker.png'
   },
   {
     id: 4,
     category: 'landscaping',
-    title: 'Backyard Transformation',
-    description: 'Complete landscaping overhaul with smart irrigation system',
-    date: 'December 2023',
+    title: CONTENT.projects.backyardTransform.title,
+    description: CONTENT.projects.backyardTransform.description,
+    date: '2025',
     location: 'North Side',
     duration: '1 week',
-    images: ['backyard-before.jpg', 'backyard-after.jpg'],
-    testimonial: 'Our backyard is now the envy of the neighborhood!',
-    client: 'Emily R.',
+    images: ['/Backyard_b4.jpg', '/Backyard_after.png'],  // Use actual backyard images for before/after
+    testimonial: CONTENT.projects.backyardTransform.testimonial,
+    client: CONTENT.projects.backyardTransform.client,
     rating: 5
   },
   {
     id: 5,
-    category: 'automotive',
-    title: 'Classic Car Restoration',
-    description: 'Full paint correction and ceramic coating on vintage vehicle',
-    date: 'November 2023',
-    location: 'Mobile Service',
-    duration: '2 days',
-    images: ['car-before.jpg', 'car-after.jpg'],
-    testimonial: 'My car looks better than when I bought it new!',
-    client: 'David C.',
-    rating: 5
+    category: 'web-dev',
+    title: CONTENT.projects.aiIntegration.title,
+    description: CONTENT.projects.aiIntegration.description,
+    date: '2024',
+    location: 'Open Source',
+    duration: 'Ongoing',
+    images: ['/Ai_description.png'],  // Show AI logo and feature description
+    projectImg: '/Ai.png',  // Use AI image as thumbnail
+    testimonial: CONTENT.projects.aiIntegration.testimonial,
+    client: CONTENT.projects.aiIntegration.client,
+    rating: 5,
+    link: 'https://www.npmjs.com/package/@guyycodes/plugin-sdk'
   },
   {
     id: 6,
     category: 'web-dev',
-    title: 'Business Portfolio Site',
-    description: 'Professional website for local photography business',
-    date: 'October 2023',
+    title: CONTENT.projects.whealthApp.title,
+    description: CONTENT.projects.whealthApp.description,
+    date: '2024',
     location: 'Remote',
-    duration: '1 week',
-    images: ['portfolio-site.jpg'],
-    testimonial: 'The website perfectly captures my brand. Clients love it!',
-    client: 'Photography Plus',
+    duration: 'in-progress',
+    images: [],  // Video will be shown in modal
+    projectImg: '/whealth_app.png',  // Thumbnail image for grid
+    testimonial: CONTENT.projects.whealthApp.testimonial,
+    client: CONTENT.projects.whealthApp.client,
     rating: 5,
-    link: 'https://example.com'
+    link: 'https://www.youtube.com/watch?v=FUmcR7h17VM&t=474s',
+    videoUrl: 'https://www.youtube.com/embed/FUmcR7h17VM?start=474&autoplay=1'  // Embed URL with autoplay
   },
   {
     id: 7,
-    category: 'home-repair',
-    title: 'Bathroom Remodel',
-    description: 'Complete bathroom renovation with modern fixtures',
-    date: 'September 2023',
-    location: 'East Side',
-    duration: '1 week',
-    images: ['bathroom-before.jpg', 'bathroom-after.jpg'],
-    testimonial: 'Turned our dated bathroom into a spa-like retreat!',
-    client: 'Jennifer K.',
-    rating: 5
+    category: 'web-dev',
+    title: CONTENT.projects.dandymen.title,
+    description: CONTENT.projects.dandymen.description,
+    date: '2024 - Present',
+    location: 'Denver',
+    duration: 'In Progress',
+    images: ['/Dandymen_io.png'],  // Use actual Dandymen image
+    testimonial: CONTENT.projects.dandymen.testimonial,
+    client: CONTENT.projects.dandymen.client,
+    rating: 5,
+    link: 'https://www.dandymen.io/',
+    projectImg: '/Dandymen_io.png'
   },
   {
     id: 8,
-    category: 'smart-home',
-    title: 'Security System Install',
-    description: 'Comprehensive security system with cameras and smart locks',
-    date: 'August 2023',
-    location: 'Commercial District',
-    duration: '1 day',
-    images: ['security-system.jpg'],
-    testimonial: 'Feel so much safer with the new security setup!',
-    client: 'Local Business',
+    category: 'home-repair',
+    title: CONTENT.projects.storageSheds.title,
+    description: CONTENT.projects.storageSheds.description,
+    date: '2022',
+    location: 'Denver Metro',
+    duration: '2 days',
+    images: ['/shed.png'],  // Use actual shed image
+    testimonial: CONTENT.projects.storageSheds.testimonial,
+    client: CONTENT.projects.storageSheds.client,
+    rating: 5,
+    projectImg: '/some_shed.png'
+  },
+  {
+    id: 9,
+    category: 'landscaping',
+    title: CONTENT.projects.backyardRenovation.title,
+    description: CONTENT.projects.backyardRenovation.description,
+    date: '2023',
+    location: 'Denver Metro',
+    duration: '2 weeks',
+    images: ['/landscape_before.png', '/landscape_after.png'],  // Before/after from Home component
+    testimonial: CONTENT.projects.backyardRenovation.testimonial,
+    client: CONTENT.projects.backyardRenovation.client,
     rating: 5
+  },
+  {
+    id: 10,
+    category: 'smart-home',
+    title: CONTENT.projects.securityCameras.title,
+    description: CONTENT.projects.securityCameras.description,
+    date: '2025',
+    location: 'Denver Metro',
+    duration: '2-4 hours',
+    images: [
+      '/ring_doorbell.png',  // Ring doorbell
+      'many_cameras.png',  // Security camera mounted
+      // '',  // Multiple cameras
+      // ''   // Indoor camera
+    ],
+    testimonial: CONTENT.projects.securityCameras.testimonial,
+    client: CONTENT.projects.securityCameras.client,
+    rating: 5,
+    projectImg: '/security_cam.png'
+  },
+  {
+    id: 11,
+    category: 'smart-home',
+    title: CONTENT.projects.smartLighting.title,
+    description: CONTENT.projects.smartLighting.description,
+    date: '2023',
+    location: 'Denver Metro',
+    duration: '3-5 hours',
+    images: [
+      // 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',  // Smart bulbs
+      '/smart_lights.jpeg',  // Smart switch
+      '/lighting.png',  // 
+      '/_lighting.png'   // Room with smart lights
+    ],
+    testimonial: CONTENT.projects.smartLighting.testimonial,
+    client: CONTENT.projects.smartLighting.client,
+    rating: 5,
+    projectImg: '/smart_home_app.png'  // Using smart home image for smart lighting
+  },
+  {
+    id: 12,
+    category: 'landscaping',
+    title: CONTENT.projects.sprinklerMaintenance.title,
+    description: CONTENT.projects.sprinklerMaintenance.description,
+    date: '2021-2024',
+    location: 'Denver Metro',
+    duration: '3-5 hours',
+    images: [
+      '/sprinkler_b4.png', 
+      '/sprinkler_after.png', 
+    ],
+    testimonial: CONTENT.projects.sprinklerMaintenance.testimonial,
+    client: CONTENT.projects.sprinklerMaintenance.client,
+    rating: 5,
+    projectImg: '/sprkinkler_head.png'  // Using smart home image for smart lighting
   }
 ]
 
@@ -171,7 +351,7 @@ const Portfolio = () => {
   const ctaSection = useIntersectionObserver({ threshold: 0.3 })
   
   // Staggered animations for projects
-  const projectsStagger = useStaggeredIntersection(8, { threshold: 0.1 })
+  const projectsStagger = useStaggeredIntersection(PROJECTS_DATA.length, { threshold: 0.1 })
 
   const filteredProjects = PROJECTS_DATA.filter(
     project => selectedCategory === 'all' || project.category === selectedCategory
@@ -226,13 +406,36 @@ const Portfolio = () => {
                 className={`bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all transform hover:-translate-y-1 animate-scale delay-${(index % 3 + 1) * 100} ${projectsStagger.visibleItems[project.id] ? 'visible' : ''}`}
               >
                 {/* Project Image */}
-                <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
+                <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 relative overflow-hidden">
+                  {project.projectImg || (project.images && project.images[0]) ? (
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                      <img 
+                        src={project.projectImg || project.images[0]}
+                        alt={project.title}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.nextElementSibling.style.display = 'flex';
+                        }}
+                      />
+                    </div>
+                  ) : null}
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ display: (project.projectImg || (project.images && project.images[0])) ? 'none' : 'flex' }}>
                     <div className="text-center">
                       <div className="w-20 h-20 bg-gray-400 rounded-lg mx-auto mb-2"></div>
                       <p className="text-gray-600 text-sm">{CONTENT.projectCard.imagePlaceholder}</p>
                     </div>
                   </div>
+                  
+                  {/* Video Indicator */}
+                  {project.videoUrl && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="bg-black/50 rounded-full p-3 backdrop-blur-sm">
+                        <PlayCircle className="w-12 h-12 text-white fill-white/20" />
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-xs font-medium">
                     {CONTENT.categories.find(cat => cat.id === project.category)?.name.replace('All Projects', '')}
                   </div>
@@ -300,12 +503,118 @@ const Portfolio = () => {
 
             {/* Modal Content */}
             <div className="p-6">
-              {/* Image Gallery Placeholder */}
-              <div className="bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl h-96 mb-6 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-32 h-32 bg-gray-400 rounded-lg mx-auto mb-4"></div>
-                  <p className="text-gray-600">{CONTENT.projectModal.imagePlaceholder}</p>
-                </div>
+              {/* Image Gallery or Video */}
+              <div className="mb-6">
+                {selectedProject.videoUrl ? (
+                  // YouTube Video Embed with 16:9 aspect ratio
+                  <div className="rounded-xl overflow-hidden bg-black relative" style={{ paddingBottom: '56.25%', height: 0 }}>
+                    <iframe
+                      src={selectedProject.videoUrl}
+                      title={selectedProject.title}
+                      className="absolute inset-0 w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                    <a
+                      href={selectedProject.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors z-10"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      {CONTENT.projectModal.watchOnYoutube}
+                    </a>
+                  </div>
+                ) : selectedProject.images && selectedProject.images.length === 2 ? (
+                  // Before/After slider for exactly 2 images
+                  <div className="rounded-xl overflow-hidden">
+                    <BeforeAfterSlider
+                      beforeImage={selectedProject.images[0]}
+                      afterImage={selectedProject.images[1]}
+                      beforeAlt={`${selectedProject.title} - Before`}
+                      afterAlt={`${selectedProject.title} - After`}
+                      height="h-96"
+                      showLabels={true}
+                      showInstruction={true}
+                      containerClassName="rounded-xl"
+                    />
+                  </div>
+                ) : selectedProject.images && selectedProject.images.length === 1 ? (
+                  // Single image display - using object-contain to show full image
+                  <div className="rounded-xl overflow-hidden h-96 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                    <img 
+                      src={selectedProject.images[0]}
+                      alt={selectedProject.title}
+                      className="max-w-full max-h-full object-contain"
+                      onError={(e) => {
+                        e.target.parentElement.innerHTML = `
+                          <div class="text-center">
+                            <div class="w-32 h-32 bg-gray-400 rounded-lg mx-auto mb-4"></div>
+                            <p class="text-gray-600">${CONTENT.projectModal.imagePlaceholder}</p>
+                          </div>
+                        `;
+                      }}
+                    />
+                  </div>
+                ) : selectedProject.images && selectedProject.images.length > 2 ? (
+                  // Multiple images grid
+                  <div className="space-y-4">
+                    <div className={`grid ${selectedProject.images.length === 3 ? 'grid-cols-3' : 'grid-cols-2'} gap-4`}>
+                      {selectedProject.images.map((img, index) => (
+                        <div key={index} className="rounded-lg overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+                          <img 
+                            src={img}
+                            alt={`${selectedProject.title} - ${
+                              selectedProject.id === 1 ? 
+                              CONTENT.imageLabels.furniture[index] || `${CONTENT.imageLabels.default} ${index + 1}` 
+                              : selectedProject.id === 3 ? 
+                              CONTENT.imageLabels.smartAssistant[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                              : selectedProject.id === 10 ? 
+                              CONTENT.imageLabels.securityCameras[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                              : selectedProject.id === 11 ? 
+                              CONTENT.imageLabels.smartLighting[index] || `${CONTENT.imageLabels.default} ${index + 1}`
+                              : `${CONTENT.imageLabels.default} ${index + 1}`
+                            }`}
+                            className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = `https://via.placeholder.com/400x300?text=${encodeURIComponent(selectedProject.title)}`;
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {selectedProject.id === 1 && (
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        {CONTENT.projectHelperText.furniture}
+                      </p>
+                    )}
+                    {selectedProject.id === 3 && (
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        {CONTENT.projectHelperText.smartAssistant}
+                      </p>
+                    )}
+                    {selectedProject.id === 10 && (
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        {CONTENT.projectHelperText.securityCameras}
+                      </p>
+                    )}
+                    {selectedProject.id === 11 && (
+                      <p className="text-center text-sm text-gray-600 mt-2">
+                        {CONTENT.projectHelperText.smartLighting}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  // No images placeholder
+                  <div className="bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl h-96 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-32 h-32 bg-gray-400 rounded-lg mx-auto mb-4"></div>
+                      <p className="text-gray-600">{CONTENT.projectModal.imagePlaceholder}</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Project Details */}
