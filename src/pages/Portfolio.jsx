@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
@@ -707,12 +708,12 @@ const Portfolio = () => {
               size="lg"
               className="bg-none text-primary hover:bg-primary/10"
             />
-            <a 
-              href="/contact"
+            <Link 
+              to="/contact"
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
             >
               {CONTENT.cta.buttons.getQuote}
-            </a>
+            </Link>
           </div>
         </div>
       </section>

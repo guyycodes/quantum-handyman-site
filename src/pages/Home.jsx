@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
@@ -761,13 +762,13 @@ const Home = () => {
           </div>
 
           <div className="text-center mt-8">
-            <a 
-              href="/portfolio" 
+            <Link 
+              to="/portfolio" 
               className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
             >
               {CONTENT.portfolio.viewFull}
               <ChevronRight className="w-5 h-5" />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

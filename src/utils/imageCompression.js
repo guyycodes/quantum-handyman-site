@@ -30,13 +30,16 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5, targ
           if (originalSizeKB > 1000) { // > 1MB
             adaptiveScale = Math.min(0.2, Math.sqrt(compressionRatio * 2));
             adaptiveQuality = Math.min(0.2, compressionRatio * 3);
+            
           } else if (originalSizeKB > 800) { // > 800KB
             // Very aggressive compression for large images
-            adaptiveScale = Math.min(0.3, Math.sqrt(compressionRatio * 2));
-            adaptiveQuality = Math.min(0.3, compressionRatio * 4);
+            adaptiveScale = Math.min(0.2, Math.sqrt(compressionRatio * 2));
+            adaptiveQuality = Math.min(0.2, compressionRatio * 3);
+
           } else if (originalSizeKB > 500) { // 500KB - 800KB
-            adaptiveScale = Math.min(0.4, Math.sqrt(compressionRatio * 3));
-            adaptiveQuality = Math.min(0.4, compressionRatio * 7);
+            adaptiveScale = Math.min(0.3, Math.sqrt(compressionRatio * 3));
+            adaptiveQuality = Math.min(0.3, compressionRatio * 5);
+
           } else if (originalSizeKB > 100) { // 100KB - 500KB
             adaptiveScale = Math.min(0.6, Math.sqrt(compressionRatio * 5));
             adaptiveQuality = Math.min(0.5, compressionRatio * 9);
