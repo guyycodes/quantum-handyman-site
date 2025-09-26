@@ -24,29 +24,33 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5, targ
           const originalSizeKB = file.size / 1024;
           const compressionRatio = targetSizeKB / originalSizeKB;
           
-          // Dynamic scaling calculation
+          // Dynamic scaling calculation - MORE AGGRESSIVE for large files
           let adaptiveScale = scaleFactor;
           let adaptiveQuality = quality;
           if (originalSizeKB > 1000) { // > 1MB
-            adaptiveScale = Math.min(0.2, Math.sqrt(compressionRatio * 2));
-            adaptiveQuality = Math.min(0.2, compressionRatio * 3);
-            
+            // VERY aggressive compression for 1MB+ images
+            adaptiveScale = Math.min(0.15, Math.sqrt(compressionRatio * 1.5));
+            adaptiveQuality = Math.min(0.15, compressionRatio * 2);
           } else if (originalSizeKB > 800) { // > 800KB
             // Very aggressive compression for large images
             adaptiveScale = Math.min(0.2, Math.sqrt(compressionRatio * 2));
             adaptiveQuality = Math.min(0.2, compressionRatio * 3);
-
           } else if (originalSizeKB > 500) { // 500KB - 800KB
-            adaptiveScale = Math.min(0.3, Math.sqrt(compressionRatio * 3));
+            adaptiveScale = Math.min(0.3, Math.sqrt(compressionRatio * 2.5));
             adaptiveQuality = Math.min(0.3, compressionRatio * 5);
-
           } else if (originalSizeKB > 100) { // 100KB - 500KB
-            adaptiveScale = Math.min(0.6, Math.sqrt(compressionRatio * 5));
-            adaptiveQuality = Math.min(0.5, compressionRatio * 9);
+            adaptiveScale = Math.min(0.5, Math.sqrt(compressionRatio * 4));
+            adaptiveQuality = Math.min(0.4, compressionRatio * 7);
           }
           
-          // Ensure minimum dimensions (don't go below 400px on smallest side)
-          const minDimension = 400;
+          // Dynamic minimum dimensions based on target size
+          // For very large images, allow smaller dimensions to reach target
+          let minDimension = 400;
+          if (originalSizeKB > 1000 && targetSizeKB <= 15) {
+            minDimension = 300; // Allow smaller for 1MB+ images
+          } else if (originalSizeKB > 2000 && targetSizeKB <= 15) {
+            minDimension = 250; // Even smaller for 2MB+ images
+          }
           const smallestSide = Math.min(img.width, img.height);
           const minScale = minDimension / smallestSide;
           adaptiveScale = Math.max(adaptiveScale, minScale);
@@ -70,10 +74,26 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5, targ
           // Try different quality levels to get close to target size
           let compressedBase64 = '';
           let currentQuality = adaptiveQuality;
+          let currentWidth = newWidth;
+          let currentHeight = newHeight;
           let attempts = 0;
-          const maxAttempts = 5;
+          const maxAttempts = 10; // More attempts for fine-tuning
           
           do {
+            // If we've tried quality adjustments and still too big, reduce canvas size
+            if (attempts > 5 && compressedBase64.length / 1024 > targetSizeKB * 1.5) {
+              // Reduce dimensions by 10% each iteration after 5 attempts
+              currentWidth = Math.round(currentWidth * 0.9);
+              currentHeight = Math.round(currentHeight * 0.9);
+              
+              canvas.width = currentWidth;
+              canvas.height = currentHeight;
+              ctx.drawImage(img, 0, 0, currentWidth, currentHeight);
+              
+              // Reset quality for new size
+              currentQuality = Math.min(adaptiveQuality * 1.2, 0.3);
+            }
+            
             const dataUrl = canvas.toDataURL('image/jpeg', currentQuality);
             compressedBase64 = dataUrl.replace(/^data:image\/\w+;base64,/, '');
             const currentSizeKB = compressedBase64.length / 1024;
@@ -82,8 +102,21 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5, targ
               break;
             }
             
-            // Reduce quality further
-            currentQuality *= 0.7;
+            // Adjust quality reduction based on how far we are from target
+            const sizeRatio = targetSizeKB / currentSizeKB;
+            if (sizeRatio < 0.5) {
+              // Far from target - aggressive reduction
+              currentQuality *= 0.5;
+            } else if (sizeRatio < 0.7) {
+              // Getting closer - moderate reduction
+              currentQuality *= 0.65;
+            } else {
+              // Very close - fine-tune
+              currentQuality *= 0.8;
+            }
+            
+            // Ensure quality doesn't go below minimum threshold
+            currentQuality = Math.max(currentQuality, 0.05);
             attempts++;
           } while (attempts < maxAttempts);
           
@@ -202,7 +235,10 @@ export const testImageCompression = async (file) => {
     const compressionRatio = (originalSizeKB / compressedSizeKB).toFixed(2);
     
     // Check if we achieved reasonable compression
-    if (compressedSizeKB <= targetSizeKB * 1.5) { // Allow 50% margin
+    // Be more lenient - accept up to 20KB for images (Google Sheets can handle up to 50KB)
+    const acceptableSize = Math.max(targetSizeKB * 1.5, 20); 
+    
+    if (compressedSizeKB <= acceptableSize) {
       return { 
         success: true,
         sizeKB: Math.round(compressedSizeKB),
@@ -212,7 +248,7 @@ export const testImageCompression = async (file) => {
     } else {
       return { 
         success: false, 
-        error: `Could not compress image enough. Got ${Math.round(compressedSizeKB)}KB, target was ${targetSizeKB}KB. Try a smaller or simpler image.`,
+        error: `Could not compress image enough. Got ${Math.round(compressedSizeKB)}KB, target was ${targetSizeKB}KB (acceptable up to ${acceptableSize}KB). Try a smaller or simpler image.`,
         sizeKB: Math.round(compressedSizeKB),
         compressionRatio: compressionRatio
       };
