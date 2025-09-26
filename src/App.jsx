@@ -9,7 +9,7 @@ import NotFound from './pages/NotFound'
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
 import ChatBot from './Components/ChatBot'
-import ScrollToTop from './components/ScrollToTop'
+import ScrollToTop from './Components/ScrollToTop'
 
 function App() {
   return (
