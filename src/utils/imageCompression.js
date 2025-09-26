@@ -4,13 +4,14 @@
  */
 
 /**
- * Compress a single image file
+ * Compress a single image file with dynamic compression to reach target size
  * @param {File} file - The image file to compress
  * @param {number} scaleFactor - Scale factor (0.6 = 60% of original size)
  * @param {number} quality - JPEG quality (0.5 = 50% quality)
+ * @param {number} targetSizeKB - Target size in KB (default 13KB)
  * @returns {Promise<string>} Base64 string without data URL prefix
  */
-export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5) => {
+export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5, targetSizeKB = 13) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
@@ -19,12 +20,38 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5) => {
       
       img.onload = () => {
         try {
+          // Calculate adaptive compression based on original file size
+          const originalSizeKB = file.size / 1024;
+          const compressionRatio = targetSizeKB / originalSizeKB;
+          
+          // Dynamic scaling calculation
+          let adaptiveScale = scaleFactor;
+          let adaptiveQuality = quality;
+          
+          if (originalSizeKB > 1000) { // > 1MB
+            // Very aggressive compression for large images
+            adaptiveScale = Math.min(0.3, Math.sqrt(compressionRatio * 2));
+            adaptiveQuality = Math.min(0.3, compressionRatio * 5);
+          } else if (originalSizeKB > 500) { // 500KB - 1MB
+            adaptiveScale = Math.min(0.4, Math.sqrt(compressionRatio * 3));
+            adaptiveQuality = Math.min(0.4, compressionRatio * 8);
+          } else if (originalSizeKB > 100) { // 100KB - 500KB
+            adaptiveScale = Math.min(0.6, Math.sqrt(compressionRatio * 5));
+            adaptiveQuality = Math.min(0.5, compressionRatio * 10);
+          }
+          
+          // Ensure minimum dimensions (don't go below 400px on smallest side)
+          const minDimension = 400;
+          const smallestSide = Math.min(img.width, img.height);
+          const minScale = minDimension / smallestSide;
+          adaptiveScale = Math.max(adaptiveScale, minScale);
+          
           // Create canvas for resizing
           const canvas = document.createElement('canvas');
           
           // Calculate new dimensions
-          const newWidth = Math.round(img.width * scaleFactor);
-          const newHeight = Math.round(img.height * scaleFactor);
+          const newWidth = Math.round(img.width * adaptiveScale);
+          const newHeight = Math.round(img.height * adaptiveScale);
           
           canvas.width = newWidth;
           canvas.height = newHeight;
@@ -35,16 +62,33 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5) => {
           ctx.imageSmoothingQuality = 'high';
           ctx.drawImage(img, 0, 0, newWidth, newHeight);
           
-          // Convert to JPEG with compression
-          const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+          // Try different quality levels to get close to target size
+          let compressedBase64 = '';
+          let currentQuality = adaptiveQuality;
+          let attempts = 0;
+          const maxAttempts = 5;
           
-          // Strip data URL prefix to save space
-          const base64Only = compressedBase64.replace(/^data:image\/\w+;base64,/, '');
+          do {
+            const dataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+            compressedBase64 = dataUrl.replace(/^data:image\/\w+;base64,/, '');
+            const currentSizeKB = compressedBase64.length / 1024;
+            
+            if (currentSizeKB <= targetSizeKB || attempts >= maxAttempts) {
+              break;
+            }
+            
+            // Reduce quality further
+            currentQuality *= 0.7;
+            attempts++;
+          } while (attempts < maxAttempts);
+          
+          const finalSizeKB = Math.round(compressedBase64.length / 1024);
           
           console.log(`Image compressed: ${img.width}x${img.height} → ${newWidth}x${newHeight}, ` +
-                     `Size: ~${Math.round(base64Only.length / 1024)}KB`);
+                     `Original: ${Math.round(originalSizeKB)}KB → Final: ${finalSizeKB}KB, ` +
+                     `Scale: ${adaptiveScale.toFixed(2)}, Quality: ${currentQuality.toFixed(2)}`);
           
-          resolve(base64Only);
+          resolve(compressedBase64);
         } catch (error) {
           console.error('Error compressing image:', error);
           reject(error);
@@ -73,18 +117,26 @@ export const compressImage = async (file, scaleFactor = 0.6, quality = 0.5) => {
  * @param {number} options.scaleFactor - Scale factor (default 0.6)
  * @param {number} options.quality - JPEG quality (default 0.5)
  * @param {number} options.maxTotalSize - Max total size in bytes (default 45000)
+ * @param {number} options.targetPerImage - Target KB per image (default 13KB)
  * @returns {Promise<string>} Comma-separated base64 strings
  */
 export const compressMultipleImages = async (images, options = {}) => {
   const {
     scaleFactor = 0.6,
     quality = 0.5,
-    maxTotalSize = 45000 // Leave buffer for Google Sheets 50KB limit
+    maxTotalSize = 45000, // Leave buffer for Google Sheets 50KB limit
+    targetPerImage = 13   // Target 13KB per image
   } = options;
   
   if (!images || images.length === 0) {
     return '';
   }
+  
+  // Calculate target size per image based on total limit and number of images
+  const targetSizePerImage = Math.min(
+    targetPerImage,
+    Math.floor(maxTotalSize / images.length / 1024) // KB per image
+  );
   
   const base64Images = [];
   let totalSize = 0;
@@ -92,14 +144,15 @@ export const compressMultipleImages = async (images, options = {}) => {
   for (const image of images) {
     if (image instanceof File) {
       try {
-        const compressedBase64 = await compressImage(image, scaleFactor, quality);
+        // Use dynamic compression with target size
+        const compressedBase64 = await compressImage(image, scaleFactor, quality, targetSizePerImage);
         
         // Check if adding this image would exceed our limit
         if (totalSize + compressedBase64.length < maxTotalSize) {
           base64Images.push(compressedBase64);
           totalSize += compressedBase64.length;
         } else {
-          console.warn(`Image "${image.name}" skipped - would exceed size limit`);
+          console.warn(`Image "${image.name}" skipped - would exceed total size limit`);
         }
       } catch (error) {
         console.error(`Failed to compress image "${image.name}":`, error);
@@ -109,7 +162,7 @@ export const compressMultipleImages = async (images, options = {}) => {
   }
   
   const result = base64Images.join(',');
-  console.log(`Total compressed images size: ~${Math.round(result.length / 1024)}KB`);
+  console.log(`Total compressed images: ${base64Images.length}/${images.length}, Total size: ~${Math.round(result.length / 1024)}KB`);
   
   return result;
 };
@@ -117,7 +170,7 @@ export const compressMultipleImages = async (images, options = {}) => {
 /**
  * Test if a single image can be compressed successfully
  * @param {File} file - The image file to test
- * @returns {Promise<{success: boolean, error?: string}>} Test result
+ * @returns {Promise<{success: boolean, error?: string, sizeKB?: number, compressionRatio?: number}>} Test result
  */
 export const testImageCompression = async (file) => {
   try {
@@ -125,31 +178,40 @@ export const testImageCompression = async (file) => {
       return { success: false, error: 'Invalid file provided' };
     }
     
-    // Test compression with same settings as actual compression
-    const base64 = await compressImage(file, 0.6, 0.5);
+    const originalSizeKB = file.size / 1024;
+    const targetSizeKB = 13; // Target 13KB per image
+    
+    // Test compression with dynamic target size
+    const base64 = await compressImage(file, 0.6, 0.5, targetSizeKB);
     
     // Check if compression actually worked (not empty or too small)
     if (!base64 || base64.length < 100) {
-      console.error('Compression resulted is empty or invalid output');
+      console.error('Compression resulted in empty or invalid output');
       return { 
         success: false, 
-        error: 'Image could not be processed. Please try a smaller or different image.'
+        error: 'Image could not be processed. Please try a different image.'
       };
     }
     
-    // Check if compressed size is reasonable (under 45KB for single image)
-    const compressedSize = base64.length;
-    const maxSingleImageSize = 45000; // 45KB limit per image
+    const compressedSizeKB = base64.length / 1024;
+    const compressionRatio = (originalSizeKB / compressedSizeKB).toFixed(2);
     
-    if (compressedSize > maxSingleImageSize) {
-      const sizeInKB = Math.round(compressedSize / 1024);
+    // Check if we achieved reasonable compression
+    if (compressedSizeKB <= targetSizeKB * 1.5) { // Allow 50% margin
+      return { 
+        success: true,
+        sizeKB: Math.round(compressedSizeKB),
+        compressionRatio: compressionRatio,
+        message: `Successfully compressed from ${Math.round(originalSizeKB)}KB to ${Math.round(compressedSizeKB)}KB (${compressionRatio}x reduction)`
+      };
+    } else {
       return { 
         success: false, 
-        error: `Image is too large even after compression (${sizeInKB}KB). Please use a smaller image.`
+        error: `Could not compress image enough. Got ${Math.round(compressedSizeKB)}KB, target was ${targetSizeKB}KB. Try a smaller or simpler image.`,
+        sizeKB: Math.round(compressedSizeKB),
+        compressionRatio: compressionRatio
       };
     }
-    
-    return { success: true };
     
   } catch (error) {
     console.error('Image compression test failed:', error);
