@@ -90,7 +90,7 @@ const CONTENT = {
     description: 'To provide comprehensive solutions, uniquely deep multidisciplinary skills & a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship with engineering discipline, delivered with community values & professionalism.',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'The handyman with a Computer Science degree - solving both physical and digital problems with deep multi-disciplinary expertise.'
+      text: 'A new kind of handyman for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.'
     },
     whyChoose: {
       title: 'Why Choose Us?',

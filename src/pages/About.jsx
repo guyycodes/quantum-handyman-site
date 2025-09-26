@@ -20,8 +20,8 @@ const CONTENT = {
     title: 'The Story Behind',
     brandName: 'Quantum Handyman',
     paragraphs: [
-      'What happens when you combine a Computer Science degree with a passion for hands-on problem solving? You get a Quantum Handyman - a unique service that bridges the gap between traditional trades and modern technology.',
-      'What started as a side hustle quickly revealed a passion for solving real-world problems. After graduating with my CS degree & Minor in Business, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
+      'A new kind of handyman for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise. Quantum Handyman is a unique service that bridges the gap between traditional trades and modern technology.',
+      'What started as a side hustle quickly revealed a passion for solving real-world problems. After years of education in both technology & business, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
       'Quantum Handyman represents 10+ years of experience & a rare combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building applications, landscaping, smart home systems & automotive paint correction I deliver the same attention to detail and engineering excellence for every project.'
     ],
     mission: {
@@ -52,7 +52,7 @@ const CONTENT = {
     items: [
       'Experienced Craftsman',
       'Deep Property & Finance Background',
-      'B.A. Computer Science Degree + Business Minor',
+      'B.A. Computer Science + Business Minor',
       'Certified Full-Stack Devloper',
       'Smart Home Professional',
       'Automotive Paint Correction Specialist',
