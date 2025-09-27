@@ -30,6 +30,7 @@ const CONTENT = {
     priceLabel: 'Starting from:',
     timeLabel: 'Time:',
     bookButton: 'Book This Service',
+    bookHelperText: '⚡ AI estimate in seconds',
     viewDetails: 'View Details',
     showLess: 'Show Less',
     whatWeOffer: 'What We Offer',
@@ -52,7 +53,8 @@ const CONTENT = {
     subtitle: 'Book your service today and experience the Quantum Handyman difference',
     buttons: {
       bookNow: 'Book Now',
-      getQuote: 'Get Free Quote'
+      getQuote: 'Get Free Quote',
+      helperText: '⚡ Instant AI estimates available'
     }
   }
 }
@@ -262,6 +264,8 @@ const Services = () => {
                         service={service.title}
                         buttonText={CONTENT.serviceDetails.bookButton}
                         buttonStyle="primary"
+                        showHelperText={true}
+                        helperText={CONTENT.serviceDetails.bookHelperText}
                       />
                       <button
                         onClick={() => setExpandedService(
@@ -373,6 +377,8 @@ const Services = () => {
               buttonText={CONTENT.cta.buttons.bookNow}
               size="lg"
               className="bg-none text-primary hover:bg-primary/10"
+              showHelperText={true}
+              helperText={CONTENT.cta.buttons.helperText}
             />
             <a 
               href="/contact"

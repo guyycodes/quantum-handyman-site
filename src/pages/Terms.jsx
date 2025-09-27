@@ -50,7 +50,7 @@ const CONTENT = {
     },
     {
       title: '10. Third-Party Platforms',
-      content: 'Bookings made through Dandymen.io are also subject to their terms of service. Please review their terms separately.'
+      content: 'All bookings are subject to our standard terms of service and booking policies.'
     },
     {
       title: '11. Modifications to Terms',

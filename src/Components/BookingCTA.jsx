@@ -6,7 +6,8 @@ import BookingModal from './BookingModal'
 const CONTENT = {
   defaultButtonText: 'Book Service',
   ariaLabel: 'Book {service} with Quantum Handyman',
-  defaultService: 'a service'
+  defaultService: 'a service',
+  defaultHelperText: '⚡ Instant AI estimates available'
 }
 
 const BookingCTA = ({
@@ -15,6 +16,8 @@ const BookingCTA = ({
   buttonStyle = 'primary',
   size = 'md',
   className = '',
+  showHelperText = false,
+  helperText = CONTENT.defaultHelperText,
   onClick = null // Optional callback when button is clicked
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,21 +46,28 @@ const BookingCTA = ({
   
   return (
     <>
-      <button
-        onClick={handleClick}
-        className={`
-          inline-flex items-center justify-center gap-2
-          font-semibold rounded-lg transition-all duration-200
-          transform hover:scale-105 active:scale-95
-          ${sizeClasses[size]}
-          ${styleClasses[buttonStyle]}
-          ${className}
-        `}
-        aria-label={CONTENT.ariaLabel.replace('{service}', service || CONTENT.defaultService)}
-      >
-        <Calendar className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />
-        <span>{buttonText}</span>
-      </button>
+      <div className={showHelperText ? 'inline-flex flex-col items-center gap-1' : ''}>
+        <button
+          onClick={handleClick}
+          className={`
+            inline-flex items-center justify-center gap-2
+            font-semibold rounded-lg transition-all duration-200
+            transform hover:scale-105 active:scale-95
+            ${sizeClasses[size]}
+            ${styleClasses[buttonStyle]}
+            ${className}
+          `}
+          aria-label={CONTENT.ariaLabel.replace('{service}', service || CONTENT.defaultService)}
+        >
+          <Calendar className={size === 'sm' ? 'w-4 h-4' : size === 'lg' ? 'w-6 h-6' : 'w-5 h-5'} />
+          <span>{buttonText}</span>
+        </button>
+        {showHelperText && (
+          <span className="text-xs text-gray-500 dark:text-green-400 animate-pulse">
+            {helperText}
+          </span>
+        )}
+      </div>
       
       <BookingModal 
         isOpen={isModalOpen} 

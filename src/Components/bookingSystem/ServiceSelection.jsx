@@ -27,7 +27,7 @@ const CONTENT = {
       color: 'bg-green-500',
       category: 'estimates',
       description: 'Get an estimate for your project',
-      features: ['No obligation', 'Professional (Free) or AI assessment - (Free w/promo code)', 'Written quote w/range & Project Breakdown']
+      features: ['No obligation Free Professional Estimate', 'AI assessment - (Free w/promo code)', 'Written quote w/range & Project Breakdown & Roadmap']
     },
     {
       id: 'custom',

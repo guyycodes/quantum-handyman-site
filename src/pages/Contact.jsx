@@ -56,7 +56,7 @@ const CONTENT = {
       submit: 'Send Message',
       submitting: 'Sending...',
       bookDirectly: 'Or Book Directly',
-      helperText: 'via Dandymen.io'
+      helperText: 'Secure online booking'
     }
   },
   
@@ -96,8 +96,9 @@ const CONTENT = {
   
   quickBook: {
     title: 'Need Immediate Help?',
-    subtitle: 'Book a service directly through our partner platform for the fastest response.',
-    buttonText: 'Book Now'
+    subtitle: 'Get an instant AI estimate or book a service directly for the fastest response.',
+    buttonText: 'Book Now',
+    helperText: '⚡ Instant AI estimates available'
   },
   
   responseTime: {
@@ -630,6 +631,8 @@ const Contact = () => {
                 <BookingCTA 
                   buttonText={CONTENT.quickBook.buttonText}
                   className="w-full bg-none text-primary hover:bg-gray-100"
+                  showHelperText={true}
+                  helperText={CONTENT.quickBook.helperText}
                 />
               </div>
 

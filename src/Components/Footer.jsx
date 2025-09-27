@@ -229,7 +229,7 @@ const Footer = () => {
                 {/* <span className="inline-flex items-center gap-1">
                   {CONTENT.footer.booking.emoji} {CONTENT.footer.booking.text} 
                   <a 
-                    href="https://dandymen.io" 
+                    href="/contact" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-primary hover:text-blue-400 transition-colors underline"

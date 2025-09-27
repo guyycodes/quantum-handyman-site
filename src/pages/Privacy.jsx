@@ -38,7 +38,7 @@ const CONTENT = {
     },
     {
       title: '7. Third-Party Services',
-      content: 'We use Dandymen.io for booking management. Please review their privacy policy for information on how they handle your data.'
+      content: 'We use secure third-party services for booking management. Your data is protected according to industry standards.'
     },
     {
       title: '8. Updates to This Policy',

@@ -32,7 +32,7 @@ const CONTENT = {
     cta: {
       bookService: 'Book a Service',
       seeWork: 'See Our Work',
-      helperText: '📅 Books through our trusted partner Dandymen.io'
+      helperText: '⚡ Instant AI estimates available'
     },
     badges: {
       fix: 'Property Maintenance & Repairs',
@@ -63,7 +63,8 @@ const CONTENT = {
     },
     cta: {
       primary: 'Get Started',
-      secondary: 'Learn More'
+      secondary: 'Learn More',
+      helperText: '⚡ Get instant AI estimates'
     },
     features: [
       { icon: '🔒', text: 'Secure' },
@@ -174,14 +175,14 @@ const CONTENT = {
     buttons: {
       bookNow: 'Book Now',
       // call: 'Call (555) 123-4567',
-      helperText: 'Secure booking via Dandymen.io'
+      helperText: '⚡ Instant AI estimates available'
     },
     badges: {
-      freeQuotes: 'Free Quotes',
+      freeQuotes: 'AI-Powered Instant Quotes',
       licensed: 'Licensed & Insured',
       satisfaction: 'Satisfaction Guaranteed'
     },
-    footer: 'We use Dandymen.io\'s secure booking platform to manage appointments and ensure the best service experience.'
+    footer: 'We use a secure booking platform to manage appointments and ensure the best service experience.'
   },
   
   phone: '555-123-4567'
@@ -232,10 +233,10 @@ const SERVICES_DATA = [
 const PORTFOLIO_DATA = [
   {
     category: 'Web Development',
-    title: 'Dandymen.io',
+    title: 'Job Management Platform',
     description: 'Realtime SaaS jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
     image: '/images/web-dev/Dandymen_io.png',
-    link: 'https://dandymen.io' // Optional link to project
+    link: null // Optional link to project
   },
   {
     category: 'Smart Home',
@@ -298,9 +299,15 @@ const Home = () => {
             <div 
               ref={heroSection.ref}
               className={`text-white space-y-6 animate-fade-right ${heroSection.isVisible ? 'visible' : ''}`}>
-              <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
-                <Sparkles className="w-4 h-4" />
-                <span>{CONTENT.hero.badge}</span>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                  <Sparkles className="w-4 h-4" />
+                  <span>{CONTENT.hero.badge}</span>
+                </div>
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 backdrop-blur-sm rounded-full px-4 py-2 text-sm animate-pulse">
+                  <span>⚡</span>
+                  <span>Instant AI Estimates</span>
+                </div>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
@@ -467,9 +474,13 @@ const Home = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               {CONTENT.services.title.split(' ')[0]} <span className="gradient-text">{CONTENT.services.title.split(' ')[1]}</span>
             </h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto">
+            <p className="text-lg text-muted max-w-2xl mx-auto mb-3">
               {CONTENT.services.subtitle}
             </p>
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-full px-4 py-1.5 text-sm text-yellow-800">
+              <span>⚡</span>
+              <span className="font-medium">All services include instant AI estimates</span>
+            </div>
           </div>
 
           <div className="flex justify-center gap-4 mb-8">

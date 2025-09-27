@@ -106,7 +106,7 @@ const CONTENT = {
       { year: '2024', event: 'Began building a custom website for Quantum Handyman, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
       { year: '2024', event: 'Built a custom Web SaaS platform, integrated LLM agents to handle booking & estimates.' },
       { year: '2025', event: 'Graduate CS Degree + Business Minor 3.95 GPA, Deeloper custom open source Ai package and Recieved over 2000+ downloads.' },
-      { year: '2025', event: 'Began building Dandymen.io, to enhance the booking, estimation, and job management process for all users.'},
+      { year: '2025', event: 'Began building a comprehensive job management platform to enhance the booking, estimation, and job management process for all users.'},
     ]
   },
   
@@ -115,7 +115,8 @@ const CONTENT = {
     subtitle: 'Experience the difference of working with a true problem-solver who brings both technical expertise and traditional craftsmanship to every project.',
     buttons: {
       bookService: 'Book a Service',
-      getQuote: 'Get Free Quote'
+      getQuote: 'Get Free Quote',
+      helperText: '⚡ Instant AI estimates available'
     }
   }
 }
@@ -303,7 +304,9 @@ const About = () => {
             <BookingCTA 
               buttonText={CONTENT.cta.buttons.bookService}
               size="lg"
-               className="bg-none text-primary hover:bg-primary/10"
+              className="bg-none text-primary hover:bg-primary/10"
+              showHelperText={true}
+              helperText={CONTENT.cta.buttons.helperText}
             />
             <a 
               href="/contact"

@@ -4,9 +4,9 @@ Site: hello@quantumhandyman.com
 Location: Greater Metro Area, Colorado
 
 /* THANKS */
-Partner Platform: Dandymen.io
 React Community
 Vite Team
+Our Amazing Clients
 
 /* SITE */
 Last update: 2024/12/01

@@ -78,7 +78,10 @@ const Header = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:block">
-            <BookingCTA buttonStyle="primary" />
+            <BookingCTA 
+              buttonStyle="primary" 
+              showHelperText={true}
+            />
           </div>
 
           {/* Mobile Menu Button */}
@@ -132,6 +135,7 @@ const Header = () => {
                 buttonStyle="primary" 
                 className="w-full" 
                 onClick={() => setIsMenuOpen(false)}
+                showHelperText={true}
               />
             </div>
           </div>

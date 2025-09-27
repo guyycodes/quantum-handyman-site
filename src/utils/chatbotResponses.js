@@ -33,9 +33,9 @@ const chatbotResponses = {
       supportiveKeywords: ['today', 'tomorrow', 'week', 'asap', 'soon', 'urgent', 'emergency', 'broken', 'install', 'fix', 'repair'],
       minKeywordMatches: 1,
       confirmationMessage: 'Great! I can help you with booking.',
-      actionMessage: 'We books through our trusted partner Dandymen.io to provide you with a seamless booking, and job managment experience. You can customize service & make secure payments & track jobs all in one place.',
-      redirectPath: 'https://www.dandymen.io/book',
-      buttonText: 'Book via Dandymen.io',
+      actionMessage: 'Book directly through our secure platform for a seamless booking and job management experience. You can customize service & make secure payments & track jobs all in one place.',
+      redirectPath: '/contact',
+      buttonText: 'Book Service',
       externalLink: true
     },
     {
@@ -195,7 +195,7 @@ const chatbotResponses = {
 
   // Special booking-related responses
   bookingInfo: {
-    standardResponse: "We're a new kind of handyman - combining traditional craftsmanship with tech expertise. Book through our partner Dandymen.io where you can:",
+    standardResponse: "We're a new kind of handyman - combining traditional craftsmanship with tech expertise. Book directly through our platform where you can:",
     features: [
       "✅ Choose your service type",
       "📅 Pick a convenient time slot", 
@@ -203,7 +203,7 @@ const chatbotResponses = {
       "📱 Track your booking status"
     ],
     ctaText: "Click below to book your service through our trusted partner:",
-    tipText: "💡 Tip: Create a Dandymen.io account to track all your bookings and receive service updates"
+    tipText: "💡 Tip: Create an account to track all your bookings and receive service updates"
   },
 
   // Generate response based on user input

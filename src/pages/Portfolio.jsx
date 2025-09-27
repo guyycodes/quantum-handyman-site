@@ -48,7 +48,8 @@ const CONTENT = {
     subtitle: 'Let\'s bring your vision to life with professional expertise and attention to detail',
     buttons: {
       startProject: 'Start Your Project',
-      getQuote: 'Get Free Quote'
+      getQuote: 'Get Free Quote',
+      helperText: '⚡ Instant AI estimates available'
     }
   },
   
@@ -108,7 +109,7 @@ const CONTENT = {
       client: 'Whealth App'
     },
     dandymen: {
-      title: 'Dandymen.io Platform',
+      title: 'Job Management Platform',
       description: 'Service dispatch platform for professional services',
       testimonial: 'Platform for managing professional services efficiently!',
       client: 'Levelup Apps & Software'
@@ -255,7 +256,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.dandymen.testimonial,
     client: CONTENT.projects.dandymen.client,
     rating: 5,
-    link: 'https://www.dandymen.io/',
+    link: null,
     projectImg: '/images/web-dev/Dandymen_io.png'
   },
   {
@@ -707,13 +708,19 @@ const Portfolio = () => {
               buttonText={CONTENT.cta.buttons.startProject}
               size="lg"
               className="bg-none text-primary hover:bg-primary/10"
+              showHelperText={true}
             />
-            <Link 
-              to="/contact"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
-            >
-              {CONTENT.cta.buttons.getQuote}
-            </Link>
+            <div className="inline-flex flex-col items-center gap-1">
+              <Link 
+                to="/contact"
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
+              >
+                {CONTENT.cta.buttons.getQuote}
+              </Link>
+              <span className="text-xs text-white/70 animate-pulse">
+                {CONTENT.cta.buttons.helperText}
+              </span>
+            </div>
           </div>
         </div>
       </section>
