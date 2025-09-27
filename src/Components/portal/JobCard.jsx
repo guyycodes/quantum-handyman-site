@@ -518,7 +518,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
       {/* Progress Image Modal */}
       {showProgressImage && progressInfo.hasImage && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75"
+          className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black bg-opacity-75"
           onClick={() => setShowProgressImage(false)}
         >
           <div className="relative max-w-4xl max-h-[90vh] overflow-hidden rounded-lg">
@@ -547,7 +547,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
       {/* Customer Image Gallery Modal */}
       {showImageGallery && customerImages.length > 0 && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-90"
+          className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black bg-opacity-90"
           onClick={() => setShowImageGallery(false)}
         >
           <div className="relative max-w-6xl max-h-[90vh] w-full">

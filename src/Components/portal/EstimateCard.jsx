@@ -320,7 +320,7 @@ const EstimateCard = ({ estimate, onRefresh }) => {
       {/* Image Gallery Modal */}
       {showImageGallery && customerImages.length > 0 && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-90"
+          className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black bg-opacity-90"
           onClick={() => setShowImageGallery(false)}
         >
           <div className="relative max-w-6xl max-h-[90vh] w-full">
