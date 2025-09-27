@@ -15,10 +15,10 @@ const chatbotResponses = {
   casualResponses: {
     'how are you': "I'm doing great, thank you for asking! I'm here to help you with all your handyman needs.",
     'what can you do': "I can help you book a service, learn about our repair and installation services, get a quote, or answer any questions about home improvements.",
-    'who are you': "I'm your Quantum Handyman assistant! I'm here to help you navigate our services and get your home projects started.",
+    'who are you': "I'm your Quantum Handyman assistant! We're a new kind of handyman for your property & technology needs. Craftsman + CS-degree. No collars. Just capability.",
     'thanks': "You're very welcome! Is there anything else I can help you with?",
     'thank you': "My pleasure! Let me know if you need anything else!",
-    'what services': "We offer electrical work, plumbing, carpentry, painting, appliance installation, and general repairs. What do you need help with?",
+    'what services': "We offer home repairs, smart home automation, web development, landscaping, and more. From traditional handyman work to tech solutions - we handle it all. What do you need help with?",
     'emergency': "For emergencies, I can help you get immediate assistance. Let me know what's happening!",
     'urgent': "I understand this is urgent. Let me help you get the fastest service possible."
   },
@@ -28,7 +28,7 @@ const chatbotResponses = {
     {
       id: 'booking',
       label: 'Book a Service',
-      description: 'Schedule a handyman visit for repairs or installations',
+      description: 'Schedule a visit for property repairs, tech solutions, or installations',
       definitiveKeywords: ['book', 'schedule', 'appointment', 'visit', 'come', 'available', 'when can', 'book service', 'how do i book', 'how to book', 'make booking', 'reserve'],
       supportiveKeywords: ['today', 'tomorrow', 'week', 'asap', 'soon', 'urgent', 'emergency', 'broken', 'install', 'fix', 'repair'],
       minKeywordMatches: 1,
@@ -195,7 +195,7 @@ const chatbotResponses = {
 
   // Special booking-related responses
   bookingInfo: {
-    standardResponse: "We've partnered with Dandymen.io to provide easy online booking. Through their platform you can:",
+    standardResponse: "We're a new kind of handyman - combining traditional craftsmanship with tech expertise. Book through our partner Dandymen.io where you can:",
     features: [
       "✅ Choose your service type",
       "📅 Pick a convenient time slot", 
