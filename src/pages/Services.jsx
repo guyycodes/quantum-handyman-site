@@ -87,31 +87,6 @@ const SERVICES_DATA = [
     ]
   },
   {
-    id: 'landscaping',
-    category: 'property',
-    title: 'Landscaping & Outdoor',
-    icon: TreePine,
-    color: 'bg-green-500',
-    description: 'Upgrade your outdoor spaces with professional landscape services',
-    shortDesc: 'Comprehensive landscaping and outdoor services',
-    priceRange: 'Custom quote + materials',
-    timeEstimate: 'Typical Hours can Vary by Project',
-    subServices: [
-      { name: 'Decks & Patios', desc: 'Construction, repair and maintenance' },
-      { name: 'Masonry Work', desc: 'Stone work, retaining walls, pathways' },
-      { name: 'Outdoor Lighting', desc: 'Landscape and security lighting installation' },
-      { name: 'Custom Landscaping', desc: 'Design and installation of custom landscapes' },
-      { name: 'Landscape Maintenance', desc: 'Regular maintenance and seasonal services' },
-      { name: 'Sprinkler Systems', desc: 'Maintenance, repair, setup and programming' },
-    ],
-    benefits: [
-      'Eco-friendly practices',
-      'Smart irrigation integration',
-      'Seasonal maintenance plans',
-      'Design consultation included'
-    ]
-  },
-  {
     id: 'web-dev',
     category: 'digital',
     title: 'Web & Digital',
@@ -136,6 +111,31 @@ const SERVICES_DATA = [
       'SEO-optimized code',
       'Ongoing support available',
       'Source code ownership'
+    ]
+  },
+  {
+    id: 'landscaping',
+    category: 'property',
+    title: 'Landscaping & Outdoor',
+    icon: TreePine,
+    color: 'bg-green-500',
+    description: 'Upgrade your outdoor spaces with professional landscape services',
+    shortDesc: 'Comprehensive landscaping and outdoor services',
+    priceRange: 'Custom quote + materials',
+    timeEstimate: 'Typical Hours can Vary by Project',
+    subServices: [
+      { name: 'Decks & Patios', desc: 'Construction, repair and maintenance' },
+      { name: 'Masonry Work', desc: 'Stone work, retaining walls, pathways' },
+      { name: 'Outdoor Lighting', desc: 'Landscape and security lighting installation' },
+      { name: 'Custom Landscaping', desc: 'Design and installation of custom landscapes' },
+      { name: 'Landscape Maintenance', desc: 'Regular maintenance and seasonal services' },
+      { name: 'Sprinkler Systems', desc: 'Maintenance, repair, setup and programming' },
+    ],
+    benefits: [
+      'Eco-friendly practices',
+      'Smart irrigation integration',
+      'Seasonal maintenance plans',
+      'Design consultation included'
     ]
   },
   {
