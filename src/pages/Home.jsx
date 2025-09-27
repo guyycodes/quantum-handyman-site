@@ -272,6 +272,7 @@ const STATS_DATA = [
 const Home = () => {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [tabJustChanged, setTabJustChanged] = useState(false)
 
   // Intersection observers for different sections
   const heroSection = useIntersectionObserver({ threshold: 0.2 })
@@ -485,7 +486,11 @@ const Home = () => {
 
           <div className="flex justify-center gap-4 mb-8">
             <button
-              onClick={() => setSelectedServiceCategory('all')}
+              onClick={() => {
+                setSelectedServiceCategory('all')
+                setTabJustChanged(true)
+                setTimeout(() => setTabJustChanged(false), 100)
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'all' 
                   ? 'bg-primary text-white' 
@@ -495,7 +500,11 @@ const Home = () => {
               {CONTENT.services.categories.all}
             </button>
             <button
-              onClick={() => setSelectedServiceCategory('property')}
+              onClick={() => {
+                setSelectedServiceCategory('property')
+                setTabJustChanged(true)
+                setTimeout(() => setTabJustChanged(false), 100)
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'property' 
                   ? 'bg-primary text-white' 
@@ -505,7 +514,11 @@ const Home = () => {
               {CONTENT.services.categories.property}
             </button>
             <button
-              onClick={() => setSelectedServiceCategory('tech')}
+              onClick={() => {
+                setSelectedServiceCategory('tech')
+                setTabJustChanged(true)
+                setTimeout(() => setTabJustChanged(false), 100)
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'tech' 
                   ? 'bg-primary text-white' 
@@ -515,7 +528,11 @@ const Home = () => {
               {CONTENT.services.categories.tech}
             </button>
             <button
-              onClick={() => setSelectedServiceCategory('digital')}
+              onClick={() => {
+                setSelectedServiceCategory('digital')
+                setTabJustChanged(true)
+                setTimeout(() => setTabJustChanged(false), 100)
+              }}
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'digital' 
                   ? 'bg-primary text-white' 
@@ -526,7 +543,7 @@ const Home = () => {
             </button>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div key={selectedServiceCategory} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SERVICES_DATA
               .filter(service => selectedServiceCategory === 'all' || service.category === selectedServiceCategory)
               .map((service, index) => (
@@ -534,7 +551,7 @@ const Home = () => {
                 key={service.id}
                 ref={(el) => servicesStagger.setItemRef(service.id, el)}
                 data-item-id={service.id}
-                className={`service-card group cursor-pointer animate-fade-up delay-${(index % 3 + 1) * 100} ${servicesStagger.visibleItems[service.id] ? 'visible' : ''}`}
+                className={`service-card group cursor-pointer animate-fade-up delay-${(index % 3 + 1) * 100} ${tabJustChanged || servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''}`}
               >
                 <div className={`${service.color} w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <service.icon className="w-8 h-8 text-white" />
