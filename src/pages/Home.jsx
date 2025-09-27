@@ -479,7 +479,7 @@ const Home = () => {
             </p>
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-full px-4 py-1.5 text-sm text-yellow-800">
               <span>⚡</span>
-              <span className="font-medium">All services include instant AI estimates</span>
+              <span className="font-medium">Instant AI estimate coverage for all services</span>
             </div>
           </div>
 
