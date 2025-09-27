@@ -63,7 +63,7 @@ const BookingCTA = ({
           <span>{buttonText}</span>
         </button>
         {showHelperText && (
-          <span className="text-xs text-gray-500 dark:text-green-400 animate-pulse">
+          <span className="text-xs text-green-600 dark:text-green-400 animate-pulse">
             {helperText}
           </span>
         )}

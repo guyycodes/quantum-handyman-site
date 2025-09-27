@@ -15,7 +15,9 @@ const CONTENT = {
   aiOption: {
     label: 'Get instant AI-powered estimate',
     price: '$3.95',
+    priceWithPromo: 'FREE with promo code',
     description: 'Receive detailed cost breakdown and materials list within seconds',
+    checkboxHint: '✓ Check this box to add AI estimate (have a promo code? Enter it after checking!)',
     benefits: [
       'Instant professional estimate',
       'Detailed cost breakdown',
@@ -23,9 +25,10 @@ const CONTENT = {
       'Labor time estimates'
     ],
     promoCode: {
-      label: 'Promo Code',
-      placeholder: 'Enter promo code',
-      applied: '✅ Promo code applied - FREE AI Estimate!'
+      label: 'Have a Promo Code? Enter it here for FREE AI Estimate:',
+      placeholder: 'Enter promo code for FREE estimate',
+      applied: '✅ Promo code applied - FREE AI Estimate!',
+      hint: '💡 Enter your promo code below to get this AI estimate for FREE!'
     }
   },
   confirmButton: {
@@ -148,6 +151,14 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
 
       {/* AI Estimate Option */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 mb-6">
+        {/* Promo Code Hint Banner */}
+        {!useAIEstimate && (
+          <div className="bg-green-100 border border-green-300 rounded-lg px-3 py-2 mb-3 text-center">
+            <span className="text-sm font-medium text-green-700">
+              🎁 Have a promo code? Check the box below to enter it and get your AI estimate FREE!
+            </span>
+          </div>
+        )}
         <div className="flex items-start gap-3">
           <input
             type="checkbox"
@@ -161,11 +172,19 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-5 h-5 text-purple-600" />
                 <span className="font-semibold text-gray-900">{CONTENT.aiOption.label}</span>
-                <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
-                  {CONTENT.aiOption.price}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                    {CONTENT.aiOption.price}
+                  </span>
+                  <span className="text-xs font-semibold text-green-600 animate-pulse">
+                    or {CONTENT.aiOption.priceWithPromo}
+                  </span>
+                </div>
               </div>
-              <p className="text-sm text-gray-600 mb-3">{CONTENT.aiOption.description}</p>
+              <p className="text-sm text-gray-600 mb-2">{CONTENT.aiOption.description}</p>
+              <p className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">
+                {CONTENT.aiOption.checkboxHint}
+              </p>
             </label>
             
             {useAIEstimate && (
@@ -182,7 +201,11 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
                 </div>
                 
                 {/* Promo Code Field */}
-                <div className="mt-4">
+                <div className="mt-4 bg-green-50 border-2 border-green-200 rounded-lg p-3">
+                  <div className="text-sm font-medium text-green-700 mb-2 flex items-center gap-2">
+                    <span className="text-lg">🎉</span>
+                    {CONTENT.aiOption.promoCode.hint}
+                  </div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {CONTENT.aiOption.promoCode.label}
                   </label>
@@ -191,7 +214,7 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
                     value={promoCode}
                     onChange={handlePromoCodeChange}
                     placeholder={CONTENT.aiOption.promoCode.placeholder}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-3 py-2 border-2 border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
                   />
                   {isPromoValid && (
                     <p className="mt-2 text-sm font-medium text-green-600">

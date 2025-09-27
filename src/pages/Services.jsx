@@ -94,7 +94,7 @@ const SERVICES_DATA = [
     color: 'bg-purple-500',
     description: 'Digital presence solutions for small businesses, content creators, and social media influencers',
     shortDesc: 'Professional web development and digital solutions',
-    priceRange: '$500 - $1300',
+    priceRange: '$500 - $2500',
     timeEstimate: '1-2 weeks typical',
     subServices: [
       { name: 'Custom Web Development', desc: 'Modern, responsive websites from scratch' },

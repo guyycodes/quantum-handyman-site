@@ -112,6 +112,17 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     };
   }, [isOpen]);
 
+  // Scroll to top when step changes
+  useEffect(() => {
+    // Small delay to ensure content has rendered
+    setTimeout(() => {
+      const modalContent = document.getElementById('modal-content');
+      if (modalContent) {
+        modalContent.scrollTop = 0;
+      }
+    }, 50);
+  }, [currentStep]);
+
   const handleServiceSelect = (service) => {
     setBookingData(prev => ({ ...prev, service }));
     
