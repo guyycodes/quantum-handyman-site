@@ -179,12 +179,12 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
         break;
       case 'estimateRef':
         // Convert to uppercase and remove invalid chars
-        processedValue = value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
+        processedValue = value.toUpperCase().replace(/^[A-Z]{3}-[0-9]{6}-[A-Z0-9]{4}-[A-Z0-9]{3}$/g, '');
         // Only validate if they've typed something
         if (value.length > 0) {
           const refResult = sanitizeEstimateRef(processedValue);
           if (!refResult.isValid) {
-            realtimeError = 'Format: EST-XXXXXX (6 digits)';
+            realtimeError = 'Format: EST-XXXXXX-XXXX-XXX';
           }
         }
         break;
