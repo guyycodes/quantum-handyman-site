@@ -42,7 +42,7 @@ const CONTENT = {
     },
     estimateRef: {
       label: 'Estimate Reference Number',
-      placeholder: 'EST-123456 (if you have one)',
+      placeholder: 'e.g. EST-250928-252E-9EB',
       helpText: 'Enter the estimate reference number here. Note: AI Generated estimates can vary.'
     },
     photos: {
@@ -178,8 +178,8 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
         }
         break;
       case 'estimateRef':
-        // Convert to uppercase and remove invalid chars
-        processedValue = value.toUpperCase().replace(/^[A-Z]{3}-[0-9]{6}-[A-Z0-9]{4}-[A-Z0-9]{3}$/g, '');
+        // Convert to uppercase and keep only valid chars (letters, numbers, hyphens)
+        processedValue = value.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
         // Only validate if they've typed something
         if (value.length > 0) {
           const refResult = sanitizeEstimateRef(processedValue);

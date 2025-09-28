@@ -641,13 +641,14 @@ export const sanitizeEstimateRef = (ref) => {
   // Remove all non-alphanumeric characters except hyphens
   let sanitized = ref.toUpperCase().replace(/[^A-Z0-9\-]/g, '');
   
-  // Check format (EST-XXXXXX or similar)
-  const isValid = /^[A-Z]{2,4}-?\d{4,8}$/.test(sanitized) || sanitized === '';
+  // Check format: EST-XXXXXX-XXXX-XXX (letters/numbers in each segment)
+  // Pattern: 2-4 letters, 6 digits, 3-4 alphanumeric, 2-3 alphanumeric
+  const isValid = /^[A-Z]{2,4}-\d{6}-[A-Z0-9]{3,4}-[A-Z0-9]{2,3}$/.test(sanitized) || sanitized === '';
   
   return {
     isValid,
     sanitized,
-    error: isValid ? undefined : 'Invalid estimate reference format'
+    error: isValid ? undefined : 'Invalid estimate reference format (e.g. EST-250928-252E-9EB)'
   };
 };
 
