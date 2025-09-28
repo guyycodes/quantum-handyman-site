@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera } from 'lucide-react';
+import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera, Home, ChevronDown } from 'lucide-react';
 
 // Content Management - All text content in one place
 const CONTENT = {
   title: 'Choose Your Service Package',
   subtitle: '💡 Pro Tip: Not sure what to choose? Start with a Free Estimate, we\'ll tailor for your needs!',
-  popularBadge: 'MOST POPULAR',
+  popularBadge: 'POPULAR',
+  hotBadge: 'HOT',
   categories: {
     all: 'All',
     estimates: 'Estimates',
@@ -26,6 +27,8 @@ const CONTENT = {
       icon: Calculator,
       color: 'bg-green-500',
       category: 'estimates',
+      hot: false,
+      popular: true,
       description: 'Get an estimate for your project',
       features: ['No obligation Free Professional Estimate', 'AI assessment - (Free w/promo code)', 'Written quote w/range & Project Breakdown & Roadmap']
     },
@@ -38,8 +41,28 @@ const CONTENT = {
       icon: Clock,
       color: 'bg-gray-600',
       category: 'estimates',
+      hot: false,
+      popular: false,
       description: 'Custom project with detailed estimate',
       features: ['Tailored solution', 'Flexible timing', 'Detailed proposal']
+    },
+    {
+      id: 'basic-home',
+      name: 'Basic Home Tasks',
+      price: '$95+',
+      materials: false,
+      duration: 1,
+      icon: Home,
+      color: 'bg-teal-500',
+      category: 'property',
+      hot: true,
+      popular: false,
+      description: 'Basic home tasks - $95 (trip fee + first hour)',
+      features: [
+        'Basic tasks ONLY: curtains, furniture assembly, Filter Replacements, etc.',
+        'First hour: $95 (includes trip fee + $35/hr)',
+        'Additional hours: $35/hr'
+      ]
     },
     {
       id: 'package195',
@@ -50,8 +73,10 @@ const CONTENT = {
       icon: Wrench,
       color: 'bg-blue-500',
       category: 'property',
-      description: '3 small jobs completed in up to 2.5 hours total',
-      features: ['Perfect for quick fixes', 'Multiple small tasks', 'Same day completion']
+      hot: false,
+      popular: false,
+      description: '3 small small jobs completed in up to ~2.5 hours',
+      features: ['Perfect for quick fixes', 'Doors, Locks, Hinges, etc.', 'Same day completion']
     },
     {
       id: 'package295',
@@ -62,8 +87,10 @@ const CONTENT = {
       icon: Star,
       color: 'bg-purple-500',
       category: 'property',
-      description: '3 medium jobs completed in up to 3.5 hours total',
-      features: ['Most popular choice', 'Mix of tasks', 'Comprehensive service']
+      hot: false,
+      popular: true,
+      description: '3 moderate-complexity jobs completed in up to ~3.5 hours',
+      features: ['Mix of moderate-complexity & Simple tasks', 'Drywall, Hinges, Furniture, etc.', 'Comprehensive service']
     },
     {
       id: 'package395',
@@ -74,8 +101,10 @@ const CONTENT = {
       icon: Zap,
       color: 'bg-orange-500',
       category: 'property',
-      description: '3 larger jobs completed in up to 4.5 hours total',
-      features: ['Complex projects', 'Extended time', 'Priority scheduling']
+      hot: false,
+      popular: false,
+      description: '3 larger jobs completed in up to ~4.5 hours',
+      features: ['Complex projects', 'Painting, flooring, etc.', 'Priority scheduling']
     },
 
     // New Digital/Tech packages
@@ -88,7 +117,9 @@ const CONTENT = {
       icon: Tv,
       color: 'bg-cyan-500',
       category: 'tech',
-      description: 'Up to 5.5 hours for smart devices (cameras, voice assistants, streaming).',
+      hot: false,
+      popular: false,
+      description: '3-5.5 hours for smart devices (cameras, voice assistants, streaming).',
       features: [
         'TV mount ≤65″ + apps & soundbar',
         'OR up to 5hr 30min for smart devices',
@@ -104,7 +135,9 @@ const CONTENT = {
       icon: Wifi,
       color: 'bg-indigo-500',
       category: 'tech',
-      description: 'Perfect for Airbnb & property managers, upt to 4.5 hours',
+      hot: false,
+      popular: true,
+      description: 'Perfect for Airbnb & property managers, up to ~4.5 hours',
       features: ['Keypad entry setup', 'Wi-Fi optimization', 'Guest QR codes & streaming ready', 'Touch-ups']
     },
     {
@@ -116,6 +149,8 @@ const CONTENT = {
       icon: Globe,
       color: 'bg-emerald-500',
       category: 'tech',
+      hot: false,
+      popular: false,
       description: 'Full online business presence: Full pay or 2×installments',
       features: ['Two-page website', 'Google Business Profile', '8 pro photos + booking link', 'Add-ons: AI, hosting, analytics, SEO, Care Plan ($99/mo)']
     },
@@ -128,6 +163,8 @@ const CONTENT = {
       icon: Camera,
       color: 'bg-pink-500',
       category: 'tech',
+      hot: false,
+      popular: false,
       description: 'Complete creator setup & optimization',
       features: ['Ring light & backdrop install', 'Social media optimization (Insta, Patreon, etc.)', 'Monetization setup + brand photos', 'Optional add-ons']
     }
@@ -135,12 +172,27 @@ const CONTENT = {
 };
 
 const ServiceSelection = ({ onServiceSelect, selectedService }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('property');
+  const [expandedCards, setExpandedCards] = useState(new Set());
   
   // Filter services based on selected category
   const filteredServices = CONTENT.services.filter(service => 
     selectedCategory === 'all' || service.category === selectedCategory
   );
+
+  // Toggle card expansion
+  const toggleCardExpansion = (e, serviceId) => {
+    e.stopPropagation(); // Prevent card selection when toggling
+    setExpandedCards(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(serviceId)) {
+        newSet.delete(serviceId);
+      } else {
+        newSet.add(serviceId);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <div>
@@ -195,6 +247,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
         {filteredServices.map((service) => {
           const Icon = service.icon;
           const isSelected = selectedService?.id === service.id;
+          const isExpanded = expandedCards.has(service.id);
           
           return (
             <button
@@ -209,12 +262,19 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
                 }
               `}
             >
-              {/* Popular badge for Standard Package */}
-              {service.id === 'package295' && (
-                <div className="absolute -top-3 right-4">
-                  <span className="bg-gradient-to-r from-blue-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                    {CONTENT.popularBadge}
-                  </span>
+              {/* Dynamic badges based on service properties */}
+              {(service.hot || service.popular) && (
+                <div className="absolute -top-3 right-4 flex gap-2">
+                  {service.hot && (
+                    <span className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                      {CONTENT.hotBadge}
+                    </span>
+                  )}
+                  {service.popular && (
+                    <span className="bg-gradient-to-r from-blue-600 to-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
+                      {CONTENT.popularBadge}
+                    </span>
+                  )}
                 </div>
               )}
               <div className="flex items-start gap-4 mb-0">
@@ -233,14 +293,33 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
 
               <p className="text-gray-600 mb-2 text-sm">{service.description}</p>
 
-              <ul className="space-y-2">
-                {service.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm text-gray-700">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              {/* Accordion Toggle Button */}
+              <div 
+                onClick={(e) => toggleCardExpansion(e, service.id)}
+                className="flex items-center justify-center py-1 mb-2 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+              >
+                <ChevronDown 
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                    isExpanded ? 'rotate-180' : ''
+                  }`}
+                />
+              </div>
+
+              {/* Collapsible Features List */}
+              <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+              >
+                <ul className="space-y-2 pb-2">
+                  {service.features.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-2 text-sm text-gray-700">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
               {isSelected && (
                 <div className="absolute top-4 right-4">
