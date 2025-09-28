@@ -33,7 +33,7 @@ const CONTENT = {
   },
   urgentBooking: {
     label: 'Urgent - I need service ASAP',
-    disclaimer: '⚠️ Urgent bookings include a $35+ rush service premium and are subject to availability.',
+    disclaimer: '⚠️ Urgent bookings include a $35+ rush service premium & subject to availability.',
     standardNotice: '📅 Standard bookings require 36 hours advance notice to confirm availability.'
   }
 };
@@ -131,6 +131,28 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
         {CONTENT.title}
       </h3>
       
+      {/* Urgent Booking Checkbox - Moved to top and made compact */}
+      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isUrgent}
+            onChange={(e) => setIsUrgent(e.target.checked)}
+            className="w-5 h-5 text-red-600 bg-white border-gray-300 rounded focus:ring-red-500"
+          />
+          <div className="flex-1">
+            <span className="font-semibold text-gray-900">
+              🚨 {CONTENT.urgentBooking.label} 
+            </span>
+            {isUrgent && (
+              <span className="text-sm text-red-700 ml-2">
+                {CONTENT.urgentBooking.disclaimer}
+              </span>
+            )}
+          </div>
+        </label>
+      </div>
+      
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         {/* Calendar Header */}
         <div className="flex justify-between items-center mb-6">
@@ -216,32 +238,6 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
             );
           })}
         </div>
-      </div>
-
-      {/* Urgent Booking Checkbox */}
-      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isUrgent}
-            onChange={(e) => setIsUrgent(e.target.checked)}
-            className="mt-1 w-5 h-5 text-red-600 bg-white border-gray-300 rounded focus:ring-red-500"
-          />
-          <div className="flex-1">
-            <span className="font-semibold text-gray-900">
-              🚨 {CONTENT.urgentBooking.label}
-            </span>
-            {isUrgent ? (
-              <p className="text-sm text-red-700 mt-1">
-                {CONTENT.urgentBooking.disclaimer}
-              </p>
-            ) : (
-              <p className="text-sm text-gray-600 mt-1">
-                {CONTENT.urgentBooking.standardNotice}
-              </p>
-            )}
-          </div>
-        </label>
       </div>
 
       {/* Selected date display */}
