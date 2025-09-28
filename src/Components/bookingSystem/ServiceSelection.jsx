@@ -172,7 +172,7 @@ const CONTENT = {
 };
 
 const ServiceSelection = ({ onServiceSelect, selectedService }) => {
-  const [selectedCategory, setSelectedCategory] = useState('property');
+  const [selectedCategory, setSelectedCategory] = useState('estimates');
   const [expandedCards, setExpandedCards] = useState(new Set());
   
   // Filter services based on selected category
