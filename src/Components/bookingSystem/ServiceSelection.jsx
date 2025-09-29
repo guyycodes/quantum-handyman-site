@@ -3,13 +3,13 @@ import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera, Home, Ch
 
 // Content Management - All text content in one place
 const CONTENT = {
-  title: 'Choose Your Service Package',
+  title: 'Schedule a Service',
   subtitle: '💡 Pro Tip: Not sure what to choose? Start with a Free Estimate, we\'ll tailor for your needs!',
   popularBadge: 'POPULAR',
   hotBadge: 'HOT',
   categories: {
     all: 'All',
-    estimates: 'Estimates',
+    estimates: 'Estimates/Consultations',
     property: 'Property',
     tech: 'Digital/Tech'
   },
@@ -23,19 +23,19 @@ const CONTENT = {
       name: 'Free Estimate',
       price: 'Free',
       materials: false,
-      duration: -2, // -2 for blank
+      duration: 'ai', // -2 for blank
       icon: Calculator,
       color: 'bg-green-500',
       category: 'estimates',
       hot: false,
       popular: true,
-      description: 'Get an estimate for your project',
+      description: 'Upload project photos & we\'ll provide a free estimate OR use AI for an instant assessment.',
       features: ['No obligation Free Professional Estimate', 'AI assessment - (Free w/promo code)', 'Written quote w/range & Project Breakdown & Roadmap']
     },
     {
-      id: 'custom',
-      name: 'Custom Project',
-      price: 'Quote',
+      id: 'consultation',
+      name: 'Consultation',
+      price: 'Free',
       materials: false,
       duration: -2, // -1 for infinity
       icon: Clock,
@@ -43,13 +43,13 @@ const CONTENT = {
       category: 'estimates',
       hot: false,
       popular: false,
-      description: 'Custom project with detailed estimate',
-      features: ['Tailored solution', 'Flexible timing', 'Detailed proposal']
+      description: 'Project review & discovery',
+      features: ['30 min consultation', 'Project proposal', 'High level roadmap']
     },
     {
       id: 'basic-home',
       name: 'Basic Home Tasks',
-      price: '$95+',
+      price: '$95',
       materials: false,
       duration: 1,
       icon: Home,
@@ -285,8 +285,8 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
                   <h4 className="text-md mt-1 font-bold text-gray-900">{service.name === 'Make-Ready Package' ? 'Make-Ready Pkg' : service.name}</h4>
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-2xl font-bold text-blue-600">{service.price}</span>
-                    <span className="text-xs text-gray-500">{service.materials ? '+mat\'ls' : (service.duration !== -1) ? '' : (service.duration === 'ai') ? 'or 🤖 AI - (Beta)' : '' }</span>
-                    <span className="text-xs text-gray-500">{service.materials ? '/' : ''}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration === 0) ? '∞' : service.duration === -2 ? '' : 'not -2'}</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '+mat\'ls' : (service.duration !== -1 && service.duration !== 'ai') ? '' : (service.duration === 'ai') ? 'or 🤖 AI - (Beta)' : '' }</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '/' : ''}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration === 0) ? '∞' : service.duration === -2 ? '' : ''}</span>
                   </div>
                 </div>
               </div>

@@ -17,6 +17,7 @@ import EstimateSuccess from '../Components/bookingSystem/EstimateSuccess';
 import StripePaymentModal from '../Components/StripePaymentModal';
 import TypewriterDisplay from '../Components/TypewriterDisplay';
 import ConfirmModal from '../Components/ConfirmModal';
+import { usePostHog } from '../hooks/usePostHog';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -44,6 +45,7 @@ const CONTENT = {
 };
 
 const BookingModal = ({ isOpen, onClose, initialService = null }) => {
+  const { trackFunnelStep, trackEvent, trackBookingComplete, trackError } = usePostHog();
   const [currentStep, setCurrentStep] = useState(1);
   const [bookingData, setBookingData] = useState({
     service: initialService,
@@ -61,10 +63,23 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   const [showAIResult, setShowAIResult] = useState(false);
   const [aiResultText, setAIResultText] = useState('');
   const [showConfirmClose, setShowConfirmClose] = useState(false);
+  const [funnelStartTime, setFunnelStartTime] = useState(null);
 
   const steps = CONTENT.steps;
 
   const handleClose = () => {
+    // Track funnel abandonment if not on success page
+    if (currentStep !== 6) {
+      const timeSpent = funnelStartTime ? Math.round((Date.now() - funnelStartTime) / 1000) : 0;
+      trackEvent('booking_abandoned', {
+        last_step: currentStep,
+        last_step_name: steps[currentStep - 1]?.title,
+        is_estimate_flow: isEstimateFlow,
+        time_spent_seconds: timeSpent,
+        service: bookingData.service?.name
+      });
+    }
+    
     // If on success page (step 6) or first page, close directly
     if (currentStep === 1) {
       onClose();
@@ -100,6 +115,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   useEffect(() => {
     if (isOpen) {
       clearState(1);
+      // Track modal opening
+      setFunnelStartTime(Date.now());
+      trackEvent('booking_modal_opened', {
+        initial_service: initialService?.name || null
+      });
+      trackFunnelStep('Service Selection', { stepNumber: 1 });
+      
       // Prevent body scrolling when modal is open
       document.body.classList.add('modal-open');
     } else {
@@ -126,30 +148,46 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   const handleServiceSelect = (service) => {
     setBookingData(prev => ({ ...prev, service }));
     
+    // Track service selection
+    trackEvent('service_selected', {
+      service_name: service.name,
+      service_id: service.id,
+      service_price: service.price,
+      service_category: service.category
+    });
+    
     // Check if estimate service is selected
     if (service.id === 'estimate') {
       setIsEstimateFlow(true);
       // Skip directly to customer info for estimates
       setCurrentStep(4);
+      trackFunnelStep('Customer Info (Estimate)', { stepNumber: 2, is_estimate: true });
     } else {
       setIsEstimateFlow(false);
       setCurrentStep(2);
+      trackFunnelStep('Date Selection', { stepNumber: 2 });
     }
   };
 
   const handleDateSelect = (date, isUrgent = false) => {
     setBookingData(prev => ({ ...prev, date, isUrgent }));
+    trackEvent('date_selected', { date, is_urgent: isUrgent });
     setCurrentStep(3);
+    trackFunnelStep('Time Selection', { stepNumber: 3 });
   };
 
   const handleTimeSelect = (timeSlot) => {
     setBookingData(prev => ({ ...prev, timeSlot }));
+    trackEvent('time_selected', { time_slot: timeSlot });
     setCurrentStep(4);
+    trackFunnelStep('Customer Info', { stepNumber: 4 });
   };
 
   const handleCustomerInfoSubmit = (customerInfo) => {
     setBookingData(prev => ({ ...prev, customerInfo }));
+    trackEvent('customer_info_provided', { has_images: !!customerInfo.images?.length });
     setCurrentStep(5);
+    trackFunnelStep('Confirmation', { stepNumber: 5 });
   };
 
   const handleBookingConfirm = async (useAI = false, hasValidPromo = false, promoCode = '') => {
@@ -285,6 +323,17 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             aiEstimateResult: aiEstimateResult
           }));
           
+          // Track successful estimate submission
+          const timeSpent = funnelStartTime ? Math.round((Date.now() - funnelStartTime) / 1000) : 0;
+          trackBookingComplete({
+            ...bookingData,
+            isEstimateFlow: true,
+            estimateRef,
+            used_ai: withAI,
+            ai_success: aiEstimateResult.success,
+            time_to_complete_seconds: timeSpent
+          });
+          
           // If AI was used and successful, show the result with typewriter effect
           if (withAI && aiEstimateResult.success) {
             setIsProcessingAI(false);
@@ -354,6 +403,16 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           bookingRef: bookingRef
         }));
         
+        // Track successful booking submission
+        const timeSpent = funnelStartTime ? Math.round((Date.now() - funnelStartTime) / 1000) : 0;
+        trackBookingComplete({
+          ...bookingData,
+          isEstimateFlow: false,
+          bookingRef,
+          calendar_success: calendarResult?.success || false,
+          time_to_complete_seconds: timeSpent
+        });
+        
         // If calendar failed, notify user but still proceed
         if (!calendarResult?.success) {
           console.warn('Booking submitted via email only. Calendar sync failed - will be added manually.');
@@ -370,6 +429,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
       }
     } catch (error) {
       console.error('Submission error:', error);
+      
+      // Track submission error
+      trackError('submission_failed', {
+        error_message: error.message,
+        is_estimate_flow: isEstimateFlow,
+        service: bookingData.service?.name
+      });
       
       if (isEstimateFlow) {
         // Fallback for estimate - make sure images are compressed

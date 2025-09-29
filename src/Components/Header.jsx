@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Wrench, Code } from 'lucide-react'
+import { Menu, X, Wrench, Code, Monitor } from 'lucide-react'
 import BookingCTA from './BookingCTA'
 
 // Content Management - All text content in one place
@@ -14,7 +14,8 @@ const CONTENT = {
     { name: 'Home', href: '/' },
     { name: 'Services', href: '/services' },
     { name: 'About', href: '/about' },
-    { name: 'Portfolio', href: '/portfolio' },
+    // { name: 'Portfolio', href: '/portfolio' },
+    { name: 'How It Works', href: '/how-it-works' },
     { name: 'Contact', href: '/contact' },
   ],
   mobileMenu: {
@@ -76,8 +77,16 @@ const Header = () => {
             ))}
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:block">
+          {/* Desktop CTAs */}
+          <div className="hidden lg:flex items-center gap-4">
+            <Link
+              to="/portal"
+              onClick={scrollToTop}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all"
+            >
+              <Monitor className="w-4 h-4" />
+              Portal
+            </Link>
             <BookingCTA 
               buttonStyle="primary" 
               showHelperText={true}
@@ -130,7 +139,18 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4 pb-2">
+            <div className="pt-4 pb-2 space-y-2">
+              <Link
+                to="/portal"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  scrollToTop()
+                }}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all"
+              >
+                <Monitor className="w-4 h-4" />
+                Portal
+              </Link>
               <BookingCTA 
                 buttonStyle="primary" 
                 className="w-full" 
