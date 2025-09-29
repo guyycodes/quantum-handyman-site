@@ -31,7 +31,7 @@ const CONTENT = {
     subtitle: 'A new kind of handyman for your property & technology needs. No collars. Just capability.',
     cta: {
       bookService: 'Book a Service',
-      seeWork: 'See Our Work',
+      seeWork: 'View Portfolio',
       helperText: '⚡ Instant AI estimates available'
     },
     badges: {
