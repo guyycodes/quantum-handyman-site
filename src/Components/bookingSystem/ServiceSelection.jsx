@@ -152,7 +152,7 @@ const CONTENT = {
       hot: false,
       popular: false,
       description: 'Full online business presence: Full pay or 2×installments',
-      features: ['Two-page website', 'Google Business Profile', '8 pro photos + booking link', 'Add-ons: AI, hosting, analytics, SEO, Care Plan ($99/mo)']
+      features: ['1-5 page website', 'Google Business Profile + Google Analytics', 'Social Media Optimization', '6 pro photos', 'Add-ons: AI, hosting, Authentication + Database, Sales funnel + Advanced service telemetry, SEO, Care Plan ($99/mo)']
     },
     {
       id: 'creator-studio',
