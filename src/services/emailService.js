@@ -287,7 +287,7 @@ export const sendBookingEmail = async (bookingData) => {
       booking_date: formattedDate,
       booking_time: timeSlot.display,
       service_duration: `${service.duration} hour${service.duration > 1 ? 's' : ''}`,
-      service_price: isUrgent ? `${service.price} + $35 Urgent Premium` : service.price,
+      service_price: isUrgent ? `${service.price} $35 Urgent Premium` : service.price,
       customer_address: customerInfo.address,
       customer_email: customerInfo.email,
       customer_phone: customerInfo.phone,

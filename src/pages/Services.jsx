@@ -89,28 +89,28 @@ const SERVICES_DATA = [
   {
     id: 'web-dev',
     category: 'digital',
-    title: 'Web & Digital',
+    title: 'Web & Digital Services',
     icon: Code,
     color: 'bg-purple-500',
     description: 'Digital presence solutions for small businesses, content creators, and social media influencers',
     shortDesc: 'Professional web development and digital solutions',
-    priceRange: '$500 - $2500',
+    priceRange: '$599 - $2500',
     timeEstimate: '1-2 weeks typical',
     subServices: [
-      { name: 'Custom Web Development', desc: 'Modern, responsive websites from scratch' },
-      { name: 'Influencer/Creator Studio Starter', desc: 'Instagram, TikTok, Patreon, etc., Ring light + backdrop install etc.' },
-      { name: 'Platform Support', desc: 'WordPress, Wix, Squarespace upgrades & support' },
+      { name: 'Open-for-Business Bundle', desc: '1-5 page website + Google Business Profile + Analytics setup' },
+      { name: 'Creator Studio Starter', desc: 'Ring light & backdrop install + social media optimization' },
+      { name: 'Custom Web Development', desc: 'Modern, responsive websites with advanced features' },
       { name: 'E-Commerce Solutions', desc: 'Shopify stores and online selling platforms' },
-      { name: 'Social Media & Branding', desc: 'Instagram, personal branding, content strategy' },
+      { name: 'Social Media Optimization', desc: 'Instagram, TikTok, personal branding setup' },
       { name: 'SEO & Google Services', desc: 'Search optimization and Google My Business' },
       { name: 'AI Integration', desc: 'Custom AI tools and chatbot integration 🤖' },
-      { name: 'Online Booking Systems', desc: 'Scheduling and appointment booking setup' }
+      { name: 'Add-Ons Available', desc: 'Authentication, databases, sales funnels, advanced telemetry' }
     ],
     benefits: [
+      'Professional photography included',
       'Mobile-responsive design',
-      'SEO-optimized code',
-      'Ongoing support available',
-      'Source code ownership'
+      'Care Plan available ($99/mo)',
+      'Payment plans available'
     ]
   },
   {
@@ -141,27 +141,28 @@ const SERVICES_DATA = [
   {
     id: 'smart-home',
     category: 'tech',
-    title: 'Smart Homes & Automation',
+    title: 'Smart Home & Tech Services',
     icon: Wifi,
     color: 'bg-cyan-500',
-    description: 'Software engineer expertise applied to home automation. IoT setup & integration',
-    shortDesc: 'Professional smart home installation and configuration',
-    priceRange: '$200 - $1300',
-    timeEstimate: '2-6 hours typical',
+    description: 'Professional smart home setup, TV mounting, and tech automation services',
+    shortDesc: 'Smart home installation and tech configuration',
+    priceRange: '$95 - $495',
+    timeEstimate: '1.5-4.5 hours typical',
     subServices: [
-      { name: 'Home Assistants', desc: 'Alexa, Google Home setup and configuration' },
-      { name: 'Smart Cameras', desc: 'Security camera installation and setup' },
-      { name: 'Smart Thermostats', desc: 'Installation and programming of smart climate control' },
-      { name: 'Custom Lighting', desc: 'Smart lighting systems and automation' },
-      { name: 'PC & Device Support', desc: 'Computer troubleshooting and optimization' },
-      { name: 'Custom Automation', desc: 'Programming custom automation scripts and routines' },
-      { name: 'IoT Integration', desc: 'Connect and integrate smart home devices' }
+      { name: 'Basic Tech Setup', desc: 'Single device setup - smart speakers, cameras, etc.' },
+      { name: 'Stream Pro + Mount', desc: 'TV mount (≤65") + apps & soundbar setup' },
+      { name: 'Turnover Tech+', desc: 'Perfect for Airbnb - keypad entry, Wi-Fi, guest QR codes' },
+      { name: 'Smart Cameras', desc: 'Security camera installation and configuration' },
+      { name: 'Voice Assistants', desc: 'Alexa, Google Home setup and routines' },
+      { name: 'Smart Lighting', desc: 'Smart bulbs and switch automation' },
+      { name: 'Wi-Fi Optimization', desc: 'Network setup and dead zone elimination' },
+      { name: 'PC & Device Support', desc: 'Computer troubleshooting and optimization' }
     ],
     benefits: [
-      'Energy savings optimization',
-      'Professional configuration',
+      'Professional installation',
       'User training included',
-      'Ongoing tech support'
+      'Wi-Fi optimization available',
+      'Flexible hourly rates'
     ]
   }
   // Note: Automotive scratch repair service is not currently offered

@@ -34,22 +34,22 @@ const CONTENT = {
     },
     {
       id: 'consultation',
-      name: 'Consultation',
+      name: 'Project Consultation',
       price: 'Free',
       materials: false,
-      duration: -2, // -1 for infinity
+      duration: 1, // -1 for infinity
       icon: Clock,
       color: 'bg-gray-600',
       category: 'estimates',
       hot: false,
       popular: false,
-      description: 'Project review & discovery',
-      features: ['30 min consultation', 'Project proposal', 'High level roadmap']
+      description: 'Discuss your project needs & get expert advice',
+      features: ['30 minute consultation', 'Project proposal & roadmap', 'Custom quote with options']
     },
     {
       id: 'basic-home',
       name: 'Basic Home Tasks',
-      price: '$95',
+      price: '$95+',
       materials: false,
       duration: 1,
       icon: Home,
@@ -57,10 +57,10 @@ const CONTENT = {
       category: 'property',
       hot: true,
       popular: false,
-      description: 'Basic home tasks - $95 (trip fee + first hour)',
+      description: 'Simple home tasks - First hour $95 (includes trip fee)',
       features: [
-        'Basic tasks ONLY: curtains, furniture assembly, Filter Replacements, etc.',
-        'First hour: $95 (includes trip fee + $35/hr)',
+        'Basic tasks ONLY: curtains, furniture assembly, filter replacements',
+        'First hour: $95 (trip fee + labor included)',
         'Additional hours: $35/hr'
       ]
     },
@@ -106,30 +106,46 @@ const CONTENT = {
       description: '3 larger jobs completed in up to ~4.5 hours',
       features: ['Complex projects', 'Painting, flooring, etc.', 'Priority scheduling']
     },
-
-    // New Digital/Tech packages
+    {
+      id: 'basic-tech',
+      name: 'Basic Tech Setup',
+      price: '$95+',
+      materials: false,
+      duration: 1.5,
+      icon: Wifi,
+      color: 'bg-teal-500',
+      category: 'tech',
+      hot: false,
+      popular: false,
+      description: 'Simple tech help - 1.5 hours minimum',
+      features: [
+        'Single device setup (smart speaker, camera, etc.)',
+        'Basic Wi-Fi troubleshooting',
+        'App installations & configurations'
+      ]
+    },
     {
       id: 'stream-pro',
       name: 'Stream Pro + Mount',
-      price: '$349-$549',
+      price: '$195-$395',
       materials: false,
-      duration: 5,
+      duration: 3,
       icon: Tv,
       color: 'bg-cyan-500',
       category: 'tech',
       hot: false,
       popular: false,
-      description: '3-5.5 hours for smart devices (cameras, voice assistants, streaming).',
+      description: '2-3.5 hours for TV mounting & smart device setup',
       features: [
         'TV mount ≤65″ + apps & soundbar',
-        'OR up to 5hr 30min for smart devices',
+        'OR smart device installations',
         'Cameras • voice assistants • streaming gear'
       ]
     },
     {
       id: 'turnover-tech',
       name: 'Turnover Tech+',
-      price: '$399-$799',
+      price: '$295-$495',
       materials: false,
       duration: 4,
       icon: Wifi,
@@ -137,22 +153,8 @@ const CONTENT = {
       category: 'tech',
       hot: false,
       popular: true,
-      description: 'Perfect for Airbnb & property managers, up to ~4.5 hours',
-      features: ['Keypad entry setup', 'Wi-Fi optimization', 'Guest QR codes & streaming ready', 'Touch-ups']
-    },
-    {
-      id: 'business-bundle',
-      name: 'Open-for-Business Bundle',
-      price: '$599-$1299',
-      materials: false,
-      duration: 1,
-      icon: Globe,
-      color: 'bg-emerald-500',
-      category: 'tech',
-      hot: false,
-      popular: false,
-      description: 'Full online business presence: Full pay or 2×installments',
-      features: ['1-5 page website', 'Google Business Profile + Google Analytics', 'Social Media Optimization', '6 pro photos', 'Add-ons: AI, hosting, Authentication + Database, Sales funnel + Advanced service telemetry, SEO, Care Plan ($99/mo)']
+      description: 'Perfect for Airbnb & property managers, 2.5-4.5 hours',
+      features: ['Keypad entry setup', 'Wi-Fi optimization', 'Guest QR codes & streaming ready', 'Smart home basics']
     },
     {
       id: 'creator-studio',
@@ -167,6 +169,20 @@ const CONTENT = {
       popular: false,
       description: 'Complete creator setup & optimization',
       features: ['Ring light & backdrop install', 'Social media optimization (Insta, Patreon, etc.)', 'Monetization setup + brand photos', 'Optional add-ons']
+    },
+    {
+      id: 'business-bundle',
+      name: 'Open-for-Business Bundle',
+      price: '$599-$2500',
+      materials: false,
+      duration: 1,
+      icon: Globe,
+      color: 'bg-emerald-500',
+      category: 'tech',
+      hot: false,
+      popular: false,
+      description: 'Complete online business presence - Payment plans available',
+      features: ['1-5 page professional website', 'Google Business Profile + Analytics setup', '6 professional photos included', 'Social media optimization', 'Optional add-ons: AI chat, authentication, sales funnels, Care Plan ($99/mo)']
     }
   ]
 };
