@@ -18,6 +18,7 @@ import StripePaymentModal from '../Components/StripePaymentModal';
 import TypewriterDisplay from '../Components/TypewriterDisplay';
 import ConfirmModal from '../Components/ConfirmModal';
 import { usePostHog } from '../hooks/usePostHog';
+import { gaEvent, gaConversion } from '../contexts/GoogleAnalyticsProvider';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -121,6 +122,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         initial_service: initialService?.name || null
       });
       trackFunnelStep('Service Selection', { stepNumber: 1 });
+      
+      // Google Analytics tracking
+      gaEvent('booking_modal_open', 'engagement', initialService?.name || 'direct');
       
       // Prevent body scrolling when modal is open
       document.body.classList.add('modal-open');
@@ -334,6 +338,12 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             time_to_complete_seconds: timeSpent
           });
           
+          // Google Analytics tracking for estimate
+          gaEvent('estimate_submitted', 'conversion', bookingData.service?.name);
+          if (withAI) {
+            gaEvent('ai_estimate_used', 'feature', aiEstimateResult.success ? 'success' : 'failed');
+          }
+          
           // If AI was used and successful, show the result with typewriter effect
           if (withAI && aiEstimateResult.success) {
             setIsProcessingAI(false);
@@ -412,6 +422,11 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           calendar_success: calendarResult?.success || false,
           time_to_complete_seconds: timeSpent
         });
+        
+        // Google Analytics tracking for booking
+        gaEvent('booking_completed', 'conversion', bookingData.service?.name);
+        // Track as conversion if you have conversion tracking set up
+        gaConversion('booking', parseFloat(bookingData.service?.price?.replace(/[^0-9.]/g, '')) || 0);
         
         // If calendar failed, notify user but still proceed
         if (!calendarResult?.success) {
