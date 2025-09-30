@@ -190,7 +190,7 @@ const CONTENT = {
     footer: 'We use a secure booking platform to manage appointments and ensure the best service experience.'
   },
   
-  phone: '555-123-4567'
+  phone: '303-495-8899'
 }
 
 // Data objects with their text content
@@ -685,7 +685,7 @@ const Home = () => {
                   <div className="w-full h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
                 }>
                   <FramedImage
-                    src="/images/profile/Me&Pops.jpg"
+                    src="/images/profile/Me-and-Pops.jpg"
                     alt="Morgan B. - Quantum Handyman"
                     frameStyle="modern"
                     aspectRatio="portrait"
