@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* World-specific theme variables */
+[data-world="handyman"] {
+  --color-world-primary: #3b82f6; /* Blue */
+  --color-world-secondary: #10b981; /* Green */
+  --color-world-accent: #f59e0b; /* Amber */
+  --color-world-bg: #1e40af;
+  --color-world-gradient-from: #3b82f6;
+  --color-world-gradient-to: #1e40af;
+}
+
+[data-world="web"] {
+  --color-world-primary: #059669; /* Spruce Green */
+  --color-world-secondary: #10b981; /* Emerald */
+  --color-world-accent: #F59E0B; /* Citrus */
+  --color-world-bg: #059669;
+  --color-world-gradient-from: #10b981;
+  --color-world-gradient-to: #F59E0B;
+}
+
+/* Optional: Apply world colors to existing elements */
+[data-world="handyman"] .world-themed {
+  color: var(--color-world-primary);
+}
+
+[data-world="web"] .world-themed {
+  color: var(--color-world-primary);
+}
+
+/* Smooth theme transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -329,5 +362,45 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+  }
+  
+  /* Split Landing Page Animations */
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideRight {
+    from {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }

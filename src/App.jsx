@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import ScrollToTop from './Components/ScrollToTop'
+import SplitLanding from './Components/SplitLanding'
 
 // Lazy load all route components
 const Home = lazy(() => import('./pages/Home'))
@@ -25,6 +26,30 @@ const PageLoader = () => (
 )
 
 function App() {
+  const [selectedWorld, setSelectedWorld] = useState(() => {
+    // Check if user has already selected a world
+    return localStorage.getItem('qh_world');
+  });
+
+  const handleWorldSelect = (world) => {
+    setSelectedWorld(world);
+    // Apply theme class to document root
+    document.documentElement.setAttribute('data-world', world);
+  };
+
+  useEffect(() => {
+    // Apply theme on mount if world is already selected
+    if (selectedWorld) {
+      document.documentElement.setAttribute('data-world', selectedWorld);
+    }
+  }, [selectedWorld]);
+
+  // Show split landing if no world selected
+  if (!selectedWorld) {
+    return <SplitLanding onWorldSelect={handleWorldSelect} />;
+  }
+
+  // Otherwise show the main app
   return (
     <>
       <ScrollToTop />
