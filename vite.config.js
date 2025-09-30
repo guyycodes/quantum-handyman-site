@@ -5,6 +5,17 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
+    modulePreload: {
+      // Reduce preloading to improve initial load
+      resolveDependencies: (filename, deps, context) => {
+        // Only preload critical modules for initial render
+        return deps.filter(dep => {
+          return dep.includes('index') || 
+                 dep.includes('react-vendor') ||
+                 dep.includes('vendor.js');
+        });
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -22,6 +33,10 @@ export default defineConfig({
             if (id.includes('posthog') || id.includes('@posthog')) {
               return 'analytics-vendor';
             }
+            // Split heavy UI components into their own chunk
+            if (id.includes('framer-motion') || id.includes('@radix-ui')) {
+              return 'ui-heavy';
+            }
             // Payment and email services
             if (id.includes('emailjs') || id.includes('stripe')) {
               return 'services-vendor';
@@ -33,6 +48,10 @@ export default defineConfig({
           if (id.includes('GoogleAnalytics') || id.includes('PostHog')) {
             return 'analytics';
           }
+          // Split BookingModal and related heavy components
+          if (id.includes('BookingModal') || id.includes('bookingSystem')) {
+            return 'booking-system';
+          }
         },
         // Use content hash for better caching
         chunkFileNames: 'assets/[name]-[hash].js',
@@ -40,12 +59,22 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
-    // Minify for production builds
-    minify: 'esbuild',
+    // Minify for production builds with terser for better compression
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+      format: {
+        comments: false,
+      },
+    },
     // Generate source maps for debugging (disable in production if needed)
     sourcemap: false,
     // Reduce chunk size warnings
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 600,
     // Better tree-shaking
     treeShaking: true,
     // Remove console logs in production
@@ -54,8 +83,9 @@ export default defineConfig({
     },
     // Target modern browsers for smaller bundles
     target: 'es2020',
-    // CSS code splitting
+    // CSS optimization
     cssCodeSplit: true,
+    cssMinify: true,
     // Asset inlining threshold (4kb)
     assetsInlineLimit: 4096,
   },
