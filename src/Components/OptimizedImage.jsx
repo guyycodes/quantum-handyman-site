@@ -4,11 +4,11 @@ const OptimizedImage = ({
   src, 
   alt, 
   className = '', 
-  loading = 'lazy',
+  loading = 'eager', // Changed default to eager for immediate loading
   onError,
   ...props 
 }) => {
-  // Just use the original image - no optimization attempt
+  // Force image to load immediately
   return (
     <img 
       src={src}
@@ -16,6 +16,7 @@ const OptimizedImage = ({
       className={className}
       loading={loading}
       onError={onError}
+      fetchpriority="high" // Add high priority for critical images
       {...props}
     />
   );
