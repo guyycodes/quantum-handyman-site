@@ -198,7 +198,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.smartAssistant.testimonial,
     client: CONTENT.projects.smartAssistant.client,
     rating: 5,
-    projectImg: '/images/smart-home/smart_speaker-thumb.png'
+    projectImg: '/images/smart-home/smart_speaker.png'
   },
   {
     id: 4,
