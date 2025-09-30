@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
+import FramedImage from '../Components/FramedImage'
+import OptimizedImage from '../Components/OptimizedImage'
 
 // Lazy load non-critical components
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
 const FloatingVideo = lazy(() => import('../Components/FloatingVideo'))
-const FramedImage = lazy(() => import('../Components/FramedImage'))
 const BeforeAfterSlider = lazy(() => import('../Components/BeforeAfterSlider'))
 
 // Lazy load BookingModal since it's only needed when user clicks to book
 const BookingModal = lazy(() => import('../Components/BookingModal'))
-import OptimizedImage from '../Components/OptimizedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -681,27 +681,23 @@ const Home = () => {
               
               {/* Personal Photo */}
               <div className="relative">
-                <Suspense fallback={
-                  <div className="w-full h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
-                }>
-                  <FramedImage
-                    src="/images/profile/Me-and-Pops.jpg"
-                    alt="Morgan B. - Quantum Handyman"
-                    frameStyle="modern"
-                    aspectRatio="portrait"
-                    objectFit="cover"
-                    rounded="2xl"
-                    shadow={true}
-                    hover={true}
-                    maxWidth="max-w-sm"
-                    maxHeight="max-h-md"
-                    width="w-full"
-                    caption="Morgan B. - Quantum Handyman"
-                    captionPosition="bottom"
-                    className="mx-auto"
-                    preferThumb={true}
-                  />
-                </Suspense>
+                <FramedImage
+                  src="/images/profile/Me-and-Pops.jpg"
+                  alt="Morgan B. - Quantum Handyman"
+                  frameStyle="modern"
+                  aspectRatio="portrait"
+                  objectFit="cover"
+                  rounded="2xl"
+                  shadow={true}
+                  hover={true}
+                  maxWidth="max-w-sm"
+                  maxHeight="max-h-md"
+                  width="w-full"
+                  caption="Morgan B. - Quantum Handyman"
+                  captionPosition="bottom"
+                  className="mx-auto"
+                  preferThumb={true}
+                />
               </div>
             </div>
           </div>
