@@ -1,5 +1,4 @@
 import React from 'react'
-import OptimizedImage from '../Components/OptimizedImage'
 
 const FramedImage = ({ 
   src, 
@@ -83,12 +82,11 @@ const FramedImage = ({
   return (
     <figure className={`${width || 'w-full'}`}>
       <div className={`${imageWrapperClasses} group`}>
-        <OptimizedImage 
+        <img 
           src={src} 
           alt={alt}
           className={imageClasses}
-          loading="lazy"
-          preferThumb={preferThumb}
+          loading="eager"
         />
         
         {/* Optional overlay */}

@@ -4,7 +4,6 @@ import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import FramedImage from '../Components/FramedImage'
-import OptimizedImage from '../Components/OptimizedImage'
 
 // Lazy load non-critical components
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
@@ -240,29 +239,29 @@ const PORTFOLIO_DATA = [
     category: 'Web Development',
     title: 'Job Management Platform',
     description: 'Realtime SaaS jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
-    image: '/images/web-dev/Dandymen_io.png',
+    image: '/images/web-dev/Dandymen_io-optimized.webp',
     link: null // Optional link to project
   },
   {
     category: 'Smart Home',
     title: 'Smart Home Automation',
     description: 'Integrated lighting, Security Cameras, home assistants etc.',
-    image: '/images/smart-home/smart_home_app.png',
+    image: '/images/smart-home/smart_home_app-optimized.webp',
     link: null
   },
   {
     category: 'Landscape',
     title: 'Backyard Transformation',
     description: 'Stamped concrete Patio • Irrigation • Ceiling drywall • Decking • Sod • Masonry • Roofing',
-    before: '/images/landscaping/landscape_before.jpg',
-    after: '/images/landscaping/landscape_after.jpg',
+    before: '/images/landscaping/landscape_before-optimized.webp',
+    after: '/images/landscaping/landscape_after-optimized.webp',
     link: null
   },
   {
     category: 'Property Maintenance',
     title: 'Storage Shed Installation',
     description: 'Storage Shed Installation • No permit-required work • Build • Seal & Paint',
-    image: '/images/home-repair/distant_shed.jpg',
+    image: '/images/home-repair/distant_shed-optimized.webp',
     link: null
   }
 ]
@@ -682,7 +681,7 @@ const Home = () => {
               {/* Personal Photo */}
               <div className="relative">
                 <FramedImage
-                  src="/images/profile/Me-and-Pops.jpg"
+                  src="/images/profile/Me-and-Pops-optimized.webp"
                   alt="Morgan B. - Quantum Handyman"
                   frameStyle="modern"
                   aspectRatio="portrait"
@@ -750,11 +749,11 @@ const Home = () => {
                         // Single Image Layout (Original)
                         <>
                           {item.image ? (
-                            <OptimizedImage 
+                            <img 
                               src={item.image} 
                               alt={item.title}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                              loading="lazy"
+                              loading="eager"
                               onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextElementSibling.style.display = 'flex';
