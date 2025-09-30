@@ -680,6 +680,8 @@ const ChatBot = () => {
         <button
           onClick={toggleChat}
           className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-110 chatbot-animate-pulse-slow"
+          aria-label="Open chat assistant"
+          title="Chat with Quantum Handyman AI Assistant"
         >
           <FaComments className="text-2xl" />
         </button>
@@ -704,12 +706,15 @@ const ChatBot = () => {
                 onClick={resetConversation}
                 className="text-gray-400 hover:text-white transition-colors"
                 title="Reset conversation"
+                aria-label="Reset conversation"
               >
                 <FaRedo className="text-sm" />
               </button>
               <button
                 onClick={toggleChat}
                 className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Close chat"
+                title="Close chat"
               >
                 <FaTimes />
               </button>
@@ -737,6 +742,8 @@ const ChatBot = () => {
                 <button
                   type="submit"
                   className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+                  aria-label="Send message"
+                  title="Send message"
                 >
                   <FaPaperPlane />
                 </button>

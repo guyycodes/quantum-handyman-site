@@ -36,9 +36,9 @@ const FloatingVideo = () => {
               onLoadedData={() => {
                 setVideoLoaded(true)
               }}
-              onError={(e) => {
+              onError={() => {
                 setVideoError(true)
-                console.error('Video failed to load:', e)
+                // Silently handle video error and show fallback
               }}
             >
               Your browser does not support the video tag.
@@ -51,7 +51,7 @@ const FloatingVideo = () => {
                      if (videoRef.current) {
                        videoRef.current.playbackRate = 0.8  // Set 80% speed
                        videoRef.current.play().catch(() => {
-                         console.log('Video play was prevented')
+                         // Silently handle autoplay prevention (common on mobile)
                        })
                      }
                    }}>
@@ -68,7 +68,7 @@ const FloatingVideo = () => {
           /* Fallback if video fails to load */
           <div className="w-full h-[320px] md:h-[400px] bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
             <div className="text-center text-white p-8">
-              <h3 className="text-2xl font-bold mb-2">Quantum Handyman</h3>
+              <div className="text-2xl font-bold mb-2">Quantum Handyman</div>
               <p className="text-white/80">Professional Service • Quality Guaranteed</p>
             </div>
           </div>

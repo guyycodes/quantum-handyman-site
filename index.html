@@ -75,8 +75,7 @@
     <link rel="dns-prefetch" href="https://js.stripe.com" />
     
     <!-- Google Fonts with display swap for better performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" /></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
     
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">
@@ -342,32 +341,8 @@
   </head>
   <body>
     <div id="root">
-      <!-- Minimal loading indicator while JavaScript loads -->
-      <style>
-        .app-loader {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #0f172a;
-          z-index: 9999;
-        }
-        .app-loader-spinner {
-          width: 50px;
-          height: 50px;
-          border: 3px solid rgba(59, 130, 246, 0.3);
-          border-top-color: #3b82f6;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      </style>
+      <!-- Loading styles in external CSS for CSP compliance -->
+      <link rel="stylesheet" href="/loader.css" />
       <div class="app-loader">
         <div class="app-loader-spinner"></div>
       </div>

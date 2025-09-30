@@ -446,7 +446,7 @@ const Portfolio = () => {
 
                 {/* Project Info */}
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
                   <p className="text-muted text-sm mb-4">{project.description}</p>
                   
                   <div className="flex items-center gap-4 text-xs text-muted mb-4">

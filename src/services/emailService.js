@@ -74,7 +74,10 @@ export const sendContactEmail = async (formData) => {
       response
     };
   } catch (error) {
-    console.error('EmailJS Error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('EmailJS Error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Failed to send email'
@@ -175,7 +178,10 @@ Time: ${new Date().toLocaleString()}
       ticketId: ticketData.ticketId
     };
   } catch (error) {
-    console.error('Support Ticket Email Error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('Support Ticket Email Error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Failed to send support ticket'
@@ -338,7 +344,10 @@ export const sendBookingEmail = async (bookingData) => {
       bookingRef: finalBookingRef
     };
   } catch (error) {
-    console.error('Booking Email Error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('Booking Email Error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Failed to send booking confirmation'
@@ -476,7 +485,10 @@ export const sendEstimateRequestEmail = async (estimateData) => {
       estimateRef: finalEstimateRef
     };
   } catch (error) {
-    console.error('Estimate Request Email Error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('Estimate Request Email Error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Failed to send estimate request'

@@ -497,7 +497,7 @@ const Home = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'all' 
                   ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-muted hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
               }`}
             >
               {CONTENT.services.categories.all}
@@ -511,7 +511,7 @@ const Home = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'property' 
                   ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-muted hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
               }`}
             >
               {CONTENT.services.categories.property}
@@ -525,7 +525,7 @@ const Home = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'tech' 
                   ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-muted hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
               }`}
             >
               {CONTENT.services.categories.tech}
@@ -539,7 +539,7 @@ const Home = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all ${
                 selectedServiceCategory === 'digital' 
                   ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-muted hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
               }`}
             >
               {CONTENT.services.categories.digital}
@@ -615,7 +615,7 @@ const Home = () => {
                     {index === 1 && <Clock className="w-8 h-8 text-secondary mb-2" />}
                     {index === 2 && <Shield className="w-8 h-8 text-accent mb-2" />}
                     {index === 3 && <Users className="w-8 h-8 text-purple-500 mb-2" />}
-                    <h4 className="font-semibold text-near-black">{cred.title}</h4>
+                    <h3 className="font-semibold text-near-black">{cred.title}</h3>
                     <p className="text-sm text-muted">{cred.description}</p>
                   </div>
                 ))}
@@ -796,7 +796,8 @@ const Home = () => {
           <div className="text-center mt-8">
             <Link 
               to="/portfolio" 
-              className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all hover:text-blue-700"
+              aria-label="View full portfolio of completed projects"
             >
               {CONTENT.portfolio.viewFull}
               <ChevronRight className="w-5 h-5" />
@@ -854,7 +855,7 @@ const Home = () => {
                 href={CONTENT.reviews.googleUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white text-lg font-semibold rounded-lg hover:bg-primary-dark transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 <MessageSquare className="w-6 h-6" />
                 {CONTENT.reviews.googleButton}

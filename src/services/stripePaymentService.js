@@ -76,7 +76,10 @@ export const createAIEstimateCheckoutSession = async (customerInfo) => {
       url: result.url
     };
   } catch (error) {
-    console.error('Stripe Checkout Session Error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('Stripe Checkout Session Error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Failed to create payment session'
@@ -155,7 +158,10 @@ export const processPaymentWithElement = async (customerInfo, paymentElementRef)
       paymentIntent: result.paymentIntent
     };
   } catch (error) {
-    console.error('Payment processing error:', error);
+    // Log error only in development
+    if (import.meta.env.DEV) {
+      console.error('Payment processing error:', error);
+    }
     return {
       success: false,
       error: error.message || 'Payment processing failed'

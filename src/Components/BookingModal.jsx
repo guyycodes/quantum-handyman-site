@@ -266,11 +266,15 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
                 
                 setAIResultText(resultText);
               } else {
-                console.error('AI estimate failed:', aiResult.error);
+                if (import.meta.env.DEV) {
+                  console.error('AI estimate failed:', aiResult.error);
+                }
                 aiEstimateResult = aiResult;
               }
           } catch (aiError) {
-            console.error('AI estimate request failed:', aiError);
+            if (import.meta.env.DEV) {
+              console.error('AI estimate request failed:', aiError);
+            }
             aiEstimateResult = {
               success: false,
               error: aiError.message || 'Failed to generate AI estimate',
@@ -307,9 +311,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         // Save to Google Sheets BEFORE sending email
         try {
           const sheetResult = await googleCalendarService.saveEstimate(estimateData);
-          console.log('Estimate saved to sheets:', sheetResult);
+          if (import.meta.env.DEV) {
+            console.log('Estimate saved to sheets:', sheetResult);
+          }
         } catch (sheetError) {
-          console.warn('Failed to save estimate to sheets, continuing with email:', sheetError);
+          if (import.meta.env.DEV) {
+            console.warn('Failed to save estimate to sheets, continuing with email:', sheetError);
+          }
           // Don't fail the whole process if sheets fails
         }
         
@@ -367,7 +375,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         // Compress images for regular bookings too (if any)
         let imageDataBase64 = '';
         if (bookingData.customerInfo?.images && bookingData.customerInfo.images.length > 0) {
-          console.log('Processing images for booking...');
+          if (import.meta.env.DEV) {
+            console.log('Processing images for booking...');
+          }
           imageDataBase64 = await compressMultipleImages(bookingData.customerInfo.images, {
             scaleFactor: 0.6,  // 60% of original size
             quality: 0.5,      // 50% JPEG quality
@@ -392,9 +402,13 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             isUrgent: bookingData.isUrgent || false
           };
           calendarResult = await googleCalendarService.createBooking(bookingWithUrgent);
-          console.log('Calendar booking created:', calendarResult);
+          if (import.meta.env.DEV) {
+            console.log('Calendar booking created:', calendarResult);
+          }
         } catch (calendarError) {
-          console.warn('Google Calendar booking failed, will proceed with email only:', calendarError);
+          if (import.meta.env.DEV) {
+            console.warn('Google Calendar booking failed, will proceed with email only:', calendarError);
+          }
           // Don't fail the entire booking if calendar fails
         }
         
@@ -430,7 +444,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         
         // If calendar failed, notify user but still proceed
         if (!calendarResult?.success) {
-          console.warn('Booking submitted via email only. Calendar sync failed - will be added manually.');
+          if (import.meta.env.DEV) {
+            console.warn('Booking submitted via email only. Calendar sync failed - will be added manually.');
+          }
         }
         
         setCurrentStep(6); // Success step
@@ -443,7 +459,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         }, 250);
       }
     } catch (error) {
-      console.error('Submission error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Submission error:', error);
+      }
       
       // Track submission error
       trackError('submission_failed', {
@@ -474,7 +492,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             }
           }, 100);
         } catch (emailError) {
-          console.error('Email also failed:', emailError);
+          if (import.meta.env.DEV) {
+            console.error('Email also failed:', emailError);
+          }
           alert('There was an error submitting your estimate request. Please try again.');
         }
       } else {
@@ -499,7 +519,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             }
           }, 100);
         } catch (emailError) {
-          console.error('Email also failed:', emailError);
+          if (import.meta.env.DEV) {
+            console.error('Email also failed:', emailError);
+          }
           alert(CONTENT.errors.bookingSubmission);
         }
       }

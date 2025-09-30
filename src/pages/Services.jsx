@@ -215,7 +215,7 @@ const Services = () => {
                 className={`px-6 py-3 rounded-lg font-medium transition-all ${
                   selectedCategory === category.id
                     ? 'bg-primary text-white shadow-lg'
-                    : 'bg-white text-muted hover:bg-gray-100 shadow-md'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
                 }`}
               >
                 {category.name}
