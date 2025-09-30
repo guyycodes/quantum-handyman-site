@@ -13,7 +13,10 @@ import {
 import chatbotResponses from '../utils/chatbotResponses';
 import { sendSupportTicketEmail } from '../services/emailService';
 import { generateTicketRef } from '../utils/uniqueIdGenerator';
-import BookingModal from './BookingModal';
+
+// Lazy load BookingModal since it's only needed when user clicks
+import { lazy, Suspense } from 'react';
+const BookingModal = lazy(() => import('./BookingModal'));
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -744,10 +747,16 @@ const ChatBot = () => {
       )}
       
       {/* Booking Modal */}
-      <BookingModal 
-        isOpen={isBookingModalOpen} 
-        onClose={() => setIsBookingModalOpen(false)} 
-      />
+      <Suspense fallback={
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      }>
+        <BookingModal 
+          isOpen={isBookingModalOpen} 
+          onClose={() => setIsBookingModalOpen(false)} 
+        />
+      </Suspense>
     </div>
   );
 };

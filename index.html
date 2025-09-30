@@ -63,12 +63,20 @@
     <meta name="format-detection" content="email=no" />
     <meta name="format-detection" content="address=no" />
     
-    <!-- Preconnect to external domains -->
+    <!-- Critical Resource Hints for Performance -->
+    <!-- Preconnect for critical third-party origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+    <!-- DNS prefetch for non-critical third-party origins (loaded later) -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://us.i.posthog.com" />
+    <link rel="dns-prefetch" href="https://api.emailjs.com" />
+    <link rel="dns-prefetch" href="https://js.stripe.com" />
+    
+    <!-- Google Fonts with display swap for better performance -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" /></noscript>
     
     <!-- Structured Data / JSON-LD -->
     <script type="application/ld+json">

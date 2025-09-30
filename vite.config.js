@@ -29,10 +29,6 @@ export default defineConfig({
           if (id.includes('posthog') || id.includes('google')) {
             return 'analytics';
           }
-          // Animation
-          if (id.includes('framer-motion')) {
-            return 'animation';
-          }
           // Payment
           if (id.includes('stripe')) {
             return 'payment';

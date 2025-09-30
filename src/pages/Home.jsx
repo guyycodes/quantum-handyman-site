@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
-import BookingModal from '../Components/BookingModal'
 import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
 import FramedImage from '../Components/FramedImage'
 import BeforeAfterSlider from '../Components/BeforeAfterSlider'
+
+// Lazy load BookingModal since it's only needed when user clicks to book
+const BookingModal = lazy(() => import('../Components/BookingModal'))
 import OptimizedImage from '../Components/OptimizedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
@@ -920,10 +922,12 @@ const Home = () => {
       <Footer />
       
       {/* Booking Modal */}
-      <BookingModal 
-        isOpen={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-      />
+      <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div></div>}>
+        <BookingModal 
+          isOpen={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+        />
+      </Suspense>
     </div>
   )
 }

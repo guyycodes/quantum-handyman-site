@@ -15,21 +15,44 @@ export function GoogleAnalyticsProvider({ children }) {
       return;
     }
 
-    // Load gtag script
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+    // Defer loading until after page becomes interactive
+    const loadAnalytics = () => {
+      // Check if already loaded
+      if (window.gtag) return;
 
-    // Initialize gtag
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
-      window.dataLayer.push(arguments);
+      // Load gtag script
+      const script = document.createElement('script');
+      script.async = true;
+      script.defer = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+      document.head.appendChild(script);
+
+      // Initialize gtag
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function() {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_MEASUREMENT_ID, {
+        send_page_view: false // We'll handle page views manually
+      });
     };
-    window.gtag('js', new Date());
-    window.gtag('config', GA_MEASUREMENT_ID, {
-      send_page_view: false // We'll handle page views manually
-    });
+
+    // Load immediately if page is already loaded, otherwise wait
+    if (document.readyState === 'complete') {
+      // Small delay to ensure critical resources are loaded first
+      setTimeout(loadAnalytics, 100);
+    } else {
+      // Wait for window load event (all resources loaded)
+      window.addEventListener('load', () => {
+        // Use requestIdleCallback if available, otherwise setTimeout
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadAnalytics);
+        } else {
+          setTimeout(loadAnalytics, 1);
+        }
+      });
+    }
 
     return () => {
       // Cleanup if needed
