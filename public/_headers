@@ -1,18 +1,9 @@
-/*
-  # Security Headers
-  X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(self), interest-cohort=()
-  
-  # Content Security Policy - Production Configuration
-  # Balances security with React/Vite requirements
-  # Note: React requires 'unsafe-inline' for styles in production builds
-  # IMPORTANT: Do NOT use 'strict-dynamic' as it breaks Vite's script loading
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-tQjf8gvb2ROOMapIxFvFAYBeUJ0v1HCbOcSmDNXGtDo=' 'sha256-GuqXnJvwmfTrmYp41PrPq+EKWN7Gt/VykD0RpTOxG9E=' 'sha256-V7/RK8nvqJ3roGmj7vDZLqPYTwIqSr4nLp5jeHvNpwE=' https://quantumhandyman.com https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.posthog.com; script-src-elem 'self' https://quantumhandyman.com https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://api.emailjs.com https://vitals.vercel-insights.com https://script.google.com https://*.googleusercontent.com https://api.openai.com https://api.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.posthog.com wss://us.i.posthog.com; frame-src https://js.stripe.com https://hooks.stripe.com; media-src 'self' blob: data:; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;
+# NOTE: Security headers including CSP are now configured in netlify.toml
+# This file is kept for cache control settings only
 
-  # Cache Control for static assets
+/*
+
+  # Cache Control for static assets (these still work from _headers file)
   Cache-Control: public, max-age=2592000, immutable
   
 /index.html
