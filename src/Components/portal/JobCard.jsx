@@ -60,6 +60,78 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
   
   const progressInfo = getProgressInfo();
   
+  // Determine the actual status based on date/time and completion status
+  const getActualStatus = () => {
+    // If marked as complete in the spreadsheet, show completed status
+    const progressStr = job['Progress'] || '';
+    const jobStatus = job['Status'] || '';
+    const paymentStatus = job['Payment Status'] || 'Pending';
+    
+    // Check if job is marked as completed
+    if (progressStr.includes('100%') || progressStr.toLowerCase().includes('complete') || 
+        jobStatus.toLowerCase().includes('complete')) {
+      return paymentStatus === 'Paid' ? 'completed_paid' : 'completed_unpaid';
+    }
+    
+    // Check if job is in progress
+    if (progressStr.includes('%') && !progressStr.includes('100%')) {
+      return 'in_progress';
+    }
+    
+    // Check if job time has passed
+    const jobDate = job['Date'];
+    const jobTime = job['Time'];
+    
+    if (jobDate) {
+      const now = new Date();
+      const [year, month, day] = jobDate.split('-').map(Number);
+      const jobDateTime = new Date(year, month - 1, day);
+      
+      // Add time if available
+      if (jobTime) {
+        let hours = 0, minutes = 0;
+        
+        // Handle different time formats
+        const timeStr = jobTime.toString();
+        if (timeStr.includes('T') && timeStr.includes('Z')) {
+          // ISO datetime format (e.g., "1899-12-30T16:00:00.000Z")
+          const timeDate = new Date(timeStr);
+          hours = timeDate.getHours(); // This converts from UTC to local
+          minutes = timeDate.getMinutes();
+        } else if (timeStr.includes(':')) {
+          // Simple time format "9:00"
+          const timeParts = timeStr.split(':');
+          hours = parseInt(timeParts[0]) || 0;
+          minutes = parseInt(timeParts[1]) || 0;
+        }
+        
+        jobDateTime.setHours(hours, minutes, 0, 0);
+      } else {
+        // If no time specified, set to end of day
+        jobDateTime.setHours(23, 59, 59, 999);
+      }
+      
+      // Add 2 hours buffer after job time before considering it "past"
+      const bufferTime = new Date(jobDateTime.getTime() + (2 * 60 * 60 * 1000));
+      
+      if (now > bufferTime) {
+        // Job time has passed, should be marked completed or needs attention
+        return paymentStatus === 'Paid' ? 'completed_paid' : 'completed_unpaid';
+      } else if (now >= jobDateTime && now <= bufferTime) {
+        // Job is happening now or just happened
+        return 'in_progress';
+      } else {
+        // Job is in the future
+        return 'upcoming';
+      }
+    }
+    
+    // Fallback to the provided status
+    return job.displayStatus || 'upcoming';
+  };
+  
+  const actualStatus = getActualStatus();
+  
   // Parse customer images from CSV base64 strings
   const getCustomerImages = () => {
     const imagesData = job['Images'] || '';
@@ -117,7 +189,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
   
   // Determine status display
   const getStatusBadge = () => {
-    switch (job.displayStatus) {
+    switch (actualStatus) {
       case 'upcoming':
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
@@ -215,14 +287,50 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
     });
   };
   
-  // Format time
-  const formatTime = (time24) => {
-    if (!time24) return '';
-    const [hours, minutes] = time24.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
+  // Format time - handle various time formats from Google Sheets
+  const formatTime = (timeValue) => {
+    if (!timeValue) return '';
+    
+    const timeStr = timeValue.toString().trim();
+    
+    // Check if it's an ISO datetime string (e.g., "1899-12-30T16:00:00.000Z")
+    // This happens when Google Sheets stores time values in UTC
+    if (timeStr.includes('T') && timeStr.includes('Z')) {
+      const date = new Date(timeStr);
+      if (!isNaN(date.getTime())) {
+        // Use local time methods to automatically convert from UTC to local timezone
+        const hours = date.getHours(); // This converts from UTC to local
+        const minutes = date.getMinutes();
+        
+        // Convert to 12-hour format
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHour = hours % 12 || 12;
+        const displayMinutes = minutes.toString().padStart(2, '0');
+        
+        return `${displayHour}:${displayMinutes} ${ampm}`;
+      }
+    }
+    
+    // Handle simple time string like "9:00" or "09:00"
+    const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+    if (timeMatch) {
+      const hour = parseInt(timeMatch[1], 10);
+      const minute = timeMatch[2];
+      
+      // Convert to 12-hour format
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      
+      return `${displayHour}:${minute} ${ampm}`;
+    }
+    
+    // If we can't parse it, don't show the raw datetime string
+    // Just return empty or a placeholder
+    if (timeStr.includes('1899')) {
+      return 'Time not set';
+    }
+    
+    return timeStr;
   };
   
   const handlePayment = async () => {
@@ -236,12 +344,12 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
     setIsProcessingPayment(false);
   };
   
-  const needsPayment = job.displayStatus === 'completed_unpaid';
+  const needsPayment = actualStatus === 'completed_unpaid';
   const isUrgent = job['Urgent Flag'] === 'URGENT';
   
   // Determine card border color based on status
   const getBorderColor = () => {
-    switch (job.displayStatus) {
+    switch (actualStatus) {
       case 'in_progress':
         return 'border-orange-300';
       case 'completed_unpaid':
@@ -506,7 +614,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
             </button>
           )}
           
-          {job.displayStatus === 'completed_paid' && (
+          {actualStatus === 'completed_paid' && (
             <div className="flex items-center gap-2 text-green-600">
               <CheckCircle className="w-5 h-5" />
               <span className="font-medium">Paid</span>

@@ -16,13 +16,16 @@ const CONTENT = {
     label: 'Get instant AI-powered estimate',
     price: '$3.95',
     priceWithPromo: 'FREE with promo code',
-    description: 'Receive detailed cost breakdown and materials list within seconds',
+    description: '⚠️ IMPORTANT: Ensure your project description + photos are accurate & detailed to receive the best estimate.',
     checkboxHint: '✓ Check this box to add AI estimate (have a promo code? Enter it after checking!)',
     benefits: [
       'Instant professional estimate',
-      'Detailed cost breakdown',
-      'Materials recommendation',
-      'Labor time estimates'
+      'Cost breakdown',
+      'Work breakdown',
+      'Labor hours',
+      'Complexity',
+      'Materials (if applicable)',
+      'High level project roadmap'
     ],
     promoCode: {
       label: 'Have a Promo Code? Enter it here for FREE AI Estimate:',
@@ -48,6 +51,9 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
   const [useAIEstimate, setUseAIEstimate] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
+  
+  // Check if photos are uploaded
+  const hasPhotos = customerInfo.images && customerInfo.images.length > 0;
 
   // Check promo code validity
   const checkPromoCode = (code) => {
@@ -68,6 +74,9 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
   };
 
   const handleAIToggle = (checked) => {
+    // Only allow toggling if photos are uploaded
+    if (!hasPhotos) return;
+    
     setUseAIEstimate(checked);
     if (onAIToggle) {
       onAIToggle(checked);
@@ -151,8 +160,16 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
 
       {/* AI Estimate Option */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 mb-6">
+        {/* No Photos Warning */}
+        {!hasPhotos && (
+          <div className="bg-yellow-100 border border-yellow-300 rounded-lg px-3 py-2 mb-3 text-center">
+            <span className="text-sm font-medium text-yellow-700">
+              📷 Photo uploads are required for AI to perform analysis & generate estimates.
+            </span>
+          </div>
+        )}
         {/* Promo Code Hint Banner */}
-        {!useAIEstimate && (
+        {!useAIEstimate && hasPhotos && (
           <div className="bg-green-100 border border-green-300 rounded-lg px-3 py-2 mb-3 text-center">
             <span className="text-sm font-medium text-green-700">
               🎁 Have a promo code? Check the box below to enter it and get your AI estimate FREE!
@@ -165,26 +182,33 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
             id="ai-estimate"
             checked={useAIEstimate}
             onChange={(e) => handleAIToggle(e.target.checked)}
-            className="mt-1 w-5 h-5 text-purple-600 bg-white border-gray-300 rounded focus:ring-purple-500"
+            disabled={!hasPhotos}
+            className={`mt-1 w-5 h-5 ${hasPhotos ? 'text-purple-600' : 'text-gray-400'} bg-white border-gray-300 rounded focus:ring-purple-500 ${!hasPhotos ? 'cursor-not-allowed opacity-50' : ''}`}
           />
           <div className="flex-1">
-            <label htmlFor="ai-estimate" className="cursor-pointer">
+            <label htmlFor="ai-estimate" className={hasPhotos ? "cursor-pointer" : "cursor-not-allowed"}>
               <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-5 h-5 text-purple-600" />
-                <span className="font-semibold text-gray-900">{CONTENT.aiOption.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
-                    {CONTENT.aiOption.price}
-                  </span>
-                  <span className="text-xs font-semibold text-green-600 animate-pulse">
-                    or {CONTENT.aiOption.priceWithPromo}
-                  </span>
-                </div>
+                <Sparkles className={`w-5 h-5 ${hasPhotos ? 'text-purple-600' : 'text-gray-400'}`} />
+                <span className={`font-semibold ${hasPhotos ? 'text-gray-900' : 'text-gray-500'}`}>{CONTENT.aiOption.label}</span>
+                {hasPhotos && (
+                  <div className="flex items-center gap-2">
+                    <span className="bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                      {CONTENT.aiOption.price}
+                    </span>
+                    <span className="text-xs font-semibold text-green-600 animate-pulse">
+                      or {CONTENT.aiOption.priceWithPromo}
+                    </span>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-gray-600 mb-2">{CONTENT.aiOption.description}</p>
-              <p className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">
-                {CONTENT.aiOption.checkboxHint}
+              <p className={`text-sm mb-2 ${hasPhotos ? 'text-gray-600' : 'text-gray-400'}`}>
+                {hasPhotos ? CONTENT.aiOption.description : '📷 Please upload photos of your project to enable AI-powered instant estimates'}
               </p>
+              {hasPhotos && (
+                <p className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded inline-block">
+                  {CONTENT.aiOption.checkboxHint}
+                </p>
+              )}
             </label>
             
             {useAIEstimate && (

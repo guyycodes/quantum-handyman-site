@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Calendar, DollarSign, ArrowRight, Clock, ChevronDown, ChevronUp, CheckCircle, Bot, Image } from 'lucide-react';
+import { FileText, Calendar, DollarSign, ArrowRight, Clock, ChevronDown, ChevronUp, CheckCircle, Bot, Image, XCircle } from 'lucide-react';
 import BookingModal from '../../Components/BookingModal';
 
 const EstimateCard = ({ estimate, onRefresh }) => {
@@ -23,6 +23,13 @@ const EstimateCard = ({ estimate, onRefresh }) => {
           <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-full">
             <Clock className="w-3 h-3" />
             Expired
+          </span>
+        );
+      case 'closed':
+        return (
+          <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">
+            <XCircle className="w-3 h-3" />
+            Closed
           </span>
         );
       default:

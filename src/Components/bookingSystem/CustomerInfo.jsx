@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, FileText, Camera, AlertCircle } from 'lucide-react';
 import { 
   sanitizeName, 
@@ -77,6 +77,32 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const [imagePreview, setImagePreview] = useState([]);
   const [touched, setTouched] = useState({});  // Track which fields have been interacted with
   const [realtimeErrors, setRealtimeErrors] = useState({});  // Real-time validation errors
+  
+  // Generate previews for existing images on component mount
+  useEffect(() => {
+    if (initialData?.images && initialData.images.length > 0) {
+      const generatePreviews = async () => {
+        const previews = [];
+        for (const file of initialData.images) {
+          if (file instanceof File) {
+            const reader = new FileReader();
+            await new Promise((resolve) => {
+              reader.onload = (e) => {
+                previews.push({
+                  name: file.name,
+                  url: e.target.result
+                });
+                resolve();
+              };
+              reader.readAsDataURL(file);
+            });
+          }
+        }
+        setImagePreview(previews);
+      };
+      generatePreviews();
+    }
+  }, []); // Only run on mount
 
   const validateForm = () => {
     const newErrors = {};

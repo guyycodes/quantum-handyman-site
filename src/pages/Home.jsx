@@ -249,15 +249,15 @@ const PORTFOLIO_DATA = [
     category: 'Landscape',
     title: 'Backyard Transformation',
     description: 'Stamped concrete Patio • Irrigation • Ceiling drywall • Decking • Sod • Masonry • Roofing',
-    before: '/images/landscaping/landscape_before.png',
-    after: '/images/landscaping/landscape_after.png',
+    before: '/images/landscaping/landscape_before.jpg',
+    after: '/images/landscaping/landscape_after.jpg',
     link: null
   },
   {
     category: 'Property Maintenance',
     title: 'Storage Shed Installation',
     description: 'Storage Shed Installation • No permit-required work • Build • Seal & Paint',
-    image: '/images/home-repair/distant_shed.png',
+    image: '/images/home-repair/distant_shed.jpg',
     link: null
   }
 ]
@@ -661,7 +661,7 @@ const Home = () => {
               {/* Personal Photo */}
               <div className="relative">
                 <FramedImage
-                  src="/images/profile/Me&Pops.png"
+                  src="/images/profile/Me&Pops.jpg"
                   alt="Morgan B. - Quantum Handyman"
                   frameStyle="modern"
                   aspectRatio="portrait"

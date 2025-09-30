@@ -49,7 +49,7 @@ const CONTENT = {
     buttons: {
       startProject: 'Start Your Project',
       getQuote: 'Get Free Quote',
-      helperText: '⚡ Instant AI estimates available'
+      helperText: ''
     }
   },
   
@@ -158,12 +158,12 @@ const PROJECTS_DATA = [
     location: 'Denver Metro Area',
     duration: 'Various',
     images: [
-      '/images/home-repair/living_room.png',
-      '/images/home-repair/sofa.png',
-      '/images/home-repair/repair.png',
-      '/images/home-repair/_lighting.png'
+      '/images/home-repair/living_room.jpg',
+      '/images/home-repair/sofa.jpg',
+      '/images/home-repair/repair.jpg',
+      '/images/home-repair/_lighting.jpg'
     ],
-    projectImg: '/images/home-repair/custom_furniture.png',
+    projectImg: '/images/home-repair/custom_furniture.jpg',
     testimonial: CONTENT.projects.customAssemblies.testimonial,
     client: CONTENT.projects.customAssemblies.client,
     rating: 5
@@ -176,11 +176,11 @@ const PROJECTS_DATA = [
     date: '2020',
     location: 'Denver Metro',
     duration: '1-2 weeks',
-    images: ['/images/home-repair/bathroom_tile.jpeg'],
+    images: ['/images/home-repair/bathroom_tile.jpg'],
     testimonial: CONTENT.projects.bathroomTile.testimonial,
     client: CONTENT.projects.bathroomTile.client,
     rating: 5,
-    projectImg: '/images/home-repair/bathroom.png'
+    projectImg: '/images/home-repair/bathroom.jpg'
   },
   {
     id: 3,
@@ -192,7 +192,7 @@ const PROJECTS_DATA = [
     duration: '1-2 days',
     images: [
       // 'https://images.unsplash.com/photo-1558089687-7b5831caf48e?w=800&h=600&fit=crop',  // Google Home
-      '/images/smart-home/google_home.png',  // Smart speaker setup
+      '/images/smart-home/google_home.jpg',  // Smart speaker setup
       // 'https://images.unsplash.com/photo-1519558260268-eb878c7418a4?w=800&h=600&fit=crop'   // Alexa device
     ],
     testimonial: CONTENT.projects.smartAssistant.testimonial,
@@ -208,7 +208,7 @@ const PROJECTS_DATA = [
     date: '2025',
     location: 'North Side',
     duration: '1 week',
-    images: ['/images/landscaping/Backyard_b4.jpg', '/images/landscaping/Backyard_after.png'],  // Use actual backyard images for before/after
+    images: ['/images/landscaping/Backyard_b4.jpg', '/images/landscaping/Backyard_after.jpg'],  // Use actual backyard images for before/after
     testimonial: CONTENT.projects.backyardTransform.testimonial,
     client: CONTENT.projects.backyardTransform.client,
     rating: 5
@@ -235,7 +235,7 @@ const PROJECTS_DATA = [
     description: CONTENT.projects.whealthApp.description,
     date: '2024',
     location: 'Remote',
-    duration: 'in-progress',
+    duration: '',
     images: [],  // Video will be shown in modal
     projectImg: '/images/web-dev/whealth_app.png',  // Thumbnail image for grid
     testimonial: CONTENT.projects.whealthApp.testimonial,
@@ -251,7 +251,7 @@ const PROJECTS_DATA = [
     description: CONTENT.projects.dandymen.description,
     date: '2024 - Present',
     location: 'Denver',
-    duration: 'In Progress',
+    duration: '',
     images: ['/images/web-dev/Dandymen_io.png'],  // Use actual Dandymen image
     testimonial: CONTENT.projects.dandymen.testimonial,
     client: CONTENT.projects.dandymen.client,
@@ -267,11 +267,11 @@ const PROJECTS_DATA = [
     date: '2022',
     location: 'Denver Metro',
     duration: '2 days',
-    images: ['/images/home-repair/shed.png'],  // Use actual shed image
+    images: ['/images/home-repair/shed.jpg'],  // Use actual shed image
     testimonial: CONTENT.projects.storageSheds.testimonial,
     client: CONTENT.projects.storageSheds.client,
     rating: 5,
-    projectImg: '/images/home-repair/some_shed.png'
+    projectImg: '/images/home-repair/some_shed.jpg'
   },
   {
     id: 9,
@@ -281,7 +281,7 @@ const PROJECTS_DATA = [
     date: '2023',
     location: 'Denver Metro',
     duration: '2 weeks',
-    images: ['/images/landscaping/landscape_before.png', '/images/landscaping/landscape_after.png'],  // Before/after from Home component
+    images: ['/images/landscaping/landscape_before.jpg', '/images/landscaping/landscape_after.jpg'],  // Before/after from Home component
     testimonial: CONTENT.projects.backyardRenovation.testimonial,
     client: CONTENT.projects.backyardRenovation.client,
     rating: 5
@@ -296,7 +296,7 @@ const PROJECTS_DATA = [
     duration: '2-4 hours',
     images: [
       '/images/smart-home/security_cam.png',
-      '/images/smart-home/eufy.png',
+      '/images/smart-home/eufy.jpg',
       '/images/smart-home/solar_panel.png',
     ],
     testimonial: CONTENT.projects.securityCameras.testimonial,
@@ -315,8 +315,8 @@ const PROJECTS_DATA = [
     images: [
       // 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',  // Smart bulbs
       '/images/smart-home/smart_lights.jpeg',  // Smart switch
-      '/images/smart-home/lighting.png',  // 
-      '/images/home-repair/_lighting.png'   // Room with smart lights
+      '/images/smart-home/lighting.jpg',  // 
+      '/images/home-repair/_lighting.jpg'   // Room with smart lights
     ],
     testimonial: CONTENT.projects.smartLighting.testimonial,
     client: CONTENT.projects.smartLighting.client,
@@ -332,13 +332,13 @@ const PROJECTS_DATA = [
     location: 'Denver Metro',
     duration: '3-5 hours',
     images: [
-      '/images/landscaping/sprinkler_b4.png', 
-      '/images/landscaping/sprinkler_after.png', 
+      '/images/landscaping/sprinkler_b4.jpg', 
+      '/images/landscaping/sprinkler_after.jpg', 
     ],
     testimonial: CONTENT.projects.sprinklerMaintenance.testimonial,
     client: CONTENT.projects.sprinklerMaintenance.client,
     rating: 5,
-    projectImg: '/images/landscaping/sprkinkler_head.png'  // Using smart home image for smart lighting
+    projectImg: '/images/landscaping/sprkinkler_head.jpg'  // Using smart home image for smart lighting
   }
 ]
 
