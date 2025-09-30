@@ -8,25 +8,16 @@ const OptimizedImage = ({
   onError,
   ...props 
 }) => {
-  // Generate WebP path
-  const pathWithoutExt = src.replace(/\.[^/.]+$/, '');
-  const webpSrc = `${pathWithoutExt}-optimized.webp`;
-  
+  // Just use the original image - no optimization attempt
   return (
-    <picture>
-      {/* Try WebP version first */}
-      <source srcSet={webpSrc} type="image/webp" />
-      
-      {/* Fallback to original */}
-      <img 
-        src={src}
-        alt={alt}
-        className={className}
-        loading={loading}
-        onError={onError}
-        {...props}
-      />
-    </picture>
+    <img 
+      src={src}
+      alt={alt}
+      className={className}
+      loading={loading}
+      onError={onError}
+      {...props}
+    />
   );
 };
 
