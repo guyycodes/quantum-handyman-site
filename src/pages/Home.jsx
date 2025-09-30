@@ -8,6 +8,7 @@ import QuantumSphere from '../Components/QuantumSphere'
 import FloatingVideo from '../Components/FloatingVideo'
 import FramedImage from '../Components/FramedImage'
 import BeforeAfterSlider from '../Components/BeforeAfterSlider'
+import OptimizedImage from '../Components/OptimizedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -724,10 +725,11 @@ const Home = () => {
                         // Single Image Layout (Original)
                         <>
                           {item.image ? (
-                            <img 
+                            <OptimizedImage 
                               src={item.image} 
                               alt={item.title}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
                               onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextElementSibling.style.display = 'flex';

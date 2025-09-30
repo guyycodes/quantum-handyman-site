@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
+import OptimizedImage from './OptimizedImage'
 
 const BeforeAfterSlider = ({ 
   beforeImage, 
@@ -40,10 +41,11 @@ const BeforeAfterSlider = ({
     >
       {/* Before Image */}
       <div className="absolute inset-0 flex items-center justify-center p-4">
-        <img
+        <OptimizedImage
           src={beforeImage}
           alt={beforeAlt}
           className="max-w-full max-h-full object-contain pointer-events-none select-none"
+          loading="lazy"
         />
       </div>
       
@@ -53,10 +55,11 @@ const BeforeAfterSlider = ({
         style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
       >
         <div className="absolute inset-0 flex items-center justify-center p-4">
-          <img
+          <OptimizedImage
             src={afterImage}
             alt={afterAlt}
             className="max-w-full max-h-full object-contain pointer-events-none select-none"
+            loading="lazy"
           />
         </div>
       </div>

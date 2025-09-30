@@ -4,6 +4,7 @@ import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import BeforeAfterSlider from '../Components/BeforeAfterSlider'
+import OptimizedImage from '../Components/OptimizedImage'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Filter, X, ExternalLink, Calendar,
@@ -410,10 +411,11 @@ const Portfolio = () => {
                 <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 relative overflow-hidden">
                   {project.projectImg || (project.images && project.images[0]) ? (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-                      <img 
+                      <OptimizedImage 
                         src={project.projectImg || project.images[0]}
                         alt={project.title}
                         className="w-full h-full object-contain"
+                        loading="lazy"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.parentElement.nextElementSibling.style.display = 'flex';
