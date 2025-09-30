@@ -246,7 +246,7 @@ const PORTFOLIO_DATA = [
     category: 'Smart Home',
     title: 'Smart Home Automation',
     description: 'Integrated lighting, Security Cameras, home assistants etc.',
-    image: '/images/smart-home/smart_home_app-optimized.webp',
+    image: '/images/smart-home/smart_home_app.png',
     link: null
   },
   {

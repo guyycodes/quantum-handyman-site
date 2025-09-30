@@ -163,7 +163,7 @@ const PROJECTS_DATA = [
       '/images/home-repair/repair.jpg',
       '/images/home-repair/_lighting.jpg'
     ],
-    projectImg: '/images/home-repair/custom_furniture-optimized.webp',
+    projectImg: '/images/home-repair/custom_furniture-thumb.jpg',
     testimonial: CONTENT.projects.customAssemblies.testimonial,
     client: CONTENT.projects.customAssemblies.client,
     rating: 5
@@ -180,7 +180,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.bathroomTile.testimonial,
     client: CONTENT.projects.bathroomTile.client,
     rating: 5,
-    projectImg: '/images/home-repair/bathroom-optimized.webp'
+    projectImg: '/images/home-repair/bathroom-thumb.jpg'
   },
   {
     id: 3,
@@ -198,7 +198,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.smartAssistant.testimonial,
     client: CONTENT.projects.smartAssistant.client,
     rating: 5,
-    projectImg: '/images/smart-home/smart_speaker-optimized.webp'
+    projectImg: '/images/smart-home/smart_speaker-thumb.png'
   },
   {
     id: 4,
@@ -208,7 +208,7 @@ const PROJECTS_DATA = [
     date: '2025',
     location: 'North Side',
     duration: '1 week',
-    images: ['/images/landscaping/Backyard_b4-optimized.webp', '/images/landscaping/Backyard_after-optimized.webp'],  // Use actual backyard images for before/after
+    images: ['/images/landscaping/Backyard_b4-thumb.jpg', '/images/landscaping/Backyard_after-thumb.jpg'],  // Use actual backyard images for before/after
     testimonial: CONTENT.projects.backyardTransform.testimonial,
     client: CONTENT.projects.backyardTransform.client,
     rating: 5
@@ -222,7 +222,7 @@ const PROJECTS_DATA = [
     location: 'Open Source',
     duration: 'Ongoing',
     images: ['/images/web-dev/Ai_description.png'],  // Show AI logo and feature description
-    projectImg: '/images/web-dev/Ai-optimized.webp',  // Use AI image as thumbnail
+    projectImg: '/images/web-dev/Ai.png',  // Use AI image as thumbnail
     testimonial: CONTENT.projects.aiIntegration.testimonial,
     client: CONTENT.projects.aiIntegration.client,
     rating: 5,
@@ -237,7 +237,7 @@ const PROJECTS_DATA = [
     location: 'Remote',
     duration: '',
     images: [],  // Video will be shown in modal
-    projectImg: '/images/web-dev/whealth_app-optimized.webp',  // Thumbnail image for grid
+    projectImg: '/images/web-dev/whealth_app.png',  // Thumbnail image for grid
     testimonial: CONTENT.projects.whealthApp.testimonial,
     client: CONTENT.projects.whealthApp.client,
     rating: 5,
@@ -267,11 +267,11 @@ const PROJECTS_DATA = [
     date: '2022',
     location: 'Denver Metro',
     duration: '2 days',
-    images: ['/images/home-repair/shed.jpg'],  // Use actual shed image
+    images: ['/images/home-repair/shed-thumb.jpg'],  // Use actual shed image
     testimonial: CONTENT.projects.storageSheds.testimonial,
     client: CONTENT.projects.storageSheds.client,
     rating: 5,
-    projectImg: '/images/home-repair/some_shed-optimized.webp'
+    projectImg: '/images/home-repair/some_shed-thumb.jpg'
   },
   {
     id: 9,
@@ -302,7 +302,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.securityCameras.testimonial,
     client: CONTENT.projects.securityCameras.client,
     rating: 5,
-    projectImg: '/images/smart-home/many_cameras-optimized.webp'
+    projectImg: '/images/smart-home/many_cameras.png'
   },
   {
     id: 11,
@@ -321,7 +321,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.smartLighting.testimonial,
     client: CONTENT.projects.smartLighting.client,
     rating: 5,
-    projectImg: '/images/smart-home/smart_home_app-optimized.webp'  // Using smart home image for smart lighting
+    projectImg: '/images/smart-home/smart_home_app.png'  // Using smart home image for smart lighting
   },
   {
     id: 12,
@@ -338,7 +338,7 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.sprinklerMaintenance.testimonial,
     client: CONTENT.projects.sprinklerMaintenance.client,
     rating: 5,
-    projectImg: '/images/landscaping/sprkinkler_head-optimized.webp'  // Using smart home image for smart lighting
+    projectImg: '/images/landscaping/sprkinkler_head-thumb.jpg'  // Using smart home image for smart lighting
   }
 ]
 
