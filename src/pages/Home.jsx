@@ -681,7 +681,7 @@ const Home = () => {
               {/* Personal Photo */}
               <div className="relative">
                 <FramedImage
-                  src="/images/profile/Me-and-Pops-optimized.webp"
+                  src="/images/profile/Me-and-Pops.jpg"
                   alt="Morgan B. - Quantum Handyman"
                   frameStyle="modern"
                   aspectRatio="portrait"
