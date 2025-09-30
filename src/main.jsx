@@ -6,11 +6,38 @@ import './index.css'
 import { PostHogProvider } from './contexts/PostHogProvider.jsx';
 import { GoogleAnalyticsProvider } from './contexts/GoogleAnalyticsProvider.jsx';
 
-// Suppress all console logs in production
+// Store original console methods
+const originalLog = console.log;
+const originalWarn = console.warn;
+const originalError = console.error;
+
+// // Filter out PostHog logs in all environments
+console.log = (...args) => {
+  // Filter out PostHog logs
+  if (typeof args[0] === 'string' && (args[0].includes('[PostHog') || args[0].includes('PostHog.js'))) {
+    return;
+  }
+  // In production, suppress all logs. In development, show non-PostHog logs
+  if (import.meta.env.DEV) {
+    originalLog(...args);
+  }
+};
+
+console.warn = (...args) => {
+  // Filter out PostHog warnings
+  if (typeof args[0] === 'string' && (args[0].includes('[PostHog') || args[0].includes('PostHog.js'))) {
+    return;
+  }
+  originalWarn(...args);
+};
+
+console.error = (...args) => {
+  // Always show errors
+  originalError(...args);
+};
+
+// Suppress info and debug in production
 if (import.meta.env.PROD) {
-  console.log = () => {};
-  console.warn = () => {};
-  console.error = () => {};
   console.info = () => {};
   console.debug = () => {};
 }

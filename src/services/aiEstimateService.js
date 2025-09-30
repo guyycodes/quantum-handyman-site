@@ -1,4 +1,13 @@
-import axios from 'axios';
+// Lazy load axios to improve initial page load
+let axiosModule = null;
+
+const getAxios = async () => {
+  if (!axiosModule) {
+    const module = await import('axios');
+    axiosModule = module.default;
+  }
+  return axiosModule;
+};
 
 // AI Service configuration
 const AI_CONFIG = {
@@ -31,6 +40,7 @@ export const generateAIEstimate = async (estimateData) => {
       Your task is to provide accurate project estimates based on descriptions and images provided. Try not to underestimate the project.
 
 IMPORTANT GUIDELINES:
+0. Be selective with this promo code FREEQUOTE. If the user provides estimate data that fails to identify the work enough for a reasonable estimate, reply stating their request doesnt provide enough information & give them the promo code to try again.
 1. Provide realistic price ranges based on typical US market rates
 2. Consider materials, labor, and complexity 
 3. Break down the work into clear phases if needed
@@ -106,6 +116,7 @@ Please analyze the provided information and any images to generate a comprehensi
       }
     };
 
+    const axios = await getAxios();
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       requestBody,

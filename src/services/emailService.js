@@ -1,11 +1,23 @@
-import emailjs from 'emailjs-com';
+// Lazy load emailjs-com to improve initial page load
+let emailjsModule = null;
+let emailjsLoadPromise = null;
 
-// Initialize EmailJS with your public key
-const initEmailJS = () => {
-  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-  if (publicKey) {
-    emailjs.init(publicKey);
-  }
+// Load EmailJS on demand
+const loadEmailJS = async () => {
+  if (emailjsModule) return emailjsModule;
+  if (emailjsLoadPromise) return emailjsLoadPromise;
+  
+  emailjsLoadPromise = import('emailjs-com').then((module) => {
+    emailjsModule = module.default;
+    // Initialize EmailJS with your public key
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    if (publicKey) {
+      emailjsModule.init(publicKey);
+    }
+    return emailjsModule;
+  });
+  
+  return emailjsLoadPromise;
 };
 
 // Email templates configuration
@@ -38,8 +50,8 @@ const EMAIL_CONFIG = {
  */
 export const sendContactEmail = async (formData) => {
   try {
-    // Initialize EmailJS if not already done
-    initEmailJS();
+    // Load EmailJS on demand
+    const emailjs = await loadEmailJS();
 
     const templateParams = {
       from_name: formData.name,
@@ -86,8 +98,8 @@ export const sendContactEmail = async (formData) => {
  */
 export const sendSupportTicketEmail = async (ticketData) => {
   try {
-    // Initialize EmailJS if not already done
-    initEmailJS();
+    // Load EmailJS on demand
+    const emailjs = await loadEmailJS();
 
     // Format the urgency for display
     const urgencyLabels = {
@@ -240,8 +252,8 @@ export const isValidPhone = (phone) => {
  */
 export const sendBookingEmail = async (bookingData) => {
   try {
-    // Initialize EmailJS if not already done
-    initEmailJS();
+    // Load EmailJS on demand
+    const emailjs = await loadEmailJS();
 
     const { service, date, timeSlot, customerInfo, bookingRef, isUrgent } = bookingData;
     
@@ -343,8 +355,8 @@ export const sendBookingEmail = async (bookingData) => {
  */
 export const sendEstimateRequestEmail = async (estimateData) => {
   try {
-    // Initialize EmailJS if not already done
-    initEmailJS();
+    // Load EmailJS on demand
+    const emailjs = await loadEmailJS();
 
     const { service, customerInfo, estimateRef, isAiEstimate, aiEstimateResult } = estimateData;
 

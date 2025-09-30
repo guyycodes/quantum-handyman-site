@@ -1,153 +1,87 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import posthog from 'posthog-js';
 
-// Lazy load PostHog to improve initial page load
-let posthogInstance = null;
-let posthogLoadPromise = null;
-
-const loadPostHog = async () => {
-  if (posthogInstance) return posthogInstance;
-  if (posthogLoadPromise) return posthogLoadPromise;
-
-  posthogLoadPromise = import('posthog-js').then((module) => {
-    const posthog = module.default;
-    
-    if (typeof window !== 'undefined' && import.meta.env.VITE_POSTHOG_API_KEY) {
-      posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
-        api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
-        // Disable debug mode to suppress console logs
-        debug: false,
-        // Suppress all PostHog logs
-        silence_errors: true,
-        // Capture pageviews automatically
-        capture_pageview: false, // We'll handle this manually for better control
-        // Capture sessions automatically
-        autocapture: true,
-        // Session recording configuration
-        session_recording: {
-          enabled: true,
-          maskAllInputs: true, // Mask sensitive inputs
-          maskTextContent: false
-        },
-        // Persist user across sessions
-        persistence: 'localStorage',
-        // Track UTM parameters automatically
-        capture_utm: true,
-        // Load recorder asynchronously to not block main thread
-        disable_session_recording: false,
-        // Reduce initial bundle size
-        bootstrap: {
-          distinctId: null,
-          isIdentifiedId: false
+// Initialize PostHog
+if (typeof window !== 'undefined' && import.meta.env.VITE_POSTHOG_API_KEY) {
+  posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
+    api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',
+    // Disable debug mode to suppress console logs
+    debug: false,
+    // Suppress all PostHog logs
+    silence_errors: true,
+    // Capture pageviews automatically
+    capture_pageview: false, // We'll handle this manually for better control
+    // Capture sessions automatically
+    autocapture: true,
+    // Session recording - DISABLE to prevent large payloads
+    session_recording: {
+      enabled: false,
+      maskAllInputs: true,
+      maskTextContent: true
+    },
+    disable_session_recording: true,
+    // Persist user across sessions
+    persistence: 'localStorage',
+    // Track UTM parameters automatically
+    capture_utm: true,
+    // FIX: Disable feature flags to prevent 400 error on /flags/ endpoint
+    advanced_disable_feature_flags: true,
+    // FIX: Disable compression to prevent hex escape errors
+    disable_compression: true,
+    // FIX: Sanitize properties to remove problematic characters
+    sanitize_properties: function(properties) {
+      if (!properties) return properties;
+      
+      // Clean each property value
+      const cleaned = {};
+      for (let key in properties) {
+        const value = properties[key];
+        if (value !== undefined && value !== null) {
+          // Convert to string and remove problematic characters
+          if (typeof value === 'string') {
+            // Remove non-printable and non-ASCII characters
+            cleaned[key] = value.replace(/[^\x20-\x7E]/g, '');
+          } else {
+            cleaned[key] = value;
+          }
         }
-      });
-      posthogInstance = posthog;
+      }
+      return cleaned;
     }
-    return posthog;
   });
-
-  return posthogLoadPromise;
-};
+}
 
 export function PostHogProvider({ children }) {
   const location = useLocation();
-  const isPostHogLoaded = useRef(false);
 
-  // Initialize PostHog after page load
+  // Track page views on route changes
   useEffect(() => {
-    const initPostHog = async () => {
-      // Already loaded
-      if (isPostHogLoaded.current) return;
-
-      // Wait for idle time to load PostHog
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(async () => {
-          const posthog = await loadPostHog();
-          if (posthog && posthogInstance) {
-            isPostHogLoaded.current = true;
-            
-            // Set initial user properties
-            posthogInstance.setPersonProperties({
-              user_type: 'anonymous',
-              first_seen: new Date().toISOString()
-            });
-
-            // Track initial pageview
-            posthogInstance.capture('$pageview', {
-              path: location.pathname,
-              title: document.title,
-              referrer: document.referrer
-            });
-          }
-        });
-      } else {
-        // Fallback for browsers without requestIdleCallback
-        setTimeout(async () => {
-          const posthog = await loadPostHog();
-          if (posthog && posthogInstance) {
-            isPostHogLoaded.current = true;
-            
-            // Set initial user properties
-            posthogInstance.setPersonProperties({
-              user_type: 'anonymous',
-              first_seen: new Date().toISOString()
-            });
-
-            // Track initial pageview
-            posthogInstance.capture('$pageview', {
-              path: location.pathname,
-              title: document.title,
-              referrer: document.referrer
-            });
-          }
-        }, 2000); // Delay 2 seconds to not interfere with initial load
-      }
-    };
-
-    // Start loading after DOM is ready
-    if (document.readyState === 'complete') {
-      initPostHog();
-    } else {
-      window.addEventListener('load', initPostHog);
-    }
-
-    return () => {
-      window.removeEventListener('load', initPostHog);
-    };
-  }, []); // Only run once on mount
-
-  // Track page views on route changes (after initial load)
-  useEffect(() => {
-    if (!isPostHogLoaded.current || !posthogInstance) return;
+    if (!posthog) return;
     
     // Track pageview with custom properties
-    posthogInstance.capture('$pageview', {
+    posthog.capture('$pageview', {
       path: location.pathname,
       title: document.title,
       referrer: document.referrer
     });
   }, [location]);
 
+  // Set up a persistent anonymous user ID
+  useEffect(() => {
+    if (!posthog) return;
+    
+    // Set user properties for anonymous users
+    posthog.setPersonProperties({
+      // Mark as anonymous user
+      user_type: 'anonymous',
+      // Track first visit
+      first_seen: new Date().toISOString()
+    });
+  }, []);
+
   return children;
 }
 
-// Export a proxy that loads PostHog on demand
-export const posthog = new Proxy({}, {
-  get: (target, prop) => {
-    if (!posthogInstance) {
-      // Queue the call for when PostHog loads
-      loadPostHog().then(() => {
-        if (posthogInstance && typeof posthogInstance[prop] === 'function') {
-          // If it's a method we can call later, do nothing for now
-          console.log('PostHog not yet loaded, queueing:', prop);
-        }
-      });
-      // Return a no-op function to prevent errors
-      if (typeof prop === 'string' && ['capture', 'identify', 'setPersonProperties', 'reset'].includes(prop)) {
-        return () => {};
-      }
-      return undefined;
-    }
-    return posthogInstance[prop];
-  }
-});
+// Export posthog instance for use in components
+export { posthog };

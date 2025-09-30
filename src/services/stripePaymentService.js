@@ -1,4 +1,7 @@
-import { loadStripe } from '@stripe/stripe-js';
+// Lazy load Stripe to improve initial page load
+let stripeModule = null;
+let stripeLoadPromise = null;
+let stripeInstance = null;
 
 // Stripe configuration
 const STRIPE_CONFIG = {
@@ -9,13 +12,21 @@ const STRIPE_CONFIG = {
   cancelUrl: window.location.origin + '/payment-cancelled'
 };
 
-// Initialize Stripe
-let stripePromise = null;
-const getStripe = () => {
-  if (!stripePromise && STRIPE_CONFIG.publishableKey) {
-    stripePromise = loadStripe(STRIPE_CONFIG.publishableKey);
+// Load Stripe on demand
+const getStripe = async () => {
+  if (stripeInstance) return stripeInstance;
+  
+  if (!stripeLoadPromise) {
+    stripeLoadPromise = import('@stripe/stripe-js').then(async (module) => {
+      stripeModule = module;
+      if (STRIPE_CONFIG.publishableKey) {
+        stripeInstance = await module.loadStripe(STRIPE_CONFIG.publishableKey);
+      }
+      return stripeInstance;
+    });
   }
-  return stripePromise;
+  
+  return stripeLoadPromise;
 };
 
 /**
