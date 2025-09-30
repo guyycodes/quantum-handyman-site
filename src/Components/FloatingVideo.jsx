@@ -4,7 +4,7 @@ import { Play } from 'lucide-react'
 const FloatingVideo = () => {
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [videoError, setVideoError] = useState(false)
- -AbortController  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
   const [isIntersecting, setIsIntersecting] = useState(false)
   const videoRef = useRef(null)
   const containerRef = useRef(null)
