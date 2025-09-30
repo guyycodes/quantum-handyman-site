@@ -60,16 +60,8 @@ export default defineConfig({
       },
     },
     // Minify for production builds with terser for better compression
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug'],
-      },
-      format: {
-        comments: false,
-      },
+    build: {
+      minify: 'esbuild' // Default in Vite, faster than terser
     },
     // Generate source maps for debugging (disable in production if needed)
     sourcemap: false,
