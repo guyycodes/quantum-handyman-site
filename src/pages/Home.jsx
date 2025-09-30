@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
-import QuantumSphere from '../Components/QuantumSphere'
-import FloatingVideo from '../Components/FloatingVideo'
-import FramedImage from '../Components/FramedImage'
-import BeforeAfterSlider from '../Components/BeforeAfterSlider'
+
+// Lazy load non-critical components
+const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
+const FloatingVideo = lazy(() => import('../Components/FloatingVideo'))
+const FramedImage = lazy(() => import('../Components/FramedImage'))
+const BeforeAfterSlider = lazy(() => import('../Components/BeforeAfterSlider'))
 
 // Lazy load BookingModal since it's only needed when user clicks to book
 const BookingModal = lazy(() => import('../Components/BookingModal'))
@@ -357,24 +359,40 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Show QuantumSphere on mobile below buttons */}
-              <div className="lg:hidden mt-8" style={{ height: '400px' }}>
+            {/* Show QuantumSphere on mobile below buttons */}
+            <div className="lg:hidden mt-8" style={{ height: '400px' }}>
+              <Suspense fallback={
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl animate-pulse flex items-center justify-center">
+                  <div className="text-white text-center">
+                    <div className="text-xl font-bold">Loading...</div>
+                  </div>
+                </div>
+              }>
                 <QuantumSphere>
                   <div className="animate-float">
                     <FloatingVideo />
                   </div>
                 </QuantumSphere>
-              </div>
+              </Suspense>
+            </div>
             </div>
 
-            {/* Show QuantumSphere on desktop on the right */}
-            <div className="relative hidden lg:block">
+          {/* Show QuantumSphere on desktop on the right */}
+          <div className="relative hidden lg:block">
+            <Suspense fallback={
+              <div className="w-full h-[400px] bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl animate-pulse flex items-center justify-center">
+                <div className="text-white text-center">
+                  <div className="text-xl font-bold">Loading...</div>
+                </div>
+              </div>
+            }>
               <QuantumSphere>
                 <div className="animate-float">
                   <FloatingVideo />
                 </div>
               </QuantumSphere>
-            </div>
+            </Suspense>
+          </div>
           </div>
 
           {/* Trust Indicators - Hidden on mobile since QuantumSphere takes this space */}
@@ -663,22 +681,27 @@ const Home = () => {
               
               {/* Personal Photo */}
               <div className="relative">
-                <FramedImage
-                  src="/images/profile/Me&Pops.jpg"
-                  alt="Morgan B. - Quantum Handyman"
-                  frameStyle="modern"
-                  aspectRatio="portrait"
-                  objectFit="cover"
-                  rounded="2xl"
-                  shadow={true}
-                  hover={true}
-                  maxWidth="max-w-sm"
-                  maxHeight="max-h-md"
-                  width="w-full"
-                  caption="Morgan B. - Quantum Handyman"
-                  captionPosition="bottom"
-                  className="mx-auto"
-                />
+                <Suspense fallback={
+                  <div className="w-full h-96 bg-gray-200 rounded-2xl animate-pulse"></div>
+                }>
+                  <FramedImage
+                    src="/images/profile/Me&Pops.jpg"
+                    alt="Morgan B. - Quantum Handyman"
+                    frameStyle="modern"
+                    aspectRatio="portrait"
+                    objectFit="cover"
+                    rounded="2xl"
+                    shadow={true}
+                    hover={true}
+                    maxWidth="max-w-sm"
+                    maxHeight="max-h-md"
+                    width="w-full"
+                    caption="Morgan B. - Quantum Handyman"
+                    captionPosition="bottom"
+                    className="mx-auto"
+                    preferThumb={true}
+                  />
+                </Suspense>
               </div>
             </div>
           </div>
@@ -714,15 +737,19 @@ const Home = () => {
                     <div className="relative h-72 bg-gray-100 overflow-hidden">
                       {hasBeforeAfter ? (
                         // Before/After Layout with BeforeAfterSlider component
-                        <BeforeAfterSlider
-                          beforeImage={item.before}
-                          afterImage={item.after}
-                          beforeAlt={`${item.title} - Before`}
-                          afterAlt={`${item.title} - After`}
-                          height="h-72"
-                          showLabels={true}
-                          showInstruction={true}
-                        />
+                        <Suspense fallback={
+                          <div className="w-full h-72 bg-gray-200 animate-pulse"></div>
+                        }>
+                          <BeforeAfterSlider
+                            beforeImage={item.before}
+                            afterImage={item.after}
+                            beforeAlt={`${item.title} - Before`}
+                            afterAlt={`${item.title} - After`}
+                            height="h-72"
+                            showLabels={true}
+                            showInstruction={true}
+                          />
+                        </Suspense>
                       ) : (
                         // Single Image Layout (Original)
                         <>

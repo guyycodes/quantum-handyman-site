@@ -7,10 +7,37 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['lucide-react'],
+        manualChunks: (id) => {
+          // Vendor chunks for better caching
+          if (id.includes('node_modules')) {
+            // Core React libraries
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor';
+            }
+            // UI components and icons
+            if (id.includes('lucide-react')) {
+              return 'ui-vendor';
+            }
+            // Analytics libraries (loaded after initial paint)
+            if (id.includes('posthog') || id.includes('@posthog')) {
+              return 'analytics-vendor';
+            }
+            // Payment and email services
+            if (id.includes('emailjs') || id.includes('stripe')) {
+              return 'services-vendor';
+            }
+            // Other vendor code
+            return 'vendor';
+          }
+          // Analytics providers and contexts
+          if (id.includes('GoogleAnalytics') || id.includes('PostHog')) {
+            return 'analytics';
+          }
         },
+        // Use content hash for better caching
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
     // Minify for production builds
@@ -18,13 +45,19 @@ export default defineConfig({
     // Generate source maps for debugging (disable in production if needed)
     sourcemap: false,
     // Reduce chunk size warnings
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500,
     // Better tree-shaking
     treeShaking: true,
     // Remove console logs in production
     esbuild: {
       drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     },
+    // Target modern browsers for smaller bundles
+    target: 'es2020',
+    // CSS code splitting
+    cssCodeSplit: true,
+    // Asset inlining threshold (4kb)
+    assetsInlineLimit: 4096,
   },
   server: {
     headers: {

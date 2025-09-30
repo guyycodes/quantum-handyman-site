@@ -16,7 +16,7 @@ import { generateTicketRef } from '../utils/uniqueIdGenerator';
 
 // Lazy load BookingModal since it's only needed when user clicks
 import { lazy, Suspense } from 'react';
-const BookingModal = lazy(() => import('./BookingModal'));
+const BookingModal = lazy(() => import('../Components/BookingModal'));
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);

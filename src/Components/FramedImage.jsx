@@ -1,4 +1,5 @@
 import React from 'react'
+import OptimizedImage from '../Components/OptimizedImage'
 
 const FramedImage = ({ 
   src, 
@@ -21,7 +22,8 @@ const FramedImage = ({
   width = '', // e.g., 'w-full', 'w-96', 'w-[300px]'
   height = '', // e.g., 'h-96', 'h-[400px]'
   caption = '',
-  captionPosition = 'bottom' // bottom, overlay-bottom
+  captionPosition = 'bottom', // bottom, overlay-bottom
+  preferThumb = true // Use thumbnail version for better performance
 }) => {
   
   // Define aspect ratio classes
@@ -81,11 +83,12 @@ const FramedImage = ({
   return (
     <figure className={`${width || 'w-full'}`}>
       <div className={`${imageWrapperClasses} group`}>
-        <img 
+        <OptimizedImage 
           src={src} 
           alt={alt}
           className={imageClasses}
           loading="lazy"
+          preferThumb={preferThumb}
         />
         
         {/* Optional overlay */}
