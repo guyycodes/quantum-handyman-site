@@ -246,7 +246,7 @@ const SplitLanding = () => {
   
   // Looping typewriter for mission statement
   const missionTexts = [
-    "I didn't want to choose between coding and craftsmanship - so I didn't.",
+    // "I didn't want to choose between coding and craftsmanship - so I didn't.",
     "SMB's & homeowners deserve solutions driven from a unified ethos - not just another technician."
   ];
   const { displayText: missionText, isTyping } = useLoopingTypewriter(missionTexts, 60, 2500, 20);
