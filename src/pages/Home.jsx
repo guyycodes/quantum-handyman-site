@@ -4,7 +4,7 @@ import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import FramedImage from '../Components/FramedImage'
-import { useWorld } from '../Contexts/WorldContext'
+import { useWorld } from '../contexts/WorldContext'
 
 // Lazy load non-critical components
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
