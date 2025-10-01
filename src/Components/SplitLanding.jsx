@@ -231,13 +231,17 @@ const rightBrainElements = [
 // COMPONENT
 // ============================================================================
 
-// Mobile breakpoint constant for easy management
+// Breakpoint constants for easy management
 const MOBILE_BREAKPOINT = 768;
+const SMALL_SCREEN_BREAKPOINT = 430;
+const TINY_SCREEN_BREAKPOINT = 390;
 
 const SplitLanding = () => {
   const [hoveredSide, setHoveredSide] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < SMALL_SCREEN_BREAKPOINT && window.innerWidth > TINY_SCREEN_BREAKPOINT);
+  const [isTinyScreen, setIsTinyScreen] = useState(window.innerWidth <= TINY_SCREEN_BREAKPOINT);
   const navigate = useNavigate();
   
   // Looping typewriter for mission statement
@@ -248,9 +252,12 @@ const SplitLanding = () => {
   const { displayText: missionText, isTyping } = useLoopingTypewriter(missionTexts, 60, 2500, 20);
 
   useEffect(() => {
-    // Handle resize for mobile detection
+    // Handle resize for all screen size detections
     const handleResize = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+      const width = window.innerWidth;
+      setIsMobile(width < MOBILE_BREAKPOINT);
+      setIsSmallScreen(width < SMALL_SCREEN_BREAKPOINT && width > TINY_SCREEN_BREAKPOINT); // Exclusive: 391-429px
+      setIsTinyScreen(width <= TINY_SCREEN_BREAKPOINT);
     };
     
     window.addEventListener('resize', handleResize);
@@ -299,22 +306,25 @@ const SplitLanding = () => {
 
   return (
     <div className={`fixed inset-0 bg-near-black overflow-hidden transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-      {/* Dual Brain Images with QuantumSphere Integration */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
-        {/* Left Brain - Web Dev Side */}
-        <div 
-          className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
-            hoveredSide === 'web' ? 'opacity-100 z-20' : 'opacity-40 z-10'
-          }`}
-          style={{
-            transform: `translateX(${
-              hoveredSide === 'web' 
-                ? 'calc(-17% - 15px)' 
-                : isMobile 
-                  ? 'calc(-7% - 30px)' 
-                  : '-6%'
-            })`
-          }}
+      {/* Dual Brain Images with QuantumSphere Integration - Hidden on tiny screens */}
+      {!isTinyScreen && (
+        <div className="absolute inset-0 z-0 flex items-center justify-center">
+          {/* Left Brain - Web Dev Side */}
+          <div 
+            className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
+              hoveredSide === 'web' ? 'opacity-100 z-20' : 'opacity-40 z-10'
+            }`}
+            style={{
+              transform: `translateX(${
+                hoveredSide === 'web' 
+                  ? 'calc(-17% - 15px)' 
+                  : isSmallScreen
+                    ? 'calc(-6% - 30px)'  // Shift 1% right for screens 391-429px (was -7%)
+                    : isMobile 
+                      ? 'calc(-7% - 30px)' 
+                      : '-6%'
+              })`
+            }}
         >
           <div className="relative">
             <img 
@@ -346,20 +356,22 @@ const SplitLanding = () => {
           </div>
         </div>
 
-        {/* Right Brain - Handyman Side */}
-        <div 
-          className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
-            hoveredSide === 'handyman' ? 'opacity-100 z-20' : 'opacity-40 z-10'
-          }`}
-          style={{
-            transform: `translateX(${
-              hoveredSide === 'handyman' 
-                ? 'calc(17% + 15px)' 
-                : isMobile 
-                  ? 'calc(10% + 30px)' 
-                  : '6%'
-            })`
-          }}
+          {/* Right Brain - Handyman Side */}
+          <div 
+            className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
+              hoveredSide === 'handyman' ? 'opacity-100 z-20' : 'opacity-40 z-10'
+            }`}
+            style={{
+              transform: `translateX(${
+                hoveredSide === 'handyman' 
+                  ? 'calc(17% + 15px)' 
+                  : isSmallScreen
+                    ? 'calc(11.5% + 30px)'  // Shift 1% right for screens 391-429px (was 10%)
+                    : isMobile 
+                      ? 'calc(10% + 30px)' 
+                      : '6%'
+              })`
+            }}
         >
           <div className="relative">
             <img 
@@ -390,8 +402,8 @@ const SplitLanding = () => {
             )}
           </div>
         </div>
-      </div>
-      
+        </div>
+      )}
       {/* Split Container */}
       <div className="relative h-full flex">
         
@@ -413,7 +425,7 @@ const SplitLanding = () => {
           }}
           style={{
             clipPath: hoveredSide === 'handyman' 
-              ? isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' : 'polygon(0 0, 62% 0, 62% 100%, 0% 100%)'
+              ? isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' : 'polygon(0 0, 60% 0, 60% 100%, 0% 100%)'
               : hoveredSide === 'web'
               ? isMobile ? 'polygon(0 0, 10% 0, 10% 100%, 0% 100%)' : 'polygon(0 0, 35% 0, 35% 100%, 0% 100%)' 
               : isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' :'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'
@@ -539,7 +551,7 @@ const SplitLanding = () => {
           }}
           style={{
             clipPath: hoveredSide === 'web'
-              ? 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)'
+              ? isMobile ? 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)' :'polygon(40% 0, 100% 0, 100% 100%, 40% 100%)'
               : hoveredSide === 'handyman'
               ? isMobile ? 'polygon(68% 0, 100% 0, 100% 100%, 68% 100%)' : 'polygon(65% 0, 100% 0, 100% 100%, 65% 100%)'
               : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
@@ -653,8 +665,8 @@ const SplitLanding = () => {
         {/* Center Divider & Badge - Repositioned for mobile */}
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 pointer-events-none z-20">
           
-          {/* Center Logo - Higher on mobile */}
-          <div className="absolute left-1/2 top-20 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 flex flex-col items-center gap-2 md:gap-4">
+          {/* Center Logo - Positioned at top for all screens */}
+          <div className="absolute left-1/2 top-20 -translate-x-1/2 flex flex-col items-center gap-2 md:gap-4">
             <div className="relative scale-75 md:scale-100">
               <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full" />
               <div className="relative bg-white/90 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/30 shadow-2xl">
