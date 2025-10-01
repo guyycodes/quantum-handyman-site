@@ -403,7 +403,14 @@ const SplitLanding = () => {
             ${hoveredSide === 'web' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('handyman')}
           onMouseLeave={() => setHoveredSide(null)}
-          onClick={() => setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman')}
+          onClick={() => {
+            // On mobile, always switch directly to this side when tapped
+            if (isMobile) {
+              setHoveredSide('handyman');
+            } else {
+              setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
+            }
+          }}
           style={{
             clipPath: hoveredSide === 'handyman' 
               ? isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' : 'polygon(0 0, 62% 0, 62% 100%, 0% 100%)'
@@ -522,7 +529,14 @@ const SplitLanding = () => {
             ${hoveredSide === 'handyman' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('web')}
           onMouseLeave={() => setHoveredSide(null)}
-          onClick={() => setHoveredSide(hoveredSide === 'web' ? null : 'web')}
+          onClick={() => {
+            // On mobile, always switch directly to this side when tapped
+            if (isMobile) {
+              setHoveredSide('web');
+            } else {
+              setHoveredSide(hoveredSide === 'web' ? null : 'web');
+            }
+          }}
           style={{
             clipPath: hoveredSide === 'web'
               ? 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)'
