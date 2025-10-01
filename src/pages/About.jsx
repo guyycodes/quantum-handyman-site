@@ -20,13 +20,13 @@ const CONTENT = {
     title: 'The Story Behind',
     brandName: 'Quantum Handyman',
     paragraphs: [
-      'A new kind of handyman for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise. Quantum Handyman is a unique service that bridges the gap between traditional trades and modern technology.',
-      'What started as a side hustle quickly revealed a passion for solving real-world problems. After years of education in both technology & business, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
-      'Quantum Handyman represents 10+ years of experience & a rare combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building applications, landscaping, smart home systems & property maintenance the same attention to detail and engineering excellence is delivered for every project.'
+      'A new kind of handyman that bridges the gap between traditional trades and modern technology.',
+      'What started as a side hustle quickly revealed a passion for solving real-world problems. After 10 years in cross discipline trades & running a small business, then graduating with a CS + Business degree, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
+      'Quantum Handyman represents 10+ years of experience & a unique combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building apps & home maintenance the same attention to detail and engineering excellence is delivered for every project.'
     ],
     mission: {
       title: 'Mission',
-      text: 'To provide comprehensive solutions, uniquely deep multi-disciplinary skills & a systematic problem solving approach for modern homeowners & businesses, Quantum Handyman acheives this by combining craftsmanship with engineering discipline, delivered with community values & professionalism.'
+      text: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.'
     }
   },
   
@@ -94,15 +94,16 @@ const CONTENT = {
     title: 'Our Journey',
     subtitle: 'From side hustle -> service provider',
     milestones: [
-      { year: '2011-2015', event: 'Employed as a Multi-Disciplinary trade worker covered Irrigation, Landscape, Property Repair and Automotive.' },
-      { year: '2015', event: 'Started entrapanuer journey as a side hustle.' },
-      { year: '2018', event: 'Began offering home serive.' },
+      { year: '2011-2015', event: 'Employed as a Multi-Disciplinary trade worker, Irrigation, Landscape, Property Repair & Automotive.' },
+      { year: '2015', event: 'Started a side hustle.' },
+      { year: '2017', event: 'Began offering home service.' },
+      { year: '2018', event: 'Started coding journey.' },
       { year: '2019', event: 'Returned to college for Computer Science & Minor in Business.' },
       { year: '2020', event: 'Took on lanscaping & sprinkler projects expanding services' },
       { year: '2021', event: 'Took 16 months off of college during Covid-19, Went to Mortgage/Real Estate School & Worked as a Mortgage Loan Officer.' },
       { year: '2022', event: 'Built outdoor patio with full landscaping, masonry, stamped concrete, drywalling & decking expanded services.' },
       { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework.' },
-      { year: '2023', event: 'Graduated from University of Denver Certified in Full Stack Development, added web development services.' },
+      { year: '2023', event: 'Graduated University of Denver Certified in Full Stack Development, added web development services.' },
       { year: '2024', event: 'Began building a custom website for Quantum Handyman, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
       { year: '2024', event: 'Built a custom Web SaaS platform, integrated LLM agents to handle booking & estimates.' },
       { year: '2025', event: 'Graduate CS Degree + Business Minor 3.95 GPA, Deeloper custom open source Ai package and Recieved over 2000+ downloads.' },

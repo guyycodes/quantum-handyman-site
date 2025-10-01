@@ -93,7 +93,7 @@ const CONTENT = {
   
   about: {
     title: 'Mission: Quantum Handyman',
-    description: 'To provide comprehensive solutions, uniquely deep multidisciplinary skills & a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship with engineering discipline, delivered with community values & professionalism.',
+    description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
     valueProposition: {
       title: 'Value Proposition',
       text: 'A new kind of handyman for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.'

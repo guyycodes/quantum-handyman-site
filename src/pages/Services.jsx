@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
+import { useWorld } from '../contexts/WorldContext'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Wifi,
@@ -20,10 +21,10 @@ const CONTENT = {
   },
   
   categories: [
-    { id: 'all', name: 'All Services', count: 4 },
-    { id: 'property', name: 'Property', count: 2 },
+    { id: 'all', name: 'All Services', count: 8 },
+    { id: 'property', name: 'Property', count: 3 },
     { id: 'tech', name: 'Tech', count: 1 },
-    { id: 'digital', name: 'Digital Web Services', count: 1 }
+    { id: 'digital', name: 'Digital Web Services', count: 4 }
   ],
   
   serviceDetails: {
@@ -37,8 +38,8 @@ const CONTENT = {
     whyChooseUs: 'Why Choose Us',
     trustBadges: {
       insured: 'Insured',
-      licensed: 'Licensed',
-      guaranteed: 'Guaranteed'
+      licensed: 'Certified',
+      // guaranteed: 'Guaranteed'
     }
   },
   
@@ -59,15 +60,16 @@ const CONTENT = {
   }
 }
 
-// Services Data
+// Services Data - Aligned with Home.jsx offerings
 const SERVICES_DATA = [
+  // Property Services (Handyman)
   {
     id: 'home-repairs',
     category: 'property',
     title: 'Home Repairs & Maintenance',
     icon: HomeIcon,
     color: 'bg-blue-500',
-    description: 'Professional home repair services from furniture assembly to general maintenance',
+    description: 'Professional home repair services for all your property needs',
     shortDesc: 'Professional home repair and maintenance services',
     priceRange: '$195 - $695 + materials',
     timeEstimate: '1-6 hours typical',
@@ -75,9 +77,10 @@ const SERVICES_DATA = [
       { name: 'Drywall & Painting', desc: 'Repairs, patches, caulking and interior painting' },
       { name: 'Roofing Repairs', desc: 'Minor roof repairs and maintenance' },
       { name: 'Doors & Locks', desc: 'Door adjustments, locks, hinges & trim work' },
-      { name: 'Furniture Assembly', desc: 'Professional assembly of all furniture types' },
+      { name: 'Property Preservation', desc: 'Maintenance and preservation services' },
       { name: 'General Maintenance', desc: 'No permit-required work' },
-      { name: 'Minor Repairs', desc: 'Non permit-required work' }
+      { name: 'Minor Repairs', desc: 'Non permit-required work' },
+
     ],
     benefits: [
       'Licensed and insured work',
@@ -87,30 +90,28 @@ const SERVICES_DATA = [
     ]
   },
   {
-    id: 'web-dev',
-    category: 'digital',
-    title: 'Web & Digital Services',
-    icon: Code,
+    id: 'home-setup',
+    category: 'property',
+    title: 'Home Setup & Installation',
+    icon: Settings,
     color: 'bg-purple-500',
-    description: 'Digital presence solutions for small businesses, content creators, and social media influencers',
-    shortDesc: 'Professional web development and digital solutions',
-    priceRange: '$599 - $2500',
-    timeEstimate: '1-2 weeks typical',
+    description: 'Complete home setup including furniture assembly and smart device installation',
+    shortDesc: 'Professional assembly and installation services',
+    priceRange: '$125 - $495',
+    timeEstimate: '2-5 hours typical',
     subServices: [
-      { name: 'Open-for-Business Bundle', desc: '1-5 page website + Google Business Profile + Analytics setup' },
-      { name: 'Creator Studio Starter', desc: 'Ring light & backdrop install + social media optimization' },
-      { name: 'Custom Web Development', desc: 'Modern, responsive websites with advanced features' },
-      { name: 'E-Commerce Solutions', desc: 'Shopify stores and online selling platforms' },
-      { name: 'Social Media Optimization', desc: 'Instagram, TikTok, personal branding setup' },
-      { name: 'SEO & Google Services', desc: 'Search optimization and Google My Business' },
-      { name: 'AI Integration', desc: 'Custom AI tools and chatbot integration 🤖' },
-      { name: 'Add-Ons Available', desc: 'Authentication, databases, sales funnels, advanced telemetry' }
+      { name: 'Furniture Assembly', desc: 'IKEA and all major brands' },
+      { name: 'Security Camera Installation', desc: 'Professional camera setup and configuration' },
+      { name: 'TV Mounting', desc: 'Wall mounting with cable management' },
+      { name: 'Smart Home Devices', desc: 'Setup and configuration of smart home tech' },
+      { name: 'Shelving & Storage', desc: 'Installation of shelving and organization systems' },
+      { name: 'Baby Proofing', desc: 'Child safety installations' }
     ],
     benefits: [
-      'Professional photography included',
-      'Mobile-responsive design',
-      'Care Plan available ($99/mo)',
-      'Payment plans available'
+      'Professional installation',
+      'All tools included',
+      'Clean workspace guaranteed',
+      'Setup assistance included'
     ]
   },
   {
@@ -122,7 +123,7 @@ const SERVICES_DATA = [
     description: 'Upgrade your outdoor spaces with professional landscape services',
     shortDesc: 'Comprehensive landscaping and outdoor services',
     priceRange: 'Custom quote + materials',
-    timeEstimate: 'Typical Hours can Vary by Project',
+    timeEstimate: 'Varies by project',
     subServices: [
       { name: 'Decks & Patios', desc: 'Construction, repair and maintenance' },
       { name: 'Masonry Work', desc: 'Stone work, retaining walls, pathways' },
@@ -130,6 +131,7 @@ const SERVICES_DATA = [
       { name: 'Custom Landscaping', desc: 'Design and installation of custom landscapes' },
       { name: 'Landscape Maintenance', desc: 'Regular maintenance and seasonal services' },
       { name: 'Sprinkler Systems', desc: 'Maintenance, repair, setup and programming' },
+      { name: 'Tree Pruning', desc: 'Professional tree trimming and maintenance' }
     ],
     benefits: [
       'Eco-friendly practices',
@@ -138,6 +140,8 @@ const SERVICES_DATA = [
       'Design consultation included'
     ]
   },
+
+  // Tech Services (Smart Home)
   {
     id: 'smart-home',
     category: 'tech',
@@ -164,13 +168,128 @@ const SERVICES_DATA = [
       'Wi-Fi optimization available',
       'Flexible hourly rates'
     ]
+  },
+
+  // Digital Services (Web Development)
+  {
+    id: 'custom-dev',
+    category: 'digital',
+    title: 'Custom Web Development',
+    icon: Code,
+    color: 'bg-purple-500',
+    description: 'Full-stack custom web applications and digital solutions tailored to your needs',
+    shortDesc: 'Professional custom web development',
+    priceRange: '$500 - $2500+',
+    timeEstimate: '1-4 weeks typical',
+    subServices: [
+      { name: 'React Applications', desc: 'Modern React, Next.js applications' },
+      { name: 'Node.js Backend', desc: 'Scalable backend services and APIs' },
+      { name: 'Python Development', desc: 'Django, Flask, and data processing' },
+      { name: 'E-commerce', desc: 'Custom shopping platforms' },
+      { name: 'API Development', desc: 'RESTful and GraphQL APIs' },
+      { name: 'Database Design', desc: 'SQL and NoSQL database architecture' },
+      { name: 'Cloud Deployment', desc: 'AWS, Vercel, Netlify deployment' },
+      { name: 'Mobile Apps', desc: 'iOS and Android development' }
+    ],
+    benefits: [
+      'CS + Business degree + certified developer',
+      'Clean, maintainable code',
+      'Full documentation included',
+      'Post-launch support available'
+    ]
+  },
+  {
+    id: 'website-builders',
+    category: 'digital',
+    title: 'WordPress, Wix & Squarespace',
+    icon: Globe,
+    color: 'bg-indigo-500',
+    description: 'Professional website creation and management on popular platforms',
+    shortDesc: 'CMS and website builder solutions',
+    priceRange: '$500 - $2500+',
+    timeEstimate: '3-7 days typical',
+    subServices: [
+      { name: 'WordPress Custom Themes', desc: 'Custom theme development and customization' },
+      { name: 'WordPress Plugins', desc: 'Plugin installation and custom development' },
+      { name: 'Wix Design', desc: 'Professional Wix website design' },
+      { name: 'Squarespace Setup', desc: 'Complete Squarespace configuration' },
+      { name: 'Site Migration', desc: 'Moving sites between platforms' },
+      { name: 'SEO Optimization', desc: 'On-page SEO and site speed' },
+      { name: 'Google Business Profile', desc: 'Complete GMB setup and optimization' },
+      { name: 'Ongoing Maintenance', desc: 'Monthly maintenance plans available' }
+    ],
+    benefits: [
+      'Professional photography included',
+      'Mobile-responsive design',
+      'Training documentation provided',
+      'Care Plan available ($99/mo)'
+    ]
+  },
+  {
+    id: 'content-creator',
+    category: 'digital',
+    title: 'Content Creator Setup',
+    icon: Smartphone,
+    color: 'bg-pink-500',
+    description: 'Complete digital presence setup for influencers and content creators',
+    shortDesc: 'Creator economy solutions',
+    priceRange: '$500 - $2500+',
+    timeEstimate: '1-2 weeks typical',
+    subServices: [
+      { name: 'Link-in-bio Pages', desc: 'Linktree alternatives with custom branding' },
+      { name: 'Photo & Video Support', desc: 'Content support for specific packages' },
+      { name: 'Instagram Shopping', desc: 'Instagram shop setup and product tagging' },
+      { name: 'YouTube Optimization', desc: 'Channel setup, SEO, and analytics' },
+      { name: 'TikTok Shop', desc: 'TikTok shopping integration' },
+      { name: 'Brand Partnerships Portal', desc: 'Custom portal for brand collaborations' },
+      { name: 'Creator Studio Setup', desc: 'Ring light & backdrop installation' }
+    ],
+    benefits: [
+      'Social media optimization included',
+      'Content strategy consultation',
+      'Analytics dashboard setup',
+      'Growth strategy included'
+    ]
+  },
+  {
+    id: 'ai-data-funnels',
+    category: 'digital',
+    title: 'AI & Data Funnels',
+    icon: Sparkles,
+    color: 'bg-orange-500',
+    description: 'Advanced AI integrations, data capture & analytics, product telemetry & sales funnels',
+    shortDesc: 'AI and automation solutions',
+    priceRange: '$$500 - $2500+',
+    timeEstimate: '2-6 weeks typical',
+    subServices: [
+      { name: 'ChatGPT Integration', desc: 'Custom ChatGPT and GPT-4 implementations' },
+      { name: 'Claude Integration', desc: 'Anthropic Claude AI integration' },
+      { name: 'Custom AI Chatbots', desc: 'Expert systems for your business' },
+      { name: 'Funnels', desc: 'Automated sequences' },
+      { name: 'Data Analytics Dashboards', desc: 'Custom analytics and reporting' },
+      { name: 'Product Telemetry', desc: 'User behavior tracking and insights' }
+    ],
+    benefits: [
+      'Custom AI training included',
+      'Real-time analytics',
+      'A/B testing setup',
+      'Ongoing optimization support'
+    ]
   }
-  // Note: Automotive scratch repair service is not currently offered
 ]
 
 const Services = () => {
+  const { currentWorld, isHandyman, isWeb } = useWorld()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [expandedService, setExpandedService] = useState(null)
+  const [worldKey, setWorldKey] = useState(currentWorld || 'default')
+  
+  // Reset category and force re-render when world changes
+  useEffect(() => {
+    setSelectedCategory('all')
+    setExpandedService(null) // Also close any expanded services
+    setWorldKey(currentWorld || 'default') // Force component re-render
+  }, [currentWorld])
   
   // Intersection observers
   const heroSection = useIntersectionObserver({ threshold: 0.3 })
@@ -179,9 +298,17 @@ const Services = () => {
   const ctaSection = useIntersectionObserver({ threshold: 0.3 })
   
   // Staggered animations for services
-  const servicesStagger = useStaggeredIntersection(5, { threshold: 0.1 })
+  const servicesStagger = useStaggeredIntersection(8, { threshold: 0.1 })
 
-  const filteredServices = SERVICES_DATA.filter(
+  // Filter services based on current world
+  const worldFilteredServices = SERVICES_DATA.filter(service => {
+    if (isHandyman) return service.category === 'property' || service.category === 'tech'
+    if (isWeb) return service.category === 'digital'
+    return true
+  })
+
+  // Apply category filter on top of world filter
+  const filteredServices = worldFilteredServices.filter(
     service => selectedCategory === 'all' || service.category === selectedCategory
   )
 
@@ -194,9 +321,15 @@ const Services = () => {
         <div 
           ref={heroSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-fade-down ${heroSection.isVisible ? 'visible' : ''}`}>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{CONTENT.hero.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {isHandyman ? 'Handyman Services' : isWeb ? 'Web Development Services' : CONTENT.hero.title}
+          </h1>
           <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            {CONTENT.hero.subtitle}
+            {isHandyman 
+              ? 'Professional home repair and maintenance services with a tech-savvy approach'
+              : isWeb 
+              ? 'Full-stack development and digital solutions for your business needs'
+              : CONTENT.hero.subtitle}
           </p>
         </div>
       </section>
@@ -205,33 +338,80 @@ const Services = () => {
       <section className="section-padding">
         <div className="container-max mx-auto">
           {/* Category Filter */}
-          <div 
-            ref={categoryFilter.ref}
-            className={`flex flex-wrap justify-center gap-4 mb-12 animate-fade-up ${categoryFilter.isVisible ? 'visible' : ''}`}>
-            {CONTENT.categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all ${
-                  selectedCategory === category.id
-                    ? 'bg-primary text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
-                }`}
-              >
-                {category.name}
-                <span className="ml-2 text-sm opacity-80">({category.count})</span>
-              </button>
-            ))}
-          </div>
+          {/* Only show category filter when not in a specific world, or when in handyman world (since it has multiple categories) */}
+          {(!isWeb) && (
+            <div 
+              ref={categoryFilter.ref}
+              className={`flex flex-wrap justify-center gap-4 mb-12 animate-fade-up ${categoryFilter.isVisible ? 'visible' : ''}`}>
+              {/* Dynamic categories based on world */}
+              {isHandyman ? (
+                <>
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      selectedCategory === 'all'
+                        ? 'bg-primary text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
+                    }`}
+                  >
+                    All Services
+                    <span className="ml-2 text-sm opacity-80">({worldFilteredServices.length})</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedCategory('property')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      selectedCategory === 'property'
+                        ? 'bg-primary text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
+                    }`}
+                  >
+                    Property
+                    <span className="ml-2 text-sm opacity-80">({worldFilteredServices.filter(s => s.category === 'property').length})</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedCategory('tech')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      selectedCategory === 'tech'
+                        ? 'bg-primary text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
+                    }`}
+                  >
+                    Tech
+                    <span className="ml-2 text-sm opacity-80">({worldFilteredServices.filter(s => s.category === 'tech').length})</span>
+                  </button>
+                </>
+              ) : !isWeb ? (
+                // Show all categories when no world is selected
+                CONTENT.categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      selectedCategory === category.id
+                        ? 'bg-primary text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 shadow-md'
+                    }`}
+                  >
+                    {category.name}
+                    <span className="ml-2 text-sm opacity-80">
+                      ({category.id === 'all' 
+                        ? worldFilteredServices.length 
+                        : worldFilteredServices.filter(s => s.category === category.id).length})
+                    </span>
+                  </button>
+                ))
+              ) : null}
+            </div>
+          )}
 
-          {/* Services Grid */}
-          <div className="space-y-8">
+          {/* Services Grid - key forces re-render on world change */}
+          <div key={worldKey} className={`${isWeb ? 'grid md:grid-cols-2 gap-8' : 'space-y-8'}`}>
             {filteredServices.map((service, index) => (
               <div 
-                key={service.id}
+                key={`${worldKey}-${service.id}`}
                 ref={(el) => servicesStagger.setItemRef(service.id, el)}
                 data-item-id={service.id}
-                className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all hover:shadow-2xl animate-fade-up delay-${(index + 1) * 100} ${servicesStagger.visibleItems[service.id] ? 'visible' : ''}`}
+                className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all hover:shadow-2xl animate-fade-up delay-${(index + 1) * 100} ${servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''}`}
               >
                 {/* Service Header */}
                 <div className="p-6 lg:p-8">
@@ -327,10 +507,10 @@ const Services = () => {
                                 <Award className="w-4 h-4 text-primary" />
                                 <span>{CONTENT.serviceDetails.trustBadges.licensed}</span>
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-muted">
+                              {/* <div className="flex items-center gap-2 text-sm text-muted">
                                 <CheckCircle className="w-4 h-4 text-primary" />
                                 <span>{CONTENT.serviceDetails.trustBadges.guaranteed}</span>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>
@@ -346,9 +526,19 @@ const Services = () => {
           <div 
             ref={additionalNote.ref}
             className={`mt-12 bg-blue-50 border-l-4 border-primary rounded-r-lg p-6 animate-scale ${additionalNote.isVisible ? 'visible' : ''}`}>
-            <h3 className="font-semibold text-primary mb-2">{CONTENT.additionalServices.title}</h3>
+            <h3 className="font-semibold text-primary mb-2">
+              {isHandyman 
+                ? "Need Something Else Fixed?" 
+                : isWeb 
+                ? "Need Custom Development?"
+                : CONTENT.additionalServices.title}
+            </h3>
             <p className="text-muted mb-4">
-              {CONTENT.additionalServices.description}
+              {isHandyman 
+                ? 'We offer many additional repair and maintenance services not listed here. From minor fixes to major home improvements, we can help!'
+                : isWeb 
+                ? 'We specialize in custom web solutions tailored to your specific needs. From complex applications to unique integrations, let\'s discuss your project!'
+                : CONTENT.additionalServices.description}
             </p>
             <a 
               href="/contact"
@@ -367,10 +557,18 @@ const Services = () => {
           ref={ctaSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {CONTENT.cta.title}
+            {isHandyman 
+              ? 'Ready to Fix Your Property?' 
+              : isWeb 
+              ? 'Ready to Build Your Digital Presence?'
+              : CONTENT.cta.title}
           </h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            {CONTENT.cta.subtitle}
+            {isHandyman 
+              ? 'Professional handyman services with transparent pricing and satisfaction guaranteed'
+              : isWeb 
+              ? 'Transform your ideas into powerful web applications with expert development'
+              : CONTENT.cta.subtitle}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

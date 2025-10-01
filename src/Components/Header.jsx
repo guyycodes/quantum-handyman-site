@@ -30,6 +30,21 @@ const Header = () => {
   const navigate = useNavigate()
   const { currentWorld, isHandyman, isWeb } = useWorld()
 
+  // Get the world-aware path
+  const getWorldPath = (path) => {
+    // If we have a current world, prepend it to the path
+    if (currentWorld && currentWorld !== 'default') {
+      // For home path, just return the world path
+      if (path === '/') {
+        return `/${currentWorld}`
+      }
+      // For other paths, append them to the world path
+      return `/${currentWorld}${path}`
+    }
+    // If no world is selected, return the original path
+    return path
+  }
+
   const isActive = (href) => {
     // Check if the current path matches, accounting for world prefix
     const currentPath = location.pathname.replace(/^\/(handyman|web)/, '')
@@ -57,7 +72,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link 
-            to="/" 
+            to={getWorldPath('/')} 
             onClick={scrollToTop}
             className="flex items-center gap-2 group"
             aria-label={CONTENT.logo.ariaLabel}
@@ -76,7 +91,7 @@ const Header = () => {
             {CONTENT.navigation.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}
+                to={getWorldPath(item.href)}
                 onClick={scrollToTop}
                 className={`
                   font-medium transition-colors duration-200 relative
@@ -122,7 +137,7 @@ const Header = () => {
             </button>
             
             <Link
-              to="/portal"
+              to={getWorldPath('/portal')}
               onClick={scrollToTop}
               className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all"
             >
@@ -165,7 +180,7 @@ const Header = () => {
             {CONTENT.navigation.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}
+                to={getWorldPath(item.href)}
                 onClick={() => {
                   setIsMenuOpen(false)
                   scrollToTop()
@@ -211,7 +226,7 @@ const Header = () => {
               </button>
               
               <Link
-                to="/portal"
+                to={getWorldPath('/portal')}
                 onClick={() => {
                   setIsMenuOpen(false)
                   scrollToTop()
