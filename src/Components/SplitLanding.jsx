@@ -231,9 +231,13 @@ const rightBrainElements = [
 // COMPONENT
 // ============================================================================
 
+// Mobile breakpoint constant for easy management
+const MOBILE_BREAKPOINT = 768;
+
 const SplitLanding = () => {
   const [hoveredSide, setHoveredSide] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
   const navigate = useNavigate();
   
   // Looping typewriter for mission statement
@@ -244,6 +248,13 @@ const SplitLanding = () => {
   const { displayText: missionText, isTyping } = useLoopingTypewriter(missionTexts, 60, 2500, 20);
 
   useEffect(() => {
+    // Handle resize for mobile detection
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
     // Trigger animations on mount
     setIsLoaded(true);
     
@@ -266,7 +277,10 @@ const SplitLanding = () => {
       });
     }
     
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const handleSelection = (world) => {
@@ -293,15 +307,21 @@ const SplitLanding = () => {
             hoveredSide === 'web' ? 'opacity-100 z-20' : 'opacity-40 z-10'
           }`}
           style={{
-            transform: `translateX(${hoveredSide === 'web' ? '-17%' : '-6%'})`
+            transform: `translateX(${
+              hoveredSide === 'web' 
+                ? 'calc(-17% - 15px)' 
+                : isMobile 
+                  ? 'calc(-7% - 30px)' 
+                  : '-6%'
+            })`
           }}
         >
           <div className="relative">
             <img 
               src="/left_brain.png" 
               alt="" 
-              className={`h-[500px] object-contain transition-all duration-1200 ${
-                hoveredSide === 'web' ? 'scale-110' : 'scale-100'
+              className={`h-[300px] md:h-[400px] lg:h-[500px] object-contain transition-all duration-1200 ${
+                hoveredSide === 'web' ? 'md:scale-110 scale-105' : 'scale-100'
               }`}
               style={{ 
                 filter: `drop-shadow(0 0 ${hoveredSide === 'web' ? '50px' : '15px'} rgba(16, 185, 129, 0.4))`
@@ -314,7 +334,7 @@ const SplitLanding = () => {
                   <QuantumSphere 
                     customElements={leftBrainElements}
                     scale={1}
-                    sphereScale={0.88}
+                    sphereScale={isMobile ? 0.7 : 0.88}
                     opacityDepth="deep"
                     className="pointer-events-auto"
                   >
@@ -332,15 +352,21 @@ const SplitLanding = () => {
             hoveredSide === 'handyman' ? 'opacity-100 z-20' : 'opacity-40 z-10'
           }`}
           style={{
-            transform: `translateX(${hoveredSide === 'handyman' ? '17%' : '6%'})`
+            transform: `translateX(${
+              hoveredSide === 'handyman' 
+                ? 'calc(17% + 15px)' 
+                : isMobile 
+                  ? 'calc(10% + 30px)' 
+                  : '6%'
+            })`
           }}
         >
           <div className="relative">
             <img 
               src="/right_brain.png" 
               alt="" 
-              className={`h-[500px] object-contain transition-all duration-1200 ${
-                hoveredSide === 'handyman' ? 'scale-110' : 'scale-100'
+              className={`h-[300px] md:h-[400px] lg:h-[500px] object-contain transition-all duration-1200 ${
+                hoveredSide === 'handyman' ? 'md:scale-110 scale-105' : 'scale-100'
               }`}
               style={{ 
                 filter: `drop-shadow(0 0 ${hoveredSide === 'handyman' ? '50px' : '15px'} rgba(251, 191, 36, 0.4))`
@@ -353,6 +379,7 @@ const SplitLanding = () => {
                   <QuantumSphere 
                     customElements={rightBrainElements}
                     scale={1}
+                    sphereScale={isMobile ? 0.75 : 1}
                     opacityDepth="deep"
                     className="pointer-events-auto"
                   >
@@ -379,10 +406,10 @@ const SplitLanding = () => {
           onClick={() => setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman')}
           style={{
             clipPath: hoveredSide === 'handyman' 
-              ? 'polygon(0 0, 62% 0, 62% 100%, 0% 100%)'
+              ? isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' : 'polygon(0 0, 62% 0, 62% 100%, 0% 100%)'
               : hoveredSide === 'web'
-              ? 'polygon(0 0, 35% 0, 35% 100%, 0% 100%)' 
-              : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'
+              ? isMobile ? 'polygon(0 0, 10% 0, 10% 100%, 0% 100%)' : 'polygon(0 0, 35% 0, 35% 100%, 0% 100%)' 
+              : isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' :'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'
           }}
         >
           {/* Background Gradient with adjustable opacity on hover */}
@@ -399,7 +426,7 @@ const SplitLanding = () => {
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-center h-full px-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'handyman' ? 'scale-110 -translate-x-40' : 'scale-50'}`}>
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'handyman' ? isMobile ? 'scale-90 -translate-x-6' : 'scale-110 -translate-x-40' : 'scale-50'} ${hoveredSide === 'web' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -474,15 +501,17 @@ const SplitLanding = () => {
             </div>
           </div>
 
-          {/* Side Label (vertical) */}
-          <div className={`absolute left-8 top-1/2 -translate-y-1/2 transition-opacity duration-500 ${
-            hoveredSide === 'web' ? 'opacity-100' : 'opacity-0'
-          }`}>
-            <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase" 
-              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              {CONTENT.handyman.sideLabel}
+          {/* Side Label (vertical) - Hidden on mobile */}
+          {!isMobile && (
+            <div className={`absolute left-8 top-1/2 -translate-y-1/2 transition-opacity duration-500 ${
+              hoveredSide === 'web' ? 'opacity-100' : 'opacity-0'
+            }`}>
+              <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase" 
+                style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+                {CONTENT.handyman.sideLabel}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Web Dev Side */}
@@ -496,10 +525,11 @@ const SplitLanding = () => {
           onClick={() => setHoveredSide(hoveredSide === 'web' ? null : 'web')}
           style={{
             clipPath: hoveredSide === 'web'
-              ? 'polygon(39% 0, 100% 0, 100% 100%, 39% 100%)'
+              ? 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)'
               : hoveredSide === 'handyman'
-              ? 'polygon(65% 0, 100% 0, 100% 100%, 65% 100%)'
-              : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'
+              ? isMobile ? 'polygon(68% 0, 100% 0, 100% 100%, 68% 100%)' : 'polygon(65% 0, 100% 0, 100% 100%, 65% 100%)'
+              : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
+            transform: isMobile ? 'translateX(-20%)' : undefined
           }}
         >
           {/* Background Gradient with green/citrus colors and adjustable opacity */}
@@ -518,7 +548,7 @@ const SplitLanding = () => {
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-center h-full px-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? 'scale-110 translate-x-60' : 'scale-50'}`}>
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? isMobile ? 'scale-90 -translate-x-8' : 'scale-110 translate-x-60' : 'scale-50'} ${hoveredSide === 'handyman' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -593,44 +623,46 @@ const SplitLanding = () => {
             </div>
           </div>
 
-          {/* Side Label (vertical) */}
-          <div className={`absolute right-8 top-1/2 -translate-y-1/2 transition-opacity duration-500 ${
-            hoveredSide === 'handyman' ? 'opacity-100' : 'opacity-0'
-          }`}>
-            <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase" 
-              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              {CONTENT.web.sideLabel}
+          {/* Side Label (vertical) - Hidden on mobile */}
+          {!isMobile && (
+            <div className={`absolute right-8 top-1/2 -translate-y-1/2 transition-opacity duration-500 ${
+              hoveredSide === 'handyman' ? 'opacity-100' : 'opacity-0'
+            }`}>
+              <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase z-50" 
+                style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+                {CONTENT.web.sideLabel}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Center Divider & Badge - Removed since we're using clipPath */}
+        {/* Center Divider & Badge - Repositioned for mobile */}
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 pointer-events-none z-20">
           
-          {/* Center Logo */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4">
-            <div className="relative">
+          {/* Center Logo - Higher on mobile */}
+          <div className="absolute left-1/2 top-20 md:top-1/2 -translate-x-1/2 md:-translate-y-1/2 flex flex-col items-center gap-2 md:gap-4">
+            <div className="relative scale-75 md:scale-100">
               <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full" />
-              <div className="relative bg-white/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/30 shadow-2xl">
+              <div className="relative bg-white/90 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/30 shadow-2xl">
                 <div className="flex items-center gap-2">
                   <div className="relative">
-                    <Wrench className="w-8 h-8 text-primary" />
-                    <Code className="w-4 h-4 text-secondary absolute -bottom-1 -right-1" />
+                    <Wrench className="w-6 md:w-8 h-6 md:h-8 text-primary" />
+                    <Code className="w-3 md:w-4 h-3 md:h-4 text-secondary absolute -bottom-1 -right-1" />
                   </div>
-                  <span className="text-xl font-bold text-near-black">
+                  <span className="text-lg md:text-xl font-bold text-near-black">
                     {CONTENT.brand.name}<span className="text-primary">{CONTENT.brand.nameSuffix}</span>
                   </span>
                 </div>
               </div>
             </div>
             
-            {/* Mission Statement Below */}
-            <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg max-w-[320px] md:max-w-md">
-              <p className="text-xs md:text-sm text-white text-center leading-snug min-h-[2.5rem] flex items-center justify-center">
+            {/* Mission Statement Below - Hidden on very small screens */}
+            <div className="hidden sm:block bg-gray-800/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-lg shadow-lg max-w-[280px] md:max-w-md">
+              <p className="text-[10px] md:text-sm text-white text-center leading-snug min-h-[2rem] md:min-h-[2.5rem] flex items-center justify-center">
                 <span>
                   {missionText}
                   {isTyping && (
-                    <span className="inline-block w-0.5 h-4 bg-gray-800 animate-pulse ml-0.5" />
+                    <span className="inline-block w-0.5 h-3 md:h-4 bg-gray-800 animate-pulse ml-0.5" />
                   )}
                 </span>
               </p>
