@@ -274,8 +274,9 @@ const SplitLanding = () => {
     document.addEventListener('keydown', handleKeyDown);
     
     // Preload the main app chunks for faster transition
+    let idleId;
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => {
+      idleId = requestIdleCallback(() => {
         const link = document.createElement('link');
         link.rel = 'prefetch';
         link.as = 'script';
@@ -287,6 +288,9 @@ const SplitLanding = () => {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', handleResize);
+      if (idleId && 'cancelIdleCallback' in window) {
+        cancelIdleCallback(idleId);
+      }
     };
   }, []);
 
@@ -330,6 +334,7 @@ const SplitLanding = () => {
             <img 
               src="/left_brain.png" 
               alt="" 
+              aria-hidden="true"
               className={`h-[300px] md:h-[400px] lg:h-[500px] object-contain transition-all duration-1200 ${
                 hoveredSide === 'web' ? 'md:scale-110 scale-105' : 'scale-100'
               }`}
@@ -377,6 +382,7 @@ const SplitLanding = () => {
             <img 
               src="/right_brain.png" 
               alt="" 
+              aria-hidden="true"
               className={`h-[300px] md:h-[400px] lg:h-[500px] object-contain transition-all duration-1200 ${
                 hoveredSide === 'handyman' ? 'md:scale-110 scale-105' : 'scale-100'
               }`}
@@ -409,18 +415,27 @@ const SplitLanding = () => {
         
         {/* Handyman Side */}
         <div 
+          role="button"
+          tabIndex={0}
+          aria-label="Enter Handyman services"
           data-world="handyman"
-          className={`relative flex-1 transition-all duration-1200 ease-out cursor-default
+          className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-inset
             ${hoveredSide === 'handyman' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'web' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('handyman')}
           onMouseLeave={() => setHoveredSide(null)}
           onClick={() => {
-            // On mobile, always switch directly to this side when tapped
+            // On mobile, navigate directly when panel is tapped
             if (isMobile) {
-              setHoveredSide('handyman');
-            } else {
-              setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
+              handleSelection('handyman');
+              return;
+            }
+            setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleSelection('handyman');
             }
           }}
           style={{
@@ -535,18 +550,27 @@ const SplitLanding = () => {
 
         {/* Web Dev Side */}
         <div 
+          role="button"
+          tabIndex={0}
+          aria-label="Enter Web Development services"
           data-world="web"
-          className={`relative flex-1 transition-all duration-1200 ease-out
+          className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-inset
             ${hoveredSide === 'web' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'handyman' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('web')}
           onMouseLeave={() => setHoveredSide(null)}
           onClick={() => {
-            // On mobile, always switch directly to this side when tapped
+            // On mobile, navigate directly when panel is tapped
             if (isMobile) {
-              setHoveredSide('web');
-            } else {
-              setHoveredSide(hoveredSide === 'web' ? null : 'web');
+              handleSelection('web');
+              return;
+            }
+            setHoveredSide(hoveredSide === 'web' ? null : 'web');
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleSelection('web');
             }
           }}
           style={{
