@@ -33,7 +33,7 @@ class FibonacciSphere {
  * @class
  */
 class QuantumCloud {
-  constructor(root) {
+  constructor(root, opacityDepth = 'normal', sphereScale = 1) {
     this.root = root
     this.size = this.root.offsetWidth
     this.elements = root.querySelectorAll('.quantum-element')
@@ -45,6 +45,8 @@ class QuantumCloud {
     this.mouseX = 0
     this.mouseY = 0
     this.targetRotationSpeed = 0.005
+    this.opacityDepth = opacityDepth
+    this.sphereScale = sphereScale
 
     this.updatePositions()
     this.initEventListeners()
@@ -106,11 +108,24 @@ class QuantumCloud {
         rotationMatrix[2][1] * y +
         rotationMatrix[2][2] * z
 
-      const translateX = this.size * transformedX / 1.55 +20
-      const translateY = this.size * transformedY / 2.25
+      const translateX = this.size * transformedX * this.sphereScale / 1.55 +20
+      const translateY = this.size * transformedY * this.sphereScale / 2.25
       const scale = (transformedZ + 2) / 3
       const transform = `translateX(${translateX}px) translateY(${translateY}px) scale(${scale})`
-      const opacity = (transformedZ + 1.5) / 2.5
+      
+      // Adjust opacity based on depth setting
+      let opacity
+      if (this.opacityDepth === 'deep') {
+        // More dramatic fade for elements going behind (brain lobes)
+        // Elements at back (transformedZ = -1) should be nearly invisible
+        // Elements at front (transformedZ = 1) should be fully visible
+        opacity = Math.max(0, Math.min(1, (transformedZ + 1) * 0.5))
+        // Apply exponential curve for more dramatic fade
+        opacity = Math.pow(opacity, 2)
+      } else {
+        // Normal opacity for solid objects (video)
+        opacity = (transformedZ + 1.5) / 2.5
+      }
 
       this.elements[i].style.transform = transform
       this.elements[i].style.opacity = opacity
@@ -157,12 +172,12 @@ class QuantumCloud {
   }
 }
 
-const QuantumSphere = ({ children, className = '' }) => {
+const QuantumSphere = ({ children, className = '', customElements = null, scale = 1, opacityDepth = 'normal', sphereScale = 1 }) => {
   const sphereRef = useRef(null)
   const cloudInstanceRef = useRef(null)
 
-  // Service icons and labels for the quantum sphere
-  const quantumElements = [
+  // Default service icons and labels for the quantum sphere
+  const defaultQuantumElements = [
     { icon: Code, label: 'Web Design', color: '#a855f7' },
     { icon: Plane, label: 'Creator Sites', color: '#eab308' },
     { icon: Settings, label: 'Property+Tech', color: '#ec4899' },
@@ -172,12 +187,15 @@ const QuantumSphere = ({ children, className = '' }) => {
     { icon: Hammer, label: 'Landscaping', color: '#f97316' },
     { icon: GlassWater, label: 'Sprinklers', color: '#6366f1' }
   ]
+  
+  // Use custom elements if provided, otherwise use defaults
+  const quantumElements = customElements || defaultQuantumElements
 
   useEffect(() => {
     if (sphereRef.current && !cloudInstanceRef.current) {
       // Small delay to ensure DOM is ready
       setTimeout(() => {
-        cloudInstanceRef.current = new QuantumCloud(sphereRef.current)
+        cloudInstanceRef.current = new QuantumCloud(sphereRef.current, opacityDepth, sphereScale)
         cloudInstanceRef.current.start()
       }, 100)
     }
@@ -188,7 +206,7 @@ const QuantumSphere = ({ children, className = '' }) => {
         cloudInstanceRef.current = null
       }
     }
-  }, [])
+  }, [opacityDepth, sphereScale])
 
   // Container styles
   const containerStyles = {
@@ -200,23 +218,24 @@ const QuantumSphere = ({ children, className = '' }) => {
     justifyContent: 'center'
   }
 
-  // Sphere wrapper styles
+  // Sphere wrapper styles - adjusted for scale
   const sphereStyles = {
     position: 'absolute',
-    width: '600px',
-    height: '600px',
+    width: `${600 * scale}px`,
+    height: `${600 * scale}px`,
     pointerEvents: 'none'
   }
 
-  // Element styles
+  // Element styles - adjusted for scale
+  const elementSize = 60 * scale
   const elementStyles = {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    width: '60px',
-    height: '60px',
-    marginLeft: '-30px',
-    marginTop: '-30px',
+    width: `${elementSize}px`,
+    height: `${elementSize}px`,
+    marginLeft: `-${elementSize / 2}px`,
+    marginTop: `-${elementSize / 2}px`,
     pointerEvents: 'auto',
     cursor: 'pointer',
     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out'
@@ -297,14 +316,15 @@ const QuantumSphere = ({ children, className = '' }) => {
               }}
             >
               <element.icon style={{ 
-                width: '24px', 
-                height: '24px', 
+                width: `${24 * scale}px`, 
+                height: `${24 * scale}px`, 
                 color: 'white',
                 filter: `drop-shadow(0 0 6px ${element.color}) drop-shadow(0 0 3px rgba(255,255,255,0.8))`,
                 zIndex: 2
               }} />
               <span style={{
                 ...labelStyles,
+                fontSize: `${9 * scale}px`,
                 textShadow: `0 0 8px ${element.color}, 0 0 4px rgba(255,255,255,0.6)`
               }}>{element.label}</span>
             </div>

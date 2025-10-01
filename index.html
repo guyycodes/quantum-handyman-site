@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +8,7 @@
     <!-- Primary Meta Tags -->
     <title>Quantum Handyman — Home Repairs, Tech & Smart Home Solutions | Greater Metro Area</title>
     <meta name="title" content="Quantum Handyman — Home Repairs, Tech & Smart Home Solutions | Greater Metro Area" />
-    <meta name="description" content="A new kind of handyman for your property & technology needs | Craftsman + CS-degree. No collars. Just capability. Professional home repairs, smart home automation, web development & landscaping. 10+ years experience, 15,000+ jobs completed. Flat-rate pricing from $195. Satisfaction guaranteed." />
+    <meta name="description" content="A new kind of handyman for your property & technology needs | Craftsman + CS-degree. No collars. Just capability. Professional home repairs, smart home automation, web development & landscaping. 10+ years experience, hundreds of satisfied customers. Flat-rate pricing from $195. Satisfaction guaranteed." />
     <meta name="keywords" content="handyman greater metro area, smart home installation, web development services, home repairs, landscaping services, tech handyman, technology handyman, furniture assembly, drywall repair, smart home automation, IoT setup, custom web development, WordPress support, property maintenance, deck repair, patio construction, AI integration services, online booking systems, computer troubleshooting, quantum handyman, property and technology" />
     <meta name="author" content="Quantum Handyman" />
     <meta name="generator" content="Vite" />
@@ -46,8 +47,6 @@
     <meta name="twitter:title" content="Quantum Handyman — Home Repairs, Tech & Smart Home Solutions" />
     <meta name="twitter:description" content="A new kind of handyman for your property & technology needs | Craftsman + CS-degree. No collars. Just capability. Fixing problems on every level - from home repairs to smart home tech. Book online today!" />
     <meta name="twitter:image" content="https://quantumhandyman.com/twitter-image.png" />
-    <meta name="twitter:site" content="@quantumhandyman" />
-    <meta name="twitter:creator" content="@quantumhandyman" />
     
     <!-- Verification -->
     <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" />
@@ -59,7 +58,6 @@
     <meta name="bingbot" content="index, follow" />
     
     <!-- Format Detection -->
-    <meta name="format-detection" content="telephone=no" />
     <meta name="format-detection" content="email=no" />
     <meta name="format-detection" content="address=no" />
     
@@ -94,11 +92,11 @@
         "https://quantumhandyman.com/service-image-1.jpg",
         "https://quantumhandyman.com/service-image-2.jpg"
       ],
-      "description": "A new kind of handyman for your property & technology needs | Craftsman + CS-degree. No collars. Just capability. Home repairs, smart home automation, web development, and landscaping. 10+ years experience, 15,000+ jobs completed.",
+      "description": "A new kind of handyman for your property & technology needs | Craftsman + CS-degree. No collars. Just capability. Home repairs, smart home automation, web development, and landscaping. 10+ years experience, hundreds of satisfied customers.",
       "email": "hello@quantumhandyman.com",
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": "Greater Metro Area",
+        "addressLocality": "Denver",
         "addressRegion": "CO",
         "addressCountry": "US"
       },
@@ -161,12 +159,11 @@
               }
             },
             "priceCurrency": "USD",
-            "price": "195-695",
             "priceSpecification": {
               "@type": "PriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": "195",
-              "maxPrice": "695",
+              "minPrice": 195,
+              "maxPrice": 695,
               "unitText": "plus materials"
             },
             "availability": "https://schema.org/InStock"
@@ -183,7 +180,12 @@
               }
             },
             "priceCurrency": "USD",
-            "price": "200-1300",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 200,
+              "maxPrice": 1300
+            },
             "availability": "https://schema.org/InStock"
           },
           {
@@ -198,7 +200,12 @@
               }
             },
             "priceCurrency": "USD",
-            "price": "500-1300",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "priceCurrency": "USD",
+              "minPrice": 500,
+              "maxPrice": 1300
+            },
             "availability": "https://schema.org/InStock"
           },
           {
@@ -247,17 +254,10 @@
         "name": "Morgan B.",
         "jobTitle": "Founder & Master Craftsman",
         "alumniOf": {
-          "@type": "Florida International University",
-          "name": "Computer Science Degree"
+          "@type": "CollegeOrUniversity",
+          "name": "Florida International University"
         },
         "knowsAbout": ["Property Maintenance", "Technology Solutions", "Smart Home Systems", "Web Development"]
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.5",
-        "ratingCount": "100",
-        "bestRating": "5",
-        "worstRating": "1"
       },
       "potentialAction": {
         "@type": "OrderAction",
@@ -324,29 +324,33 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Services",
-          "item": "https://quantumhandyman.com/services"
+          "name": "Handyman Services",
+          "item": "https://quantumhandyman.com/handyman/"
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Portfolio",
-          "item": "https://quantumhandyman.com/portfolio"
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": "Contact",
-          "item": "https://quantumhandyman.com/contact"
+          "name": "Web Development",
+          "item": "https://quantumhandyman.com/web/"
         }
       ]
     }
     </script>
+    
+    <!-- Loading styles -->
+    <link rel="stylesheet" href="/loader.css" />
   </head>
   <body>
+    <noscript>
+      <div style="text-align: center; padding: 2rem; font-family: sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>Please enable JavaScript to use this website.</p>
+        <p>Or choose a service:</p>
+        <a href="/handyman/" style="display: inline-block; padding: 1rem 2rem; margin: 0.5rem; background: #3B82F6; color: white; text-decoration: none; border-radius: 0.5rem;">Handyman Services</a>
+        <a href="/web/" style="display: inline-block; padding: 1rem 2rem; margin: 0.5rem; background: #059669; color: white; text-decoration: none; border-radius: 0.5rem;">Web Development</a>
+      </div>
+    </noscript>
     <div id="root">
-      <!-- Loading styles in external CSS for CSP compliance -->
-      <link rel="stylesheet" href="/loader.css" />
       <div class="app-loader">
         <div class="app-loader-spinner"></div>
       </div>

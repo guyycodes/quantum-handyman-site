@@ -2,6 +2,8 @@ import { lazy, Suspense, useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import ScrollToTop from './Components/ScrollToTop'
 import SplitLanding from './Components/SplitLanding'
+import { WorldProvider } from './Contexts/WorldContext'
+import { Navigate } from 'react-router-dom'
 
 // Lazy load all route components
 const Home = lazy(() => import('./pages/Home'))
@@ -25,31 +27,8 @@ const PageLoader = () => (
   </div>
 )
 
-function App() {
-  const [selectedWorld, setSelectedWorld] = useState(() => {
-    // Check if user has already selected a world
-    return localStorage.getItem('qh_world');
-  });
-
-  const handleWorldSelect = (world) => {
-    setSelectedWorld(world);
-    // Apply theme class to document root
-    document.documentElement.setAttribute('data-world', world);
-  };
-
-  useEffect(() => {
-    // Apply theme on mount if world is already selected
-    if (selectedWorld) {
-      document.documentElement.setAttribute('data-world', selectedWorld);
-    }
-  }, [selectedWorld]);
-
-  // Show split landing if no world selected
-  if (!selectedWorld) {
-    return <SplitLanding onWorldSelect={handleWorldSelect} />;
-  }
-
-  // Otherwise show the main app
+// World App Wrapper - contains all the app routes within a world context
+const WorldApp = () => {
   return (
     <>
       <ScrollToTop />
@@ -71,6 +50,36 @@ function App() {
         <ChatBot />
       </Suspense>
     </>
+  )
+}
+
+function App() {
+  return (
+    <WorldProvider>
+      <Routes>
+        {/* Root - Split Landing Page */}
+        <Route path="/" element={<SplitLanding />} />
+        
+        {/* Handyman World - All routes nested under /handyman */}
+        <Route path="/handyman/*" element={<WorldApp />} />
+        
+        {/* Web Dev World - All routes nested under /web */}
+        <Route path="/web/*" element={<WorldApp />} />
+        
+        {/* Fallback for old routes without world prefix - redirect to handyman by default */}
+        <Route path="/about" element={<Navigate to="/handyman/about" replace />} />
+        <Route path="/services" element={<Navigate to="/handyman/services" replace />} />
+        <Route path="/portfolio" element={<Navigate to="/handyman/portfolio" replace />} />
+        <Route path="/how-it-works" element={<Navigate to="/handyman/how-it-works" replace />} />
+        <Route path="/contact" element={<Navigate to="/handyman/contact" replace />} />
+        <Route path="/portal" element={<Navigate to="/handyman/portal" replace />} />
+        <Route path="/privacy" element={<Navigate to="/handyman/privacy" replace />} />
+        <Route path="/terms" element={<Navigate to="/handyman/terms" replace />} />
+        
+        {/* 404 for everything else */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </WorldProvider>
   )
 }
 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, Wrench, Code, Monitor } from 'lucide-react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Menu, X, Wrench, Code, Monitor, ArrowLeftRight } from 'lucide-react'
 import BookingCTA from './BookingCTA'
+import { useWorld } from '../Contexts/WorldContext'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -26,12 +27,28 @@ const CONTENT = {
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { currentWorld, isHandyman, isWeb } = useWorld()
 
-  const isActive = (href) => location.pathname === href
+  const isActive = (href) => {
+    // Check if the current path matches, accounting for world prefix
+    const currentPath = location.pathname.replace(/^\/(handyman|web)/, '')
+    const checkPath = href === '/' ? currentPath === '/' || currentPath === '' : currentPath === href
+    return checkPath
+  }
 
   // Scroll to top function for navigation
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Switch between worlds
+  const handleWorldSwitch = () => {
+    const otherWorld = isHandyman ? 'web' : 'handyman'
+    // Get the current path without the world prefix
+    const currentPath = location.pathname.replace(/^\/(handyman|web)/, '') || '/'
+    // Navigate to the same page in the other world
+    navigate(`/${otherWorld}${currentPath}`)
   }
 
   return (
@@ -79,6 +96,31 @@ const Header = () => {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-4">
+            {/* World Switcher */}
+            <button
+              onClick={handleWorldSwitch}
+              className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group"
+              aria-label={`Switch to ${isHandyman ? 'Web Development' : 'Handyman Services'}`}
+            >
+              <div className={`flex items-center gap-1.5 ${isHandyman ? 'text-blue-600' : 'text-green-600'}`}>
+                {isHandyman ? (
+                  <>
+                    <Wrench className="w-4 h-4" />
+                    <span className="text-sm font-medium">Handyman</span>
+                  </>
+                ) : (
+                  <>
+                    <Code className="w-4 h-4" />
+                    <span className="text-sm font-medium">Web</span>
+                  </>
+                )}
+              </div>
+              <ArrowLeftRight className="w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-colors" />
+              <div className="text-gray-400 text-sm">
+                {isHandyman ? 'Web' : 'Handyman'}
+              </div>
+            </button>
+            
             <Link
               to="/portal"
               onClick={scrollToTop}
@@ -140,6 +182,34 @@ const Header = () => {
               </Link>
             ))}
             <div className="pt-4 pb-2 space-y-2">
+              {/* Mobile World Switcher */}
+              <button
+                onClick={() => {
+                  handleWorldSwitch()
+                  setIsMenuOpen(false)
+                }}
+                className="flex items-center justify-between w-full px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group"
+                aria-label={`Switch to ${isHandyman ? 'Web Development' : 'Handyman Services'}`}
+              >
+                <div className={`flex items-center gap-2 ${isHandyman ? 'text-blue-600' : 'text-green-600'}`}>
+                  {isHandyman ? (
+                    <>
+                      <Wrench className="w-4 h-4" />
+                      <span className="text-sm font-medium">Viewing: Handyman</span>
+                    </>
+                  ) : (
+                    <>
+                      <Code className="w-4 h-4" />
+                      <span className="text-sm font-medium">Viewing: Web Dev</span>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 text-gray-500 text-sm">
+                  <span>Switch to {isHandyman ? 'Web' : 'Handyman'}</span>
+                  <ArrowLeftRight className="w-3 h-3" />
+                </div>
+              </button>
+              
               <Link
                 to="/portal"
                 onClick={() => {

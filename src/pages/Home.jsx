@@ -4,6 +4,7 @@ import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import FramedImage from '../Components/FramedImage'
+import { useWorld } from '../Contexts/WorldContext'
 
 // Lazy load non-critical components
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
@@ -123,7 +124,7 @@ const CONTENT = {
         title: '10+ Yrs as Craftsman',
         description: (
           <>
-            Built & sold first company. 15,000+ jobs completed average{' '}
+            500+ projects completed average{' '}
             <span className="inline-flex items-center">
               <span>⭐⭐⭐⭐</span>
               <span className="inline-block" style={{ clipPath: 'inset(0 50% 0 0)' }}>⭐</span>
@@ -194,13 +195,23 @@ const CONTENT = {
 
 // Data objects with their text content
 const SERVICES_DATA = [
+  // Handyman Services
   {
     id: 'home-repairs',
     title: 'Home Repairs & Maintenance',
     icon: HomeIcon,
     color: 'bg-blue-500',
-    description: 'Professional home repair services from Furniture assembly to General maintenance',
-    features: ['Drywall, Roofs, Paint & Caulking', 'Doors, locks, hinges & trim work', 'No permit-required work'],
+    description: 'Professional home repair services for all your property needs',
+    features: ['Drywall, Roofs, Paint & Caulking', 'Doors, locks, hinges & trim work', 'General repairs & maintenance', 'Property preservation'],
+    category: 'property'
+  },
+  {
+    id: 'home-setup',
+    title: 'Home Setup & Installation',
+    icon: Settings,
+    color: 'bg-purple-500',
+    description: 'Complete home setup including furniture assembly and smart device installation',
+    features: ['Furniture Assembly (IKEA, etc.)', 'Security Camera Installation', 'TV Mounting & Cable Management', 'Smart Home Device Setup'],
     category: 'property'
   },
   {
@@ -212,23 +223,43 @@ const SERVICES_DATA = [
     features: ['Decks, Patios, Masonry & Outdoor lighting', 'Custom Landscaping', 'Landscape Maintenance', 'Irrigation systems', 'Tree pruning'],
     category: 'property'
   },
+  
+  // Web Development Services
   {
-    id: 'web-dev',
-    title: 'Web & Digital',
+    id: 'custom-dev',
+    title: 'Custom Web Development',
     icon: Code,
     color: 'bg-purple-500',
-    description: 'Digital presence solutions for small businesses, Content Creators or Social Media Influencers.',
-    features: ['Custom web development or Wordpress, Wix, etc., support & upgrades', 'Shopify, Instagram, Personal Branding, etc.', 'SEO, Google, Online booking or AI integration 🤖'],
+    description: 'Full-stack custom web applications and digital solutions tailored to your needs',
+    features: ['React, Node.js, Python Applications', 'E-commerce & Online Booking Systems', 'AI Integration & Custom Features', 'API Development & Integration'],
     category: 'digital'
   },
   {
-    id: 'smart-home',
-    title: 'Smart Homes & Automation',
-    icon: Wifi,
-    color: 'bg-cyan-500',
-    description: 'Software engineer expertise applied to home automation. IoT setup & integration.',
-    features: ['Home Assistants & Smart Cameras ','Smart thermostats & Custom Lighting','PC & Device Troubleshooting', 'Custom automation scripts', 'Computer Troubleshooting'],
-    category: 'tech'
+    id: 'website-builders',
+    title: 'WordPress, Wix & Squarespace',
+    icon: Globe,
+    color: 'bg-indigo-500',
+    description: 'Professional website creation and management on popular platforms CMS, Google Business Profile, Analytics, etc.',
+    features: ['WordPress Custom Themes & Plugins', 'Wix & Squarespace Design', 'Site Migration & Optimization', 'Ongoing Maintenance & Updates'],
+    category: 'digital'
+  },
+  {
+    id: 'content-creator',
+    title: 'Content Creator Setup',
+    icon: Smartphone,
+    color: 'bg-pink-500',
+    description: 'Complete digital presence setup for influencers and content creators',
+    features: ['Link-in-bio Pages & Media Kits + Photography & Video', 'Instagram Shopping Integration', 'YouTube Channel Optimization', 'Brand Partnerships Portal'],
+    category: 'digital'
+  },
+  {
+    id: 'ai-data-funnels',
+    title: 'AI & Data Funnels',
+    icon: Sparkles,
+    color: 'bg-orange-500',
+    description: 'Advanced AI integrations, Data Capture & Analytics, Product Telemetry & Data Funnels',
+    features: ['ChatGPT & Claude Integration', 'Lead Scoring & CRM Automation', 'Email Marketing Funnels', 'Data Analytics Dashboards'],
+    category: 'digital'
   },
 
 ]
@@ -237,15 +268,29 @@ const SERVICES_DATA = [
 const PORTFOLIO_DATA = [
   {
     category: 'Web Development',
-    title: 'Job Management Platform',
-    description: 'Realtime SaaS jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
+    title: 'Realtime SaaS Platform',
+    description: 'Realtime jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
     image: '/images/web-dev/Dandymen_io-optimized.webp',
     link: null // Optional link to project
   },
   {
-    category: 'Smart Home',
-    title: 'Smart Home Automation',
-    description: 'Integrated lighting, Security Cameras, home assistants etc.',
+    category: 'Web Development',
+    title: 'Real Estate Templates',
+    description: 'Custom real estate website with MLS/IDX integration, lead capture, and property showcase galleries.',
+    image: '/images/web-dev/realtor-template.webp', // Placeholder - add when ready
+    link: null // Add link when live
+  },
+  {
+    category: 'Web Development',
+    title: 'Property Management Tools',
+    description: 'Property management solutions with tenant portals, online rent payment, and maintenance requests.',
+    image: '/images/web-dev/property-management.webp', // Placeholder - add when ready
+    link: null // Add link when live
+  },
+  {
+    category: 'Property Maintenance',
+    title: 'Home Setup & Installation',
+    description: 'Complete home setup including furniture assembly, security cameras, and smart device installation.',
     image: '/images/smart-home/smart_home_app.png',
     link: null
   },
@@ -268,12 +313,13 @@ const PORTFOLIO_DATA = [
 
 const STATS_DATA = [
   { label: 'Years Experience', value: '10+' },
-  { label: 'Jobs Completed', value: '15,000+' },
+  { label: 'Projects Completed', value: '500+' },
   { label: 'Happy Customers', value: '100+' },
   { label: 'Services Offered', value: '10+' }
 ]
 
 const Home = () => {
+  const { currentWorld, isHandyman, isWeb } = useWorld()
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [tabJustChanged, setTabJustChanged] = useState(false)
@@ -291,6 +337,20 @@ const Home = () => {
   const statsStagger = useStaggeredIntersection(4, { threshold: 0.2 })
   const servicesStagger = useStaggeredIntersection(6, { threshold: 0.1 })
   const portfolioStagger = useStaggeredIntersection(4, { threshold: 0.1 })
+  
+  // Filter services based on current world
+  const filteredServices = SERVICES_DATA.filter(service => {
+    if (isHandyman) return service.category === 'property'
+    if (isWeb) return service.category === 'digital'
+    return true
+  })
+  
+  // Filter portfolio based on current world  
+  const filteredPortfolio = PORTFOLIO_DATA.filter(item => {
+    if (isHandyman) return item.category === 'Property Maintenance' || item.category === 'Landscape'
+    if (isWeb) return item.category === 'Web Development'
+    return true
+  })
 
   return (
     <div className="min-h-screen bg-off-white">
@@ -317,11 +377,17 @@ const Home = () => {
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 {CONTENT.hero.title.line1} <br />
-                <span className="gradient-text bg-gradient-to-r from-yellow-300 to-orange-400">{CONTENT.hero.title.line2}</span>
+                <span className="gradient-text bg-gradient-to-r from-yellow-300 to-orange-400">
+                  {isHandyman ? 'Handyman' : isWeb ? 'Web Solutions' : CONTENT.hero.title.line2}
+                </span>
               </h1>
               
               <p className="text-xl text-white/90">
-                {CONTENT.hero.subtitle}
+                {isHandyman 
+                  ? 'Professional home repairs & property maintenance with a tech-savvy edge.'
+                  : isWeb 
+                  ? 'Full-stack web development from a CS+Busniess-grad & Certfied Full Stack Developer.'
+                  : CONTENT.hero.subtitle}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -342,20 +408,31 @@ const Home = () => {
                 </a>
               </div>
 
-              {/* Show badges on desktop only */}
+              {/* Show badges on desktop only - filtered by world */}
               <div className="flex gap-8 pt-4">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-yellow-300" />
-                  <span className="text-sm">{CONTENT.hero.badges.fix}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-yellow-300" />
-                  <span className="text-sm">{CONTENT.hero.badges.tech}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-yellow-300" />
-                  <span className="text-sm">{CONTENT.hero.badges.online}</span>
-                </div>
+                {isHandyman ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-5 h-5 text-yellow-300" />
+                      <span className="text-sm">{CONTENT.hero.badges.fix}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-yellow-300" />
+                      <span className="text-sm">Licensed & Insured</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Award className="w-5 h-5 text-yellow-300" />
+                      <span className="text-sm">{CONTENT.hero.badges.tech}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-yellow-300" />
+                      <span className="text-sm">{CONTENT.hero.badges.online}</span>
+                    </div>
+                  </>
+                )}
               </div>
 
             {/* Show QuantumSphere on mobile below buttons */}
@@ -493,10 +570,14 @@ const Home = () => {
             ref={servicesTitle.ref}
             className={`text-center mb-12 animate-fade-up ${servicesTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {CONTENT.services.title.split(' ')[0]} <span className="gradient-text">{CONTENT.services.title.split(' ')[1]}</span>
+              {isHandyman ? 'Handyman' : isWeb ? 'Web Development' : 'Our'} <span className="gradient-text">Services</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto mb-3">
-              {CONTENT.services.subtitle}
+              {isHandyman 
+                ? 'Professional home repair and property maintenance services.' 
+                : isWeb 
+                ? 'Full-stack web development and digital solutions for your business.'
+                : CONTENT.services.subtitle}
             </p>
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-full px-4 py-1.5 text-sm text-yellow-800">
               <span>⚡</span>
@@ -504,68 +585,71 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-4 mb-8">
-            <button
-              onClick={() => {
-                setSelectedServiceCategory('all')
-                setTabJustChanged(true)
-                setTimeout(() => setTabJustChanged(false), 100)
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedServiceCategory === 'all' 
-                  ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-              }`}
-            >
-              {CONTENT.services.categories.all}
-            </button>
-            <button
-              onClick={() => {
-                setSelectedServiceCategory('property')
-                setTabJustChanged(true)
-                setTimeout(() => setTabJustChanged(false), 100)
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedServiceCategory === 'property' 
-                  ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-              }`}
-            >
-              {CONTENT.services.categories.property}
-            </button>
-            <button
-              onClick={() => {
-                setSelectedServiceCategory('tech')
-                setTabJustChanged(true)
-                setTimeout(() => setTabJustChanged(false), 100)
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedServiceCategory === 'tech' 
-                  ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-              }`}
-            >
-              {CONTENT.services.categories.tech}
-            </button>
-            <button
-              onClick={() => {
-                setSelectedServiceCategory('digital')
-                setTabJustChanged(true)
-                setTimeout(() => setTabJustChanged(false), 100)
-              }}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                selectedServiceCategory === 'digital' 
-                  ? 'bg-primary text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-              }`}
-            >
-              {CONTENT.services.categories.digital}
-            </button>
-          </div>
+          {/* Service category tabs - Hidden when filtering by world */}
+          {!isHandyman && !isWeb && (
+            <div className="flex justify-center gap-4 mb-8">
+              <button
+                onClick={() => {
+                  setSelectedServiceCategory('all')
+                  setTabJustChanged(true)
+                  setTimeout(() => setTabJustChanged(false), 100)
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedServiceCategory === 'all' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+              >
+                {CONTENT.services.categories.all}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedServiceCategory('property')
+                  setTabJustChanged(true)
+                  setTimeout(() => setTabJustChanged(false), 100)
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedServiceCategory === 'property' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+              >
+                {CONTENT.services.categories.property}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedServiceCategory('tech')
+                  setTabJustChanged(true)
+                  setTimeout(() => setTabJustChanged(false), 100)
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedServiceCategory === 'tech' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+              >
+                {CONTENT.services.categories.tech}
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedServiceCategory('digital')
+                  setTabJustChanged(true)
+                  setTimeout(() => setTabJustChanged(false), 100)
+                }}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedServiceCategory === 'digital' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                }`}
+              >
+                {CONTENT.services.categories.digital}
+              </button>
+            </div>
+          )}
 
-          <div key={selectedServiceCategory} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES_DATA
-              .filter(service => selectedServiceCategory === 'all' || service.category === selectedServiceCategory)
+          <div key={selectedServiceCategory} className={`grid md:grid-cols-2 ${isWeb ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6`}>
+            {filteredServices
+              .filter(service => !isHandyman && !isWeb ? (selectedServiceCategory === 'all' || service.category === selectedServiceCategory) : true)
               .map((service, index) => (
               <div 
                 key={service.id}
@@ -710,15 +794,19 @@ const Home = () => {
             ref={portfolioTitle.ref}
             className={`text-center mb-12 animate-fade-up ${portfolioTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {CONTENT.portfolio.title.split(' ')[0]} <span className="gradient-text">{CONTENT.portfolio.title.split(' ')[1]}</span>
+              {isHandyman ? 'Handyman' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Portfolio</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto">
-              {CONTENT.portfolio.subtitle}
+              {isHandyman 
+                ? 'Quality craftsmanship and property improvements.'
+                : isWeb 
+                ? 'Custom websites and digital solutions we\'ve built.'
+                : CONTENT.portfolio.subtitle}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {PORTFOLIO_DATA.map((item, index) => {
+          <div className={`grid md:grid-cols-2 ${filteredPortfolio.length > 2 ? 'lg:grid-cols-3' : ''} gap-8`}>
+            {filteredPortfolio.map((item, index) => {
               const hasBeforeAfter = item.before && item.after;
               
               return (
@@ -898,10 +986,18 @@ const Home = () => {
           ref={ctaSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {CONTENT.cta.title}
+            {isHandyman 
+              ? 'Ready to Fix Your Home?'
+              : isWeb 
+              ? 'Ready to Build Your Digital Presence?'
+              : CONTENT.cta.title}
           </h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            {CONTENT.cta.subtitle}
+            {isHandyman 
+              ? 'Professional handyman services with transparent pricing and quality guarantee.'
+              : isWeb 
+              ? 'Transform your ideas into powerful web applications with expert development.'
+              : CONTENT.cta.subtitle}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

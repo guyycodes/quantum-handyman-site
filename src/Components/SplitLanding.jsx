@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wrench, Code, ArrowRight, Sparkles, Home, Laptop, Database, Globe, Server, Hammer, Drill, PaintBucket, Ruler, Zap, Shield, Cpu, Terminal, Cloud, Wifi } from 'lucide-react';
+import { Wrench, Code, ArrowRight, Sparkles, Home, Laptop, Database, Globe, Server, Hammer, Drill, PaintBucket, Ruler, Zap, Shield, Cpu, Terminal, Cloud, Wifi, GitBranch, FileCode, Braces, Activity } from 'lucide-react';
+
+// Lazy load QuantumSphere for performance
+const QuantumSphere = lazy(() => import('./QuantumSphere'));
 
 // ============================================================================
 // CONTENT CONFIGURATION - Edit this section to update all text content
@@ -25,10 +28,10 @@ const CONTENT = {
     ],
     stats: {
       experience: { value: '10+', label: 'Years' },
-      jobs: { value: '15K+', label: 'Jobs' },
+      jobs: { value: '500+', label: 'Projects' },
       pricing: { value: '$195', label: 'Starting' }
     },
-    button: 'Enter Handyman',
+    button: 'Handyman Services',
     sideLabel: 'Handyman Services',
     
     // Right Brain Elements
@@ -53,6 +56,20 @@ const CONTENT = {
         rating: '5.0',
         label: 'Rating'
       }
+    },
+    
+    // Element Positioning - Edit these to adjust layout
+    elementPositions: {
+      hammer: { top: '22%', right: '16%' },
+      drill: { bottom: '32%', right: '24%' },
+      ruler: { bottom: '20%', right: '12%' },
+      smartHub: { top: '30%', right: '28%' },
+      home: { top: '15%', right: '32%' },
+      electrical: { bottom: '25%', right: '34%' },
+      paintBucket: { top: '12%', right: '20%' },
+      shield: { top: '52%', right: '14%' },
+      timeline: { bottom: '32%', right: '28%' },
+      blueprint: { top: '38%', right: '38%' }
     }
   },
   
@@ -71,7 +88,7 @@ const CONTENT = {
       sites: { value: '50+', label: 'Sites' },
       pricing: { value: '$500', label: 'Starting' }
     },
-    button: 'Enter Web Dev',
+    button: 'Web Services',
     sideLabel: 'Web Development',
     
     // Left Brain Elements
@@ -107,6 +124,23 @@ const CONTENT = {
         max: '/100',
         label: 'Performance'
       }
+    },
+    
+    // Element Positioning - Edit these to adjust layout
+    elementPositions: {
+      codeBlock: { top: '18%', left: '12%' },
+      terminal: { top: '25%', left: '20%' },
+      gitBranch: { bottom: '35%', left: '18%' },
+      binary: { top: '35%', left: '8%' },
+      reactTree: { top: '28%', left: '32%' },
+      database: { bottom: '28%', left: '14%' },
+      api: { top: '48%', left: '26%' },
+      techStackNode: { bottom: '18%', left: '8%' },
+      techStackAWS: { bottom: '15%', left: '24%' },
+      performance: { bottom: '38%', left: '32%' },
+      frameworks: { bottom: '48%', left: '8%' },
+      mathSymbol1: { top: '42%', left: '36%' },
+      mathSymbol2: { bottom: '42%', left: '28%' }
     }
   },
   
@@ -118,13 +152,96 @@ const CONTENT = {
 };
 
 // ============================================================================
+// CUSTOM LOOPING TYPEWRITER FOR MISSION STATEMENT
+// ============================================================================
+
+const useLoopingTypewriter = (texts, typingSpeed = 40, pauseDuration = 2000, erasingSpeed = 20) => {
+  const [displayText, setDisplayText] = useState('');
+  const [textIndex, setTextIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
+  const [charIndex, setCharIndex] = useState(0);
+
+  useEffect(() => {
+    const currentText = texts[textIndex];
+
+    if (isTyping) {
+      // Typing phase
+      if (charIndex < currentText.length) {
+        const timer = setTimeout(() => {
+          setDisplayText(currentText.slice(0, charIndex + 1));
+          setCharIndex(charIndex + 1);
+        }, typingSpeed);
+        return () => clearTimeout(timer);
+      } else {
+        // Finished typing, pause before erasing
+        const timer = setTimeout(() => {
+          setIsTyping(false);
+          setCharIndex(currentText.length);
+        }, pauseDuration);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      // Erasing phase
+      if (charIndex > 0) {
+        const timer = setTimeout(() => {
+          setDisplayText(currentText.slice(0, charIndex - 1));
+          setCharIndex(charIndex - 1);
+        }, erasingSpeed);
+        return () => clearTimeout(timer);
+      } else {
+        // Finished erasing, move to next text
+        setIsTyping(true);
+        setTextIndex((textIndex + 1) % texts.length);
+      }
+    }
+  }, [charIndex, isTyping, textIndex, texts, typingSpeed, pauseDuration, erasingSpeed]);
+
+  return { displayText, isTyping };
+};
+
+// ============================================================================
+// QUANTUM ELEMENTS CONFIGURATION
+// ============================================================================
+
+// Left Brain Elements - Logical/Analytical (Web Dev)
+const leftBrainElements = [
+  { icon: Code, label: 'Code', color: '#10b981' },
+  { icon: Database, label: 'Database', color: '#a855f7' },
+  { icon: Terminal, label: 'Terminal', color: '#06b6d4' },
+  { icon: GitBranch, label: 'Git', color: '#ec4899' },
+  { icon: Server, label: 'Node.js', color: '#3b82f6' },
+  { icon: Cloud, label: 'AWS', color: '#22d3ee' },
+  { icon: FileCode, label: 'API', color: '#f97316' },
+  { icon: Activity, label: 'Performance', color: '#84cc16' }
+];
+
+// Right Brain Elements - Creative/Spatial (Handyman)
+const rightBrainElements = [
+  { icon: Hammer, label: 'Repairs', color: '#fbbf24' },
+  { icon: Drill, label: 'Power Tools', color: '#fb923c' },
+  { icon: Ruler, label: 'Precision', color: '#f87171' },
+  { icon: Wifi, label: 'Smart Home', color: '#a78bfa' },
+  { icon: Home, label: 'Home Setup', color: '#4ade80' },
+  { icon: Zap, label: 'Electrical', color: '#fde047' },
+  { icon: PaintBucket, label: 'Paint', color: '#60a5fa' },
+  { icon: Shield, label: 'Licensed', color: '#3b82f6' }
+];
+
+// ============================================================================
 // COMPONENT
 // ============================================================================
 
-const SplitLanding = ({ onWorldSelect }) => {
+const SplitLanding = () => {
   const [hoveredSide, setHoveredSide] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
+  
+  // Looping typewriter for mission statement
+  const missionTexts = [
+    "I didn't want to choose between coding and craftsmanship - so I didn't.",
+    "SMB's & homeowners deserve solutions driven from a unified ethos - not just another technician."
+  ];
+  const { displayText: missionText, isTyping } = useLoopingTypewriter(missionTexts, 60, 2500, 20);
 
   useEffect(() => {
     // Trigger animations on mount
@@ -153,335 +270,97 @@ const SplitLanding = ({ onWorldSelect }) => {
   }, []);
 
   const handleSelection = (world) => {
-    // Store the selection
+    // Store the selection for future reference
     localStorage.setItem('qh_world', world);
     localStorage.setItem('qh_entry_timestamp', new Date().toISOString());
     
     // Add fade out animation
     setIsLoaded(false);
     
-    // Notify parent and navigate
+    // Navigate to world-specific URL
     setTimeout(() => {
-      onWorldSelect(world);
-      navigate('/');
+      navigate(`/${world}/`);
     }, 300);
   };
 
   return (
     <div className={`fixed inset-0 bg-near-black overflow-hidden transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-      {/* Background Brain Image */}
+      {/* Dual Brain Images with QuantumSphere Integration */}
       <div className="absolute inset-0 z-0 flex items-center justify-center">
-        <img 
-          src="/brain.png" 
-          alt="" 
-          className={`w-full h-full max-w-4xl object-contain transition-all duration-1200 ${
-            hoveredSide ? 'opacity-60 blur-none scale-110' : 'opacity-30 blur-sm scale-100'
+        {/* Left Brain - Web Dev Side */}
+        <div 
+          className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
+            hoveredSide === 'web' ? 'opacity-100 z-20' : 'opacity-40 z-10'
           }`}
-          style={{ 
-            filter: `drop-shadow(0 0 ${hoveredSide ? '60px' : '20px'} rgba(255,255,255,0.2))`,
-            transform: hoveredSide === 'handyman' ? 'translateX(-50px)' : hoveredSide === 'web' ? 'translateX(50px)' : 'translateX(0)',
-            transitionDuration: '1200ms'
+          style={{
+            transform: `translateX(${hoveredSide === 'web' ? '-17%' : '-6%'})`
           }}
-        />
-        
-        {/* Web Dev Creative Elements - LEFT BRAIN - Only visible when Web is hovered */}
-        <div className={`absolute inset-0 transition-all duration-1200 ${
-          hoveredSide === 'web' ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}>
-          {/* LEFT BRAIN ELEMENTS - Logical/Analytical thinking */}
-          
-          {/* Floating Code Blocks with Glow */}
-          <div className="absolute top-[18%] left-[12%] group">
-            <div className="absolute inset-0 bg-green-400 blur-xl opacity-30 group-hover:opacity-60 transition-opacity" />
-            <div className="relative text-green-400 text-5xl font-mono font-bold drop-shadow-2xl animate-pulse" 
-              style={{textShadow: '0 0 20px rgba(74, 222, 128, 0.8)'}}>
-              {CONTENT.web.brainElements.codeBlocks.brackets}
-            </div>
-          </div>
-          
-          {/* Algorithm Flowchart Lines */}
-          <svg className="absolute top-[22%] left-[20%] w-32 h-32 text-blue-400 opacity-60" style={{animation: 'float 3s ease-in-out infinite'}}>
-            <line x1="0" y1="0" x2="80" y2="40" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" 
-              style={{animation: 'dash 2s linear infinite'}} />
-            <circle cx="80" cy="40" r="8" fill="currentColor" />
-            <line x1="80" y1="40" x2="40" y2="80" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" 
-              style={{animation: 'dash 2s linear infinite', animationDelay: '0.3s'}} />
-            <circle cx="40" cy="80" r="8" fill="currentColor" />
-          </svg>
-          
-          {/* Binary Matrix Rain Effect */}
-          <div className="absolute top-[35%] left-[8%] flex flex-col gap-1 font-mono text-xs text-emerald-400 opacity-40">
-            {CONTENT.web.brainElements.binary.map((code, idx) => (
-              <div key={idx} style={{animation: 'slideDown 4s linear infinite', animationDelay: `${idx * 0.5}s`}}>{code}</div>
-            ))}
-          </div>
-          
-          {/* React Component Tree */}
-          <div className="absolute top-[28%] left-[32%] font-mono text-sm text-cyan-400 opacity-70">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-              <span className="drop-shadow-lg">{CONTENT.web.brainElements.codeBlocks.component}</span>
-            </div>
-            <div className="ml-4 mt-1 flex items-center gap-1" style={{animation: 'fadeIn 0.8s ease-out 0.2s backwards'}}>
-              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
-              <span className="text-xs text-blue-300">{CONTENT.web.brainElements.codeBlocks.router}</span>
-            </div>
-            <div className="ml-8 mt-0.5 flex items-center gap-1" style={{animation: 'fadeIn 0.8s ease-out 0.4s backwards'}}>
-              <div className="w-1 h-1 bg-purple-400 rounded-full animate-pulse" />
-              <span className="text-xs text-purple-300">{CONTENT.web.brainElements.codeBlocks.ui}</span>
-            </div>
-          </div>
-          
-          {/* Database with Connection Lines */}
-          <div className="absolute bottom-[28%] left-[14%] group">
-            <div className="absolute inset-0 bg-purple-500 blur-2xl opacity-20 group-hover:opacity-40 transition-all" />
-            <Database className="relative w-14 h-14 text-purple-400 drop-shadow-2xl" 
-              style={{
-                animation: 'pulse 2s ease-in-out infinite',
-                filter: 'drop-shadow(0 0 15px rgba(168, 85, 247, 0.6))'
-              }} />
-            {/* SQL Query Text */}
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-mono text-purple-300 opacity-60">
-              {CONTENT.web.brainElements.database.query}
-            </div>
-          </div>
-          
-          {/* API Endpoint Box */}
-          <div className="absolute top-[48%] left-[26%] bg-gradient-to-r from-orange-500/20 to-yellow-500/20 backdrop-blur-sm 
-            border border-orange-400/30 rounded-lg px-3 py-1.5 shadow-xl" 
-            style={{animation: 'float 4s ease-in-out infinite', animationDelay: '1s'}}>
-            <div className="font-mono text-xs text-orange-300 font-semibold">{CONTENT.web.brainElements.api.endpoint}</div>
-            <div className="flex gap-1 mt-1">
-              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <div className="text-[10px] text-green-300 opacity-80">{CONTENT.web.brainElements.api.status}</div>
-            </div>
-          </div>
-          
-          {/* Terminal Window */}
-          <div className="absolute top-[12%] left-[25%] bg-gray-900/40 backdrop-blur-sm rounded-lg border border-gray-700/50 
-            shadow-2xl overflow-hidden" style={{animation: 'slideDown 0.6s ease-out'}}>
-            <div className="bg-gray-800/60 px-3 py-1 flex gap-1.5">
-              <div className="w-2 h-2 bg-red-400 rounded-full" />
-              <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-              <div className="w-2 h-2 bg-green-400 rounded-full" />
-            </div>
-            <div className="p-2 font-mono text-xs text-green-400">
-              <div className="opacity-80">{CONTENT.web.brainElements.terminal.command}</div>
-              <div className="text-gray-400 opacity-60 mt-0.5">{CONTENT.web.brainElements.terminal.output}</div>
-            </div>
-          </div>
-          
-          {/* Git Branch Graph */}
-          <div className="absolute bottom-[15%] left-[22%]" style={{animation: 'fadeIn 0.8s ease-out 0.6s backwards'}}>
-            <div className="flex items-center gap-2 text-xs font-mono text-pink-400">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="6" cy="6" r="3" fill="rgba(236, 72, 153, 0.3)" />
-                <circle cx="18" cy="18" r="3" fill="rgba(236, 72, 153, 0.3)" />
-                <path d="M6 9 L6 15 Q6 18 9 18 L18 18" strokeDasharray="2,2" />
-              </svg>
-              <span className="opacity-70">{CONTENT.web.brainElements.git.action}</span>
-            </div>
-          </div>
-          
-          {/* Tech Stack Icons with Labels */}
-          <div className="absolute top-[58%] left-[10%] flex flex-col gap-3">
-            {CONTENT.web.brainElements.techStack.map((tech, idx) => (
-              <div key={tech.name} className="flex items-center gap-2 group" style={{animation: 'slideRight 0.6s ease-out backwards', animationDelay: `${0.2 + idx * 0.2}s`}}>
-                {tech.icon === 'Server' && <Server className="w-8 h-8 text-blue-400 drop-shadow-lg group-hover:scale-110 transition-transform" 
-                  style={{filter: 'drop-shadow(0 0 10px rgba(96, 165, 250, 0.5))'}} />}
-                {tech.icon === 'Cloud' && <Cloud className="w-8 h-8 text-cyan-400 drop-shadow-lg group-hover:scale-110 transition-transform" 
-                  style={{filter: 'drop-shadow(0 0 10px rgba(34, 211, 238, 0.5))'}} />}
-                <span className="text-xs font-semibold text-blue-300 opacity-70">{tech.name}</span>
+        >
+          <div className="relative">
+            <img 
+              src="/left_brain.png" 
+              alt="" 
+              className={`h-[500px] object-contain transition-all duration-1200 ${
+                hoveredSide === 'web' ? 'scale-110' : 'scale-100'
+              }`}
+              style={{ 
+                filter: `drop-shadow(0 0 ${hoveredSide === 'web' ? '50px' : '15px'} rgba(16, 185, 129, 0.4))`
+              }}
+            />
+            {/* QuantumSphere for Left Brain - Only visible when Web is hovered */}
+            {hoveredSide === 'web' && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ transform: 'translateX(-50px)' }}>
+                <Suspense fallback={<div className="animate-pulse" />}>
+                  <QuantumSphere 
+                    customElements={leftBrainElements}
+                    scale={1}
+                    sphereScale={0.88}
+                    opacityDepth="deep"
+                    className="pointer-events-auto"
+                  >
+                    <div className="opacity-0" />
+                  </QuantumSphere>
+                </Suspense>
               </div>
-            ))}
-          </div>
-          
-          {/* Performance Metrics */}
-          <div className="absolute bottom-[38%] left-[32%] bg-green-500/10 backdrop-blur-sm border border-green-400/30 
-            rounded-md px-2 py-1 shadow-lg" style={{animation: 'float 3s ease-in-out infinite', animationDelay: '0.5s'}}>
-            <div className="text-[10px] text-green-300 font-mono font-semibold">{CONTENT.web.brainElements.performance.label}</div>
-            <div className="flex items-baseline gap-1 mt-0.5">
-              <div className="text-xl font-bold text-green-400">{CONTENT.web.brainElements.performance.score}</div>
-              <div className="text-[10px] text-green-400 opacity-70">{CONTENT.web.brainElements.performance.max}</div>
-            </div>
-          </div>
-          
-          {/* Framework Badges */}
-          <div className="absolute bottom-[48%] left-[8%] flex flex-col gap-1.5" style={{animation: 'fadeIn 0.8s ease-out 0.8s backwards'}}>
-            {CONTENT.web.brainElements.frameworks.map((framework, idx) => (
-              <div key={framework} className={`bg-gradient-to-r ${idx === 0 ? 'from-blue-600/30 to-cyan-600/30 border-blue-400/40 text-blue-200' : 'from-green-600/30 to-emerald-600/30 border-green-400/40 text-green-200'} backdrop-blur-sm border 
-                rounded-full px-2 py-0.5 text-[10px] font-semibold shadow-lg`}>{framework}</div>
-            ))}
-          </div>
-          
-          {/* Math/Algorithm Symbols */}
-          <div className="absolute top-[42%] left-[36%] text-4xl text-indigo-400 opacity-40 font-serif" 
-            style={{animation: 'float 5s ease-in-out infinite', textShadow: '0 0 20px rgba(129, 140, 248, 0.4)'}}>
-            ∑
-          </div>
-          <div className="absolute bottom-[42%] left-[28%] text-3xl text-purple-400 opacity-40" 
-            style={{animation: 'float 4s ease-in-out infinite', animationDelay: '1s'}}>
-            λ
+            )}
           </div>
         </div>
-        
-        {/* Handyman Creative Elements - RIGHT BRAIN - Only visible when Handyman is hovered */}
-        <div className={`absolute inset-0 transition-all duration-1200 ${
-          hoveredSide === 'handyman' ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}>
-          {/* RIGHT BRAIN ELEMENTS - Creative/Spatial thinking */}
-          
-          {/* Professional Tool Set with Glow Effects */}
-          <div className="absolute top-[22%] right-[16%] group">
-            <div className="absolute inset-0 bg-yellow-400 blur-2xl opacity-20 group-hover:opacity-40 transition-all" />
-            <Hammer className="relative w-14 h-14 text-yellow-400 drop-shadow-2xl" 
-              style={{
-                filter: 'drop-shadow(0 0 15px rgba(250, 204, 21, 0.6))',
-                animation: 'bounce 2s ease-in-out infinite'
-              }} />
-            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-yellow-300 opacity-70 font-semibold whitespace-nowrap">
-              {CONTENT.handyman.brainElements.toolLabels.repairs}
-            </div>
-          </div>
-          
-          {/* Power Tool with Spin Effect */}
-          <div className="absolute bottom-[32%] right-[24%] group">
-            <div className="absolute inset-0 bg-orange-400 blur-xl opacity-20 group-hover:opacity-40 transition-all" />
-            <Drill className="relative w-12 h-12 text-orange-400 drop-shadow-xl" 
-              style={{
-                transform: 'rotate(45deg)',
-                filter: 'drop-shadow(0 0 12px rgba(251, 146, 60, 0.5))',
-                animation: 'spin 8s linear infinite'
-              }} />
-          </div>
-          
-          {/* Precision Measuring Tool */}
-          <div className="absolute bottom-[20%] right-[12%] group">
-            <Ruler className="w-16 h-16 text-red-400 drop-shadow-xl opacity-80" 
-              style={{
-                transform: 'rotate(-30deg)',
-                filter: 'drop-shadow(0 0 10px rgba(248, 113, 113, 0.4))'
-              }} />
-            <div className="absolute top-0 right-0 text-[10px] text-red-300 opacity-60 font-mono">{CONTENT.handyman.brainElements.toolLabels.measurements}</div>
-          </div>
-          
-          {/* Smart Home Hub */}
-          <div className="absolute top-[30%] right-[28%] bg-gradient-to-br from-purple-500/20 to-blue-500/20 
-            backdrop-blur-sm border border-purple-400/30 rounded-xl p-3 shadow-2xl" 
-            style={{animation: 'float 3s ease-in-out infinite'}}>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Wifi className="w-5 h-5 text-purple-400 animate-pulse" />
-              <span className="text-xs text-purple-200 font-semibold">{CONTENT.handyman.brainElements.smartHub.title}</span>
-            </div>
-            <div className="flex gap-1.5">
-              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-              <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '0.3s'}} />
-              <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse" style={{animationDelay: '0.6s'}} />
-            </div>
-          </div>
-          
-          {/* Home Blueprint with Measurements */}
-          <div className="absolute top-[15%] right-[32%]" style={{animation: 'fadeIn 0.8s ease-out 0.4s backwards'}}>
-            <Home className="w-12 h-12 text-green-400 drop-shadow-xl" 
-              style={{filter: 'drop-shadow(0 0 15px rgba(74, 222, 128, 0.4))'}} />
-            {/* Measurement lines */}
-            <div className="absolute -top-2 left-0 right-0 h-px bg-green-400/40" />
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-[9px] text-green-300 opacity-60 font-mono">{CONTENT.handyman.brainElements.toolLabels.dimensions}</div>
-          </div>
-          
-          {/* Electrical/Smart System */}
-          <div className="absolute bottom-[25%] right-[34%] group">
-            <div className="absolute inset-0 bg-yellow-300 blur-xl opacity-30 animate-pulse" />
-            <Zap className="relative w-10 h-10 text-yellow-300 drop-shadow-xl" 
-              style={{
-                filter: 'drop-shadow(0 0 15px rgba(253, 224, 71, 0.7))',
-                animation: 'pulse 1.5s ease-in-out infinite'
-              }} />
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-yellow-200 opacity-70 whitespace-nowrap">
-              {CONTENT.handyman.brainElements.toolLabels.voltage}
-            </div>
-          </div>
-          
-          {/* Blueprint Grid with Annotations */}
-          <svg className="absolute top-[38%] right-[38%] w-24 h-24 opacity-20" style={{animation: 'fadeIn 1s ease-out 0.6s backwards'}}>
-            <defs>
-              <pattern id="blueprint-grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(147, 197, 253, 0.4)" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
-            <circle cx="60" cy="60" r="15" fill="none" stroke="rgba(147, 197, 253, 0.5)" strokeWidth="1.5" />
-            <line x1="10" y1="50" x2="40" y2="50" stroke="rgba(147, 197, 253, 0.6)" strokeWidth="1.5" />
-          </svg>
-          
-          {/* Paint Color Palette */}
-          <div className="absolute top-[12%] right-[20%] bg-white/10 backdrop-blur-sm rounded-lg p-2 shadow-xl border border-white/20" 
-            style={{animation: 'slideDown 0.6s ease-out 0.3s backwards'}}>
-            <PaintBucket className="w-8 h-8 text-blue-400 mb-1.5 drop-shadow-lg mx-auto" />
-            <div className="flex gap-1">
-              <div className="w-3 h-3 rounded-full bg-blue-400 shadow-lg" />
-              <div className="w-3 h-3 rounded-full bg-green-400 shadow-lg" />
-              <div className="w-3 h-3 rounded-full bg-yellow-400 shadow-lg" />
-            </div>
-            <div className="text-[9px] text-blue-200 opacity-70 mt-1 text-center">{CONTENT.handyman.brainElements.toolLabels.proPaint}</div>
-          </div>
-          
-          {/* Security Badge */}
-          <div className="absolute top-[52%] right-[14%] group">
-            <div className="absolute inset-0 bg-blue-500 blur-xl opacity-20 group-hover:opacity-40 transition-all" />
-            <Shield className="relative w-11 h-11 text-blue-500 drop-shadow-xl" 
-              style={{filter: 'drop-shadow(0 0 12px rgba(59, 130, 246, 0.5))'}} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-blue-100">✓</div>
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[9px] text-blue-300 opacity-70 whitespace-nowrap">
-              {CONTENT.handyman.brainElements.toolLabels.licensed}
-            </div>
-          </div>
-          
-          {/* Project Timeline */}
-          <div className="absolute bottom-[42%] right-[28%] bg-gradient-to-r from-rose-500/20 to-pink-500/20 
-            backdrop-blur-sm border border-rose-400/30 rounded-lg px-2.5 py-1.5 shadow-lg" 
-            style={{animation: 'float 4s ease-in-out infinite', animationDelay: '0.8s'}}>
-            <div className="text-[10px] text-rose-200 font-semibold mb-0.5">{CONTENT.handyman.brainElements.timeline.label}</div>
-            <div className="flex gap-1">
-              <div className="w-4 h-1 bg-rose-400 rounded-full" />
-              <div className="w-4 h-1 bg-pink-400 rounded-full opacity-60" />
-              <div className="w-4 h-1 bg-pink-400 rounded-full opacity-30" />
-            </div>
-            <div className="text-[9px] text-rose-300 opacity-70 mt-0.5">{CONTENT.handyman.brainElements.timeline.current}</div>
-          </div>
-          
-          {/* Quality Badge */}
-          <div className="absolute top-[58%] right-[24%] bg-gradient-to-br from-amber-500/20 to-orange-500/20 
-            backdrop-blur-sm border border-amber-400/40 rounded-full px-3 py-1.5 shadow-lg" 
-            style={{animation: 'fadeIn 0.8s ease-out 0.9s backwards'}}>
-            <div className="flex items-center gap-1.5">
-              <div className="text-amber-300 text-xl">★</div>
-              <div>
-                <div className="text-xs font-bold text-amber-200">{CONTENT.handyman.brainElements.quality.rating}</div>
-                <div className="text-[8px] text-amber-300 opacity-70">{CONTENT.handyman.brainElements.quality.label}</div>
+
+        {/* Right Brain - Handyman Side */}
+        <div 
+          className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
+            hoveredSide === 'handyman' ? 'opacity-100 z-20' : 'opacity-40 z-10'
+          }`}
+          style={{
+            transform: `translateX(${hoveredSide === 'handyman' ? '17%' : '6%'})`
+          }}
+        >
+          <div className="relative">
+            <img 
+              src="/right_brain.png" 
+              alt="" 
+              className={`h-[500px] object-contain transition-all duration-1200 ${
+                hoveredSide === 'handyman' ? 'scale-110' : 'scale-100'
+              }`}
+              style={{ 
+                filter: `drop-shadow(0 0 ${hoveredSide === 'handyman' ? '50px' : '15px'} rgba(251, 191, 36, 0.4))`
+              }}
+            />
+            {/* QuantumSphere for Right Brain - Only visible when Handyman is hovered */}
+            {hoveredSide === 'handyman' && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ transform: 'translateX(50px)' }}>
+                <Suspense fallback={<div className="animate-pulse" />}>
+                  <QuantumSphere 
+                    customElements={rightBrainElements}
+                    scale={1}
+                    opacityDepth="deep"
+                    className="pointer-events-auto"
+                  >
+                    <div className="opacity-0" />
+                  </QuantumSphere>
+                </Suspense>
               </div>
-            </div>
-          </div>
-          
-          {/* Tool Belt / Equipment Indicator */}
-          <div className="absolute bottom-[12%] right-[18%] flex gap-1.5" style={{animation: 'slideRight 0.6s ease-out 0.5s backwards'}}>
-            <div className="bg-gray-700/30 backdrop-blur-sm rounded p-1.5 border border-gray-500/30">
-              <Hammer className="w-4 h-4 text-yellow-300" />
-            </div>
-            <div className="bg-gray-700/30 backdrop-blur-sm rounded p-1.5 border border-gray-500/30">
-              <Drill className="w-4 h-4 text-orange-300" />
-            </div>
-            <div className="bg-gray-700/30 backdrop-blur-sm rounded p-1.5 border border-gray-500/30">
-              <Ruler className="w-4 h-4 text-red-300" />
-            </div>
-          </div>
-          
-          {/* Craftsman Badge */}
-          <div className="absolute top-[68%] right-[32%] text-center" style={{animation: 'fadeIn 1s ease-out 1s backwards'}}>
-            <div className="text-2xl text-amber-400 opacity-60 font-serif" style={{textShadow: '0 0 15px rgba(251, 191, 36, 0.4)'}}>
-              ⚒
-            </div>
-            <div className="text-[9px] text-amber-300 opacity-60 font-semibold mt-0.5">{CONTENT.handyman.brainElements.toolLabels.craftsman}</div>
+            )}
           </div>
         </div>
       </div>
@@ -492,12 +371,12 @@ const SplitLanding = ({ onWorldSelect }) => {
         {/* Handyman Side */}
         <div 
           data-world="handyman"
-          className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer
+          className={`relative flex-1 transition-all duration-1200 ease-out cursor-default
             ${hoveredSide === 'handyman' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'web' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('handyman')}
           onMouseLeave={() => setHoveredSide(null)}
-          onClick={() => handleSelection('handyman')}
+          onClick={() => setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman')}
           style={{
             clipPath: hoveredSide === 'handyman' 
               ? 'polygon(0 0, 62% 0, 62% 100%, 0% 100%)'
@@ -582,7 +461,7 @@ const SplitLanding = ({ onWorldSelect }) => {
               {/* CTA Button */}
               <button
                 className={`group flex items-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg 
-                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl
+                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
                   ${hoveredSide === 'handyman' ? 'scale-105' : 'scale-100'}`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -609,12 +488,12 @@ const SplitLanding = ({ onWorldSelect }) => {
         {/* Web Dev Side */}
         <div 
           data-world="web"
-          className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer
+          className={`relative flex-1 transition-all duration-1200 ease-out
             ${hoveredSide === 'web' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'handyman' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => setHoveredSide('web')}
           onMouseLeave={() => setHoveredSide(null)}
-          onClick={() => handleSelection('web')}
+          onClick={() => setHoveredSide(hoveredSide === 'web' ? null : 'web')}
           style={{
             clipPath: hoveredSide === 'web'
               ? 'polygon(39% 0, 100% 0, 100% 100%, 39% 100%)'
@@ -701,7 +580,7 @@ const SplitLanding = ({ onWorldSelect }) => {
               {/* CTA Button */}
               <button
                 className={`group flex items-center gap-2 px-6 py-3 bg-white text-emerald-600 rounded-lg 
-                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl
+                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
                   ${hoveredSide === 'web' ? 'scale-105' : 'scale-100'}`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -729,7 +608,7 @@ const SplitLanding = ({ onWorldSelect }) => {
         <div className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 pointer-events-none z-20">
           
           {/* Center Logo */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4">
             <div className="relative">
               <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full" />
               <div className="relative bg-white/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/30 shadow-2xl">
@@ -743,6 +622,18 @@ const SplitLanding = ({ onWorldSelect }) => {
                   </span>
                 </div>
               </div>
+            </div>
+            
+            {/* Mission Statement Below */}
+            <div className="bg-gray-800/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg max-w-[320px] md:max-w-md">
+              <p className="text-xs md:text-sm text-white text-center leading-snug min-h-[2.5rem] flex items-center justify-center">
+                <span>
+                  {missionText}
+                  {isTyping && (
+                    <span className="inline-block w-0.5 h-4 bg-gray-800 animate-pulse ml-0.5" />
+                  )}
+                </span>
+              </p>
             </div>
           </div>
         </div>
