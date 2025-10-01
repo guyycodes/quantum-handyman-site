@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, Wrench, Code, Monitor, ArrowLeftRight } from 'lucide-react'
 import BookingCTA from './BookingCTA'
-import { useWorld } from '../Contexts/WorldContext'
+import { useWorld } from '../contexts/WorldContext'
 
 // Content Management - All text content in one place
 const CONTENT = {
