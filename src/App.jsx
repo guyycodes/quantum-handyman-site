@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import ScrollToTop from './Components/ScrollToTop'
 import SplitLanding from './Components/SplitLanding'
-import { WorldProvider } from './Contexts/WorldContext'
+import { WorldProvider } from './contexts/WorldContext'
 import { Navigate } from 'react-router-dom'
 
 // Lazy load all route components
