@@ -35,8 +35,8 @@ class FibonacciSphere {
 class QuantumCloud {
   constructor(root, opacityDepth = 'normal', sphereScale = 1) {
     this.root = root
-    this.size = this.root.offsetWidth
-    this.elements = root.querySelectorAll('.quantum-element')
+    this.size = root?.offsetWidth || 600  // Safe default if root is null
+    this.elements = root?.querySelectorAll('.quantum-element') || []
     this.sphere = new FibonacciSphere(this.elements.length)
     this.rotationAxis = [1, 0, 0]
     this.rotationAngle = 0
@@ -50,7 +50,7 @@ class QuantumCloud {
 
     this.updatePositions()
     this.initEventListeners()
-    this.root.classList.add('sphere-loaded')
+    if (this.root) this.root.classList.add('sphere-loaded')
   }
 
   initEventListeners() {
@@ -59,11 +59,21 @@ class QuantumCloud {
   }
 
   handleResize() {
-    this.size = this.root.offsetWidth
+    this.size = this.root?.offsetWidth || 600
     this.updatePositions()
   }
 
   updatePositions() {
+    // Re-check for elements if we don't have any
+    if (this.elements.length === 0 && this.root) {
+      this.elements = this.root.querySelectorAll('.quantum-element')
+      if (this.elements.length > 0) {
+        this.sphere = new FibonacciSphere(this.elements.length)
+      }
+    }
+    // Keep animation running but handle missing elements gracefully
+    if (!this.elements || this.elements.length === 0 || !this.sphere?.points) return
+    
     const sin = Math.sin(this.rotationAngle)
     const cos = Math.cos(this.rotationAngle)
     const ux = this.rotationAxis[0]
@@ -91,6 +101,9 @@ class QuantumCloud {
     const N = this.elements.length
 
     for (let i = 0; i < N; i++) {
+      // Safety check for points array
+      if (!this.sphere.points[i]) continue
+      
       const x = this.sphere.points[i][0]
       const y = this.sphere.points[i][1]
       const z = this.sphere.points[i][2]
@@ -134,6 +147,7 @@ class QuantumCloud {
   }
 
   onMouseMove(e) {
+    if (!this.root) return  // Skip if no root
     const rootRect = this.root.getBoundingClientRect()
     const deltaX = e.clientX - (rootRect.left + this.root.offsetWidth / 2)
     const deltaY = e.clientY - (rootRect.top + this.root.offsetHeight / 2)
