@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Wrench, Code, ArrowRight, Sparkles, Home, Laptop, Database, Globe, Server, Hammer, Drill, PaintBucket, Ruler, Zap, Shield, Cpu, Terminal, Cloud, Wifi, GitBranch, FileCode, Braces, Activity } from 'lucide-react';
 
 // Lazy load QuantumSphere for performance
-const QuantumSphere = lazy(() => import('./QuantumSphere'));
+const QuantumSphere = lazy(() => import('../Components/QuantumSphere'));
 
 // ============================================================================
 // CONTENT CONFIGURATION - Edit this section to update all text content
@@ -146,8 +146,9 @@ const CONTENT = {
   
   // UI Labels
   ui: {
-    mobileHint: 'Tap to select your service',
-    desktopHint: 'Hover & click to enter • Use arrow keys to navigate'
+    mobileHint: 'Press & hold to explore • Tap to enter',
+    desktopHint: 'Hover & click to enter • Use arrow keys to navigate',
+    mobileBrandHint: 'Press & hold to expand'
   }
 };
 
@@ -242,6 +243,8 @@ const SplitLanding = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < MOBILE_BREAKPOINT);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < SMALL_SCREEN_BREAKPOINT && window.innerWidth > TINY_SCREEN_BREAKPOINT);
   const [isTinyScreen, setIsTinyScreen] = useState(window.innerWidth <= TINY_SCREEN_BREAKPOINT);
+  const [touchTimer, setTouchTimer] = useState(null);
+  const [touchedSide, setTouchedSide] = useState(null);
   const navigate = useNavigate();
   
   // Looping typewriter for mission statement
@@ -295,6 +298,12 @@ const SplitLanding = () => {
   }, []);
 
   const handleSelection = (world) => {
+    // Clear any active touch timer
+    if (touchTimer) {
+      clearTimeout(touchTimer);
+      setTouchTimer(null);
+    }
+    
     // Store the selection for future reference
     localStorage.setItem('qh_world', world);
     localStorage.setItem('qh_entry_timestamp', new Date().toISOString());
@@ -306,6 +315,48 @@ const SplitLanding = () => {
     setTimeout(() => {
       navigate(`/${world}/`);
     }, 300);
+  };
+  
+  // Handle touch start for press and hold
+  const handleTouchStart = (side) => {
+    if (!isMobile) return;
+    
+    setTouchedSide(side);
+    
+    // Start a timer for press and hold (300ms)
+    const timer = setTimeout(() => {
+      setHoveredSide(side);
+    }, 300);
+    
+    setTouchTimer(timer);
+  };
+  
+  // Handle touch end
+  const handleTouchEnd = (side) => {
+    if (!isMobile) return;
+    
+    // Clear the timer if touch ends before 300ms
+    if (touchTimer) {
+      clearTimeout(touchTimer);
+      setTouchTimer(null);
+    }
+    
+    // If the animation is not showing (short tap), navigate directly
+    if (hoveredSide !== side && touchedSide === side) {
+      handleSelection(side);
+    }
+    
+    setTouchedSide(null);
+  };
+  
+  // Handle touch cancel
+  const handleTouchCancel = () => {
+    if (touchTimer) {
+      clearTimeout(touchTimer);
+      setTouchTimer(null);
+    }
+    setTouchedSide(null);
+    setHoveredSide(null);
   };
 
   return (
@@ -422,15 +473,16 @@ const SplitLanding = () => {
           className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-inset
             ${hoveredSide === 'handyman' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'web' ? 'flex-[0.5]' : 'flex-1'}`}
-          onMouseEnter={() => setHoveredSide('handyman')}
-          onMouseLeave={() => setHoveredSide(null)}
+          onMouseEnter={() => !isMobile && setHoveredSide('handyman')}
+          onMouseLeave={() => !isMobile && setHoveredSide(null)}
+          onTouchStart={() => handleTouchStart('handyman')}
+          onTouchEnd={() => handleTouchEnd('handyman')}
+          onTouchCancel={() => handleTouchCancel()}
           onClick={() => {
-            // On mobile, navigate directly when panel is tapped
-            if (isMobile) {
-              handleSelection('handyman');
-              return;
+            // Only handle click on desktop
+            if (!isMobile) {
+              setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
             }
-            setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -557,15 +609,16 @@ const SplitLanding = () => {
           className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-inset
             ${hoveredSide === 'web' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'handyman' ? 'flex-[0.5]' : 'flex-1'}`}
-          onMouseEnter={() => setHoveredSide('web')}
-          onMouseLeave={() => setHoveredSide(null)}
+          onMouseEnter={() => !isMobile && setHoveredSide('web')}
+          onMouseLeave={() => !isMobile && setHoveredSide(null)}
+          onTouchStart={() => handleTouchStart('web')}
+          onTouchEnd={() => handleTouchEnd('web')}
+          onTouchCancel={() => handleTouchCancel()}
           onClick={() => {
-            // On mobile, navigate directly when panel is tapped
-            if (isMobile) {
-              handleSelection('web');
-              return;
+            // Only handle click on desktop
+            if (!isMobile) {
+              setHoveredSide(hoveredSide === 'web' ? null : 'web');
             }
-            setHoveredSide(hoveredSide === 'web' ? null : 'web');
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -704,6 +757,11 @@ const SplitLanding = () => {
                   </span>
                 </div>
               </div>
+            </div>
+            
+            {/* Mobile hint below brand on small screens */}
+            <div className="block sm:hidden text-white/60 text-[10px] font-medium tracking-wider animate-pulse">
+              {CONTENT.ui.mobileBrandHint}
             </div>
             
             {/* Mission Statement Below - Hidden on very small screens */}
