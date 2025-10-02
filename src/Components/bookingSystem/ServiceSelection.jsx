@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera, Home, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera, Home, ChevronDown, Code, Sparkles } from 'lucide-react';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -48,7 +48,7 @@ const CONTENT = {
     },
     {
       id: 'basic-home',
-      name: 'Basic Home Tasks',
+      name: 'Basic Tasks',
       price: '$95+',
       materials: false,
       duration: 1,
@@ -61,7 +61,8 @@ const CONTENT = {
       features: [
         'Basic tasks ONLY: curtains, furniture assembly, filter replacements',
         'First hour: $95 (trip fee + labor included)',
-        'Additional hours: $35/hr'
+        'Additional hours: $35/hr',
+        'Basic Tech help & setup'
       ]
     },
     {
@@ -107,89 +108,107 @@ const CONTENT = {
       features: ['Complex projects', 'Painting, flooring, etc.', 'Priority scheduling']
     },
     {
-      id: 'basic-tech',
-      name: 'Basic Tech Setup',
-      price: '$95+',
+      id: 'home-tech',
+      name: 'Home Tech Setup',
+      price: '$95-$495',
       materials: false,
-      duration: 1.5,
+      duration: -2,
       icon: Wifi,
       color: 'bg-teal-500',
-      category: 'tech',
+      category: 'property',
       hot: false,
-      popular: false,
-      description: 'Simple tech help - 1.5 hours minimum',
+      popular: true,
+      description: 'Complete home technology installation & setup',
       features: [
-        'Single device setup (smart speaker, camera, etc.)',
-        'Basic Wi-Fi troubleshooting',
-        'App installations & configurations'
+        'TV mounting & streaming setup (<65")',
+        'Smart locks & keypad entry',
+        'Security cameras & doorbells',
+        'Wi-Fi optimization & smart speakers',
+        'PC & device support',
+        'Smart home automation & training'
       ]
     },
     {
-      id: 'stream-pro',
-      name: 'Stream Pro + Mount',
-      price: '$195-$395',
+      id: 'website-starter',
+      name: 'Website Starter',
+      price: '$499-$1299',
       materials: false,
-      duration: 3,
-      icon: Tv,
-      color: 'bg-cyan-500',
+      duration: -2,
+      icon: Globe,
+      color: 'bg-blue-500',
       category: 'tech',
-      hot: false,
+      hot: true,
       popular: false,
-      description: '2-3.5 hours for TV mounting & smart device setup',
-      features: [
-        'TV mount ≤65″ + apps & soundbar',
-        'OR smart device installations',
-        'Cameras • voice assistants • streaming gear'
-      ]
+      description: 'Professional website for small businesses (WordPress/Wix/Custom)',
+      features: ['1-3 page responsive website', 'Mobile optimized design', 'Contact forms & basic SEO', 'Google Business Profile setup', '30 days of support']
     },
     {
-      id: 'turnover-tech',
-      name: 'Turnover Tech+',
-      price: '$295-$495',
+      id: 'website-pro',
+      name: 'Website Pro',
+      price: '$1,299-$2,499',
       materials: false,
-      duration: 4,
-      icon: Wifi,
-      color: 'bg-indigo-500',
+      duration: -2,
+      icon: Code,
+      color: 'bg-purple-500',
       category: 'tech',
       hot: false,
       popular: true,
-      description: 'Perfect for Airbnb & property managers, 2.5-4.5 hours',
-      features: ['Keypad entry setup', 'Wi-Fi optimization', 'Guest QR codes & streaming ready', 'Smart home basics']
+      description: 'Custom web development with advanced features',
+      features: ['5-10 page custom React/Next.js site', 'E-commerce or booking system', 'API integrations & automation', 'SEO & performance optimization', '90 days of support + training']
     },
     {
-      id: 'creator-studio',
-      name: 'Creator Studio Starter',
-      price: '$599-$1,199',
+      id: 'creator-package',
+      name: 'Creator/Influencer Package',
+      price: '$199-$1,999',
       materials: false,
-      duration: 1,
+      duration: -2,
       icon: Camera,
       color: 'bg-pink-500',
       category: 'tech',
       hot: false,
       popular: false,
-      description: 'Complete creator setup & optimization',
-      features: ['Ring light & backdrop install', 'Social media optimization (Insta, Patreon, etc.)', 'Monetization setup + brand photos', 'Optional add-ons']
+      description: 'Complete digital setup for content creators',
+      features: ['Link-in-bio site with custom domain', 'Social media integration', 'Instagram/TikTok shop setup', 'Monetization tools (Patreon, etc)', 'Analytics & growth strategy']
     },
     {
-      id: 'business-bundle',
-      name: 'Open-for-Business Bundle',
-      price: '$599-$2500',
+      id: 'ai-automation',
+      name: 'AI & Automation',
+      price: '$999-$2,999',
       materials: false,
-      duration: 1,
-      icon: Globe,
-      color: 'bg-emerald-500',
+      duration: -2,
+      icon: Sparkles,
+      color: 'bg-orange-500',
       category: 'tech',
       hot: false,
       popular: false,
-      description: 'Complete online business presence - Payment plans available',
-      features: ['1-5 page professional website', 'Google Business Profile + Analytics setup', '6 professional photos included', 'Social media optimization', 'Optional add-ons: AI chat, authentication, sales funnels, Care Plan ($99/mo)']
+      description: 'AI integration and business automation',
+      features: ['ChatGPT/Claude integration', 'Custom AI chatbots', 'Sales funnel automation', 'Data analytics dashboards', 'Product telemetry setup']
+    },
+    {
+      id: 'maintenance-plan',
+      name: 'Care Plan',
+      price: '$99-$299/mo',
+      materials: false,
+      duration: -2,
+      icon: Clock,
+      color: 'bg-green-500',
+      category: 'tech',
+      hot: false,
+      popular: false,
+      description: 'Ongoing website maintenance & support',
+      features: ['Monthly updates & backups', 'Security monitoring', 'Content updates (2-15 hrs/mo)', 'Performance optimization', 'Priority support']
     }
   ]
 };
 
-const ServiceSelection = ({ onServiceSelect, selectedService }) => {
-  const [selectedCategory, setSelectedCategory] = useState('estimates');
+const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 'all' }) => {
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [expandedCards, setExpandedCards] = useState(new Set());
+  
+  // Update category when initialCategory prop changes
+  useEffect(() => {
+    setSelectedCategory(initialCategory);
+  }, [initialCategory]);
   
   // Filter services based on selected category
   const filteredServices = CONTENT.services.filter(service => 
@@ -210,54 +229,89 @@ const ServiceSelection = ({ onServiceSelect, selectedService }) => {
     });
   };
 
+  // Determine if we should show category filters
+  // Never show filters when coming from intent selection (property, tech, or estimates)
+  // Only show if initialCategory is 'all' (direct access without intent selection)
+  const showCategoryFilters = initialCategory === 'all';
+  
+  // Custom titles based on selected category
+  const getCategoryTitle = () => {
+    switch (selectedCategory) {
+      case 'property':
+        return 'Select Your Handyman Service';
+      case 'tech':
+        return 'Select Your Digital Service';
+      case 'estimates':
+        return 'Choose Your Estimate Option';
+      default:
+        return CONTENT.title;
+    }
+  };
+  
+  // Custom subtitle based on selected category
+  const getCategorySubtitle = () => {
+    switch (selectedCategory) {
+      case 'property':
+        return 'Choose from our handyman packages or hourly services';
+      case 'tech':
+        return 'Select a web development or digital service package';
+      case 'estimates':
+        return CONTENT.subtitle;
+      default:
+        return CONTENT.subtitle;
+    }
+  };
+
   return (
     <div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{CONTENT.title}</h3>
-      <p className="text-gray-600 mb-4">{CONTENT.subtitle}</p>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{getCategoryTitle()}</h3>
+      <p className="text-gray-600 mb-4">{getCategorySubtitle()}</p>
       
-      {/* Category Filter Buttons */}
-      <div className="flex gap-2 mb-6 flex-wrap">
-        <button
-          onClick={() => setSelectedCategory('all')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            selectedCategory === 'all' 
-              ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {CONTENT.categories.all}
-        </button>
-        <button
-          onClick={() => setSelectedCategory('estimates')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            selectedCategory === 'estimates' 
-              ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {CONTENT.categories.estimates}
-        </button>
-        <button
-          onClick={() => setSelectedCategory('property')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            selectedCategory === 'property' 
-              ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {CONTENT.categories.property}
-        </button>
-        <button
-          onClick={() => setSelectedCategory('tech')}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            selectedCategory === 'tech' 
-              ? 'bg-blue-600 text-white shadow-md' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {CONTENT.categories.tech}
-        </button>
-      </div>
+      {/* Category Filter Buttons - Only show if user didn't come from intent selection */}
+      {showCategoryFilters && (
+        <div className="flex gap-2 mb-6 flex-wrap">
+          <button
+            onClick={() => setSelectedCategory('all')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              selectedCategory === 'all' 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {CONTENT.categories.all}
+          </button>
+          <button
+            onClick={() => setSelectedCategory('estimates')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              selectedCategory === 'estimates' 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {CONTENT.categories.estimates}
+          </button>
+          <button
+            onClick={() => setSelectedCategory('property')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              selectedCategory === 'property' 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {CONTENT.categories.property}
+          </button>
+          <button
+            onClick={() => setSelectedCategory('tech')}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              selectedCategory === 'tech' 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            {CONTENT.categories.tech}
+          </button>
+        </div>
+      )}
       
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredServices.map((service) => {

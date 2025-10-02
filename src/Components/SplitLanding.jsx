@@ -76,12 +76,13 @@ const CONTENT = {
   // Web Dev Side
   web: {
     title: 'Web Dev',
-    subtitle: 'Full-stack development from a CS-educated problem solver',
+    subtitle: 'Full-stack development - Backed by a CS Degree, 3+ years experience, and a Certified Developer',
     features: [
       'Custom Web Applications',
       'E-commerce Solutions',
       'SEO & Performance',
-      'AI Integration'
+      'AI Integration',
+      'Creative Solutions'
     ],
     stats: {
       education: { value: 'CS', label: 'Degree' },

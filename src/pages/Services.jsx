@@ -71,7 +71,7 @@ const SERVICES_DATA = [
     color: 'bg-blue-500',
     description: 'Professional home repair services for all your property needs',
     shortDesc: 'Professional home repair and maintenance services',
-    priceRange: '$195 - $695 + materials',
+    priceRange: '$95 - $495 + materials',
     timeEstimate: '1-6 hours typical',
     subServices: [
       { name: 'Drywall & Painting', desc: 'Repairs, patches, caulking and interior painting' },
@@ -233,7 +233,7 @@ const SERVICES_DATA = [
     color: 'bg-pink-500',
     description: 'Complete digital presence setup for influencers and content creators',
     shortDesc: 'Creator economy solutions',
-    priceRange: '$500 - $2500+',
+    priceRange: '$199 - $1999',
     timeEstimate: '1-2 weeks typical',
     subServices: [
       { name: 'Link-in-bio Pages', desc: 'Linktree alternatives with custom branding' },

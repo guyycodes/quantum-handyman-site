@@ -6,6 +6,7 @@ import googleCalendarService from '../services/googleCalendarService';
 import { generateAIEstimate } from '../services/aiEstimateService';
 import { compressMultipleImages } from '../utils/imageCompression';
 import { generateEstimateRef, generateBookingRef } from '../utils/uniqueIdGenerator';
+import IntentSelection from './bookingSystem/IntentSelection';
 import CalendarStep from './bookingSystem/CalendarStep';
 import ServiceSelection from './bookingSystem/ServiceSelection';
 import TimeSlotSelection from './bookingSystem/TimeSlotSelection';
@@ -47,7 +48,8 @@ const CONTENT = {
 
 const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   const { trackFunnelStep, trackEvent, trackBookingComplete, trackError } = usePostHog();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0); // Start at 0 for intent selection
+  const [selectedIntent, setSelectedIntent] = useState(null);
   const [bookingData, setBookingData] = useState({
     service: initialService,
     date: null,
@@ -74,15 +76,15 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
       const timeSpent = funnelStartTime ? Math.round((Date.now() - funnelStartTime) / 1000) : 0;
       trackEvent('booking_abandoned', {
         last_step: currentStep,
-        last_step_name: steps[currentStep - 1]?.title,
+        last_step_name: currentStep === 0 ? 'Intent' : steps[currentStep - 1]?.title,
         is_estimate_flow: isEstimateFlow,
         time_spent_seconds: timeSpent,
         service: bookingData.service?.name
       });
     }
     
-    // If on success page (step 6) or first page, close directly
-    if (currentStep === 1) {
+    // If on success page (step 6) or initial pages, close directly
+    if (currentStep === 0 || currentStep === 1 || currentStep === 6) {
       onClose();
     } else {
       // Otherwise show confirmation
@@ -97,6 +99,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
 
   const clearState = (step) => {
     setCurrentStep(step);
+    setSelectedIntent(null);
     setBookingData({
       service: null,
       date: null,
@@ -115,13 +118,19 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   // Reset when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      clearState(1);
+      // If we have an initial service, skip intent selection
+      if (initialService) {
+        clearState(1);
+        setBookingData(prev => ({ ...prev, service: initialService }));
+      } else {
+        clearState(0); // Start at intent selection
+      }
       // Track modal opening
       setFunnelStartTime(Date.now());
       trackEvent('booking_modal_opened', {
         initial_service: initialService?.name || null
       });
-      trackFunnelStep('Service Selection', { stepNumber: 1 });
+      trackFunnelStep(initialService ? 'Service Selection' : 'Intent Selection', { stepNumber: initialService ? 1 : 0 });
       
       // Google Analytics tracking
       gaEvent('booking_modal_open', 'engagement', initialService?.name || 'direct');
@@ -148,6 +157,20 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
       }
     }, 50);
   }, [currentStep]);
+
+  const handleIntentSelect = (intent) => {
+    setSelectedIntent(intent);
+    
+    // Track intent selection
+    trackEvent('intent_selected', {
+      intent_id: intent.id,
+      intent_category: intent.category
+    });
+    
+    // Always proceed to service selection with filtered category
+    setCurrentStep(1);
+    trackFunnelStep('Service Selection', { stepNumber: 1, category: intent.category });
+  };
 
   const handleServiceSelect = (service) => {
     setBookingData(prev => ({ ...prev, service }));
@@ -531,14 +554,21 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   };
 
   const goToPreviousStep = () => {
-    if (currentStep > 1) {
+    // Handle going back from different steps
+    if (currentStep === 1 && !selectedIntent) {
+      // If on service selection with no intent (initial service provided), can't go back
+      return;
+    }
+    
+    if (currentStep === 1 && selectedIntent) {
+      // Go back to intent selection
+      setCurrentStep(0);
+      setSelectedIntent(null);
+    } else if (currentStep === 4 && isEstimateFlow) {
       // If in estimate flow and on customer info, go back to service selection
-      if (isEstimateFlow && currentStep === 4) {
-        setCurrentStep(1);
-        setIsEstimateFlow(false);
-      } else {
-        setCurrentStep(currentStep - 1);
-      }
+      setCurrentStep(1);
+    } else if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -561,8 +591,14 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case 0:
+        return <IntentSelection onIntentSelect={handleIntentSelect} />;
       case 1:
-        return <ServiceSelection onServiceSelect={handleServiceSelect} selectedService={bookingData.service} />;
+        return <ServiceSelection 
+          onServiceSelect={handleServiceSelect} 
+          selectedService={bookingData.service}
+          initialCategory={selectedIntent?.category || 'all'}
+        />;
       case 2:
         return <CalendarStep onDateSelect={handleDateSelect} selectedDate={bookingData.date} service={bookingData.service} />;
       case 3:
@@ -581,7 +617,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             estimateData={bookingData} 
             onClose={onClose} 
             aiResultText={aiResultText}
-            onNewEstimate={() => clearState(1)}
+            onNewEstimate={() => clearState(0)}
           />;
         } else {
           return <BookingSuccess bookingData={bookingData} onClose={onClose} />;
@@ -644,8 +680,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
               </button>
             </div>
 
-            {/* Progress Steps - Only show for steps 1-5 */}
-            {currentStep <= 5 && (
+            {/* Progress Steps - Only show for steps 1-5 (not on intent selection) */}
+            {currentStep >= 1 && currentStep <= 5 && (
               <div className="flex justify-between items-center">
                 {steps.map((step) => {
                   // Skip date and time steps for estimate flow
@@ -733,8 +769,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             )}
           </div>
 
-          {/* Footer with navigation (only for steps 2-5, not during AI processing or result display) */}
-          {currentStep >= 2 && currentStep <= 5 && !isProcessingAI && !showAIResult && (
+          {/* Footer with navigation (only for steps 1-5, not during AI processing or result display) */}
+          {currentStep >= 1 && currentStep <= 5 && !isProcessingAI && !showAIResult && (
             <div className="border-t border-gray-200 px-6 py-4">
               <div className="flex justify-between items-center">
                 <button
