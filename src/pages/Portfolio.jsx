@@ -5,6 +5,7 @@ import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import BeforeAfterSlider from '../Components/BeforeAfterSlider'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
+import { useWorld } from '../contexts/WorldContext'
 import { 
   Filter, X, ExternalLink, Calendar,
   MapPin, Star, ChevronLeft, ChevronRight, PlayCircle
@@ -17,12 +18,15 @@ const CONTENT = {
     subtitle: 'See the quality and range of our work across different service categories'
   },
   
-  categories: [
+  categoriesHandyman: [
     { id: 'all', name: 'All' },
     { id: 'home-repair', name: 'Property & Maintenance' },
     { id: 'landscaping', name: 'Landscape & Outdoor' },
-    { id: 'web-dev', name: 'Web & Digital' },
     { id: 'smart-home', name: 'Smart Homes & Automation' }
+  ],
+  categoriesWeb: [
+    { id: 'all', name: 'All' },
+    { id: 'web-dev', name: 'Web & Digital' }
   ],
   
   emptyState: 'No projects found in this category.',
@@ -143,6 +147,18 @@ const CONTENT = {
       description: 'Sprinkler systems, seasonal & general maintenance',
       testimonial: 'Made seasonal prep easy and efficient.',
       client: 'Residential Properties'
+    },
+    luxuryRealtorSite: {
+      title: 'Luxury Realtor Portfolio',
+      description: 'Premium real estate agent website featuring 3D property tours, interactive MLS integration, virtual staging tools, and AI-powered property analysis. Built with React, Three.js, and modern web technologies.',
+      testimonial: 'This website has completely transformed how I showcase properties to my clients. The virtual tours and AI features are game-changers!',
+      client: 'Sarah Thompson Real Estate'
+    },
+    realtyBrokerage: {
+      title: 'Premier Realty Brokerage Platform',
+      description: 'Full-service real estate brokerage platform with advanced MLS/IDX integration, mortgage calculator, agent management system, lead capture, CRM integration, and property management tools. Enterprise-grade solution for modern real estate agencies.',
+      testimonial: 'The platform handles everything from lead generation to closing. Our agents love the tools, and our conversion rates have increased 40%.',
+      client: 'Premier Realty'
     }
   }
 }
@@ -339,10 +355,41 @@ const PROJECTS_DATA = [
     client: CONTENT.projects.sprinklerMaintenance.client,
     rating: 5,
     projectImg: '/images/landscaping/sprkinkler_head-thumb.jpg'  // Using smart home image for smart lighting
+  },
+  {
+    id: 13,
+    category: 'web-dev',
+    title: CONTENT.projects.luxuryRealtorSite.title,
+    description: CONTENT.projects.luxuryRealtorSite.description,
+    date: '2025',
+    location: 'Remote',
+    duration: '3 weeks',
+    images: ['/images/web-dev/sarah-thompson-realtor.png'],
+    testimonial: CONTENT.projects.luxuryRealtorSite.testimonial,
+    client: CONTENT.projects.luxuryRealtorSite.client,
+    rating: 5,
+    link: 'https://realtor-template-theta.vercel.app/',
+    projectImg: '/images/web-dev/sarah-thompson-realtor.png'
+  },
+  {
+    id: 14,
+    category: 'web-dev',
+    title: CONTENT.projects.realtyBrokerage.title,
+    description: CONTENT.projects.realtyBrokerage.description,
+    date: '2025',
+    location: 'Remote',
+    duration: '4 weeks',
+    images: ['/images/web-dev/premier-realty-brokerage.png'],
+    testimonial: CONTENT.projects.realtyBrokerage.testimonial,
+    client: CONTENT.projects.realtyBrokerage.client,
+    rating: 5,
+    link: 'https://realty-brokerage-template.vercel.app/',
+    projectImg: '/images/web-dev/premier-realty-brokerage.png'
   }
 ]
 
 const Portfolio = () => {
+  const { currentWorld, isHandyman, isWeb } = useWorld()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
   
@@ -351,12 +398,27 @@ const Portfolio = () => {
   const filterSection = useIntersectionObserver({ threshold: 0.3 })
   const ctaSection = useIntersectionObserver({ threshold: 0.3 })
   
-  // Staggered animations for projects
-  const projectsStagger = useStaggeredIntersection(PROJECTS_DATA.length, { threshold: 0.1 })
-
-  const filteredProjects = PROJECTS_DATA.filter(
+  // Filter projects based on world context first
+  const worldFilteredProjects = PROJECTS_DATA.filter(project => {
+    if (isHandyman) {
+      return ['home-repair', 'landscaping', 'smart-home'].includes(project.category)
+    }
+    if (isWeb) {
+      return project.category === 'web-dev'
+    }
+    return true
+  })
+  
+  // Then filter by selected category
+  const filteredProjects = worldFilteredProjects.filter(
     project => selectedCategory === 'all' || project.category === selectedCategory
   )
+  
+  // Staggered animations for projects (use filtered count)
+  const projectsStagger = useStaggeredIntersection(filteredProjects.length, { threshold: 0.1 })
+  
+  // Get categories based on current world
+  const categories = isWeb ? CONTENT.categoriesWeb : CONTENT.categoriesHandyman
 
   return (
     <div className="min-h-screen bg-off-white">
@@ -381,7 +443,7 @@ const Portfolio = () => {
           <div 
             ref={filterSection.ref}
             className={`flex flex-wrap justify-center gap-3 mb-12 animate-fade-up ${filterSection.isVisible ? 'visible' : ''}`}>
-            {CONTENT.categories.map((category) => (
+            {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
@@ -439,7 +501,7 @@ const Portfolio = () => {
                   )}
                   
                   <div className="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-xs font-medium">
-                    {CONTENT.categories.find(cat => cat.id === project.category)?.name.replace('All Projects', '')}
+                    {categories.find(cat => cat.id === project.category)?.name.replace('All Projects', '')}
                   </div>
                 </div>
 
@@ -671,7 +733,7 @@ const Portfolio = () => {
               {/* Actions */}
               <div className="flex gap-4">
                 <BookingCTA 
-                  service={CONTENT.categories.find(cat => cat.id === selectedProject.category)?.name}
+                  service={categories.find(cat => cat.id === selectedProject.category)?.name}
                   buttonText={CONTENT.projectModal.bookSimilar}
                   buttonStyle="primary"
                 />

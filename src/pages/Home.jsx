@@ -275,17 +275,17 @@ const PORTFOLIO_DATA = [
   },
   {
     category: 'Web Development',
-    title: 'Real Estate Templates',
-    description: 'Custom real estate website with MLS/IDX integration, lead capture, and property showcase galleries.',
-    image: '/images/web-dev/realtor-template.webp', // Placeholder - add when ready
-    link: null // Add link when live
+    title: 'Luxury Realtor Portfolio',
+    description: 'Premium real estate agent website featuring virtual property tours, 3D visualizations, MLS integration, and client testimonials.',
+    image: '/images/web-dev/sarah-thompson-realtor.png', 
+    link: 'https://realtor-template-theta.vercel.app/' 
   },
   {
     category: 'Web Development',
-    title: 'Property Management Tools',
-    description: 'Property management solutions with tenant portals, online rent payment, and maintenance requests.',
-    image: '/images/web-dev/property-management.webp', // Placeholder - add when ready
-    link: null // Add link when live
+    title: 'Premier Realty Brokerage',
+    description: 'Full-service real estate brokerage platform with MLS search, mortgage calculator, agent profiles, and property management tools.',
+    image: '/images/web-dev/premier-realty-brokerage.png', 
+    link: 'https://realty-brokerage-template.vercel.app/' 
   },
   {
     category: 'Property Maintenance',
@@ -323,6 +323,14 @@ const Home = () => {
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [tabJustChanged, setTabJustChanged] = useState(false)
+  
+  // Get the world-aware path helper function
+  const getWorldPath = (path) => {
+    if (currentWorld && currentWorld !== 'default') {
+      return `/${currentWorld}${path}`
+    }
+    return path
+  }
 
   // Intersection observers for different sections
   const heroSection = useIntersectionObserver({ threshold: 0.2 })
@@ -333,10 +341,12 @@ const Home = () => {
   const reviewsTitle = useIntersectionObserver({ threshold: 0.3 })
   const ctaSection = useIntersectionObserver({ threshold: 0.3 })
   
-  // Staggered animations for cards
-  const statsStagger = useStaggeredIntersection(4, { threshold: 0.2 })
-  const servicesStagger = useStaggeredIntersection(6, { threshold: 0.1 })
-  const portfolioStagger = useStaggeredIntersection(4, { threshold: 0.1 })
+  // Filter portfolio based on current world first to get accurate count
+  const filteredPortfolio = PORTFOLIO_DATA.filter(item => {
+    if (isHandyman) return item.category === 'Property Maintenance' || item.category === 'Landscape'
+    if (isWeb) return item.category === 'Web Development'
+    return true
+  })
   
   // Filter services based on current world
   const filteredServices = SERVICES_DATA.filter(service => {
@@ -345,12 +355,10 @@ const Home = () => {
     return true
   })
   
-  // Filter portfolio based on current world  
-  const filteredPortfolio = PORTFOLIO_DATA.filter(item => {
-    if (isHandyman) return item.category === 'Property Maintenance' || item.category === 'Landscape'
-    if (isWeb) return item.category === 'Web Development'
-    return true
-  })
+  // Staggered animations for cards (use actual filtered count for portfolio)
+  const statsStagger = useStaggeredIntersection(4, { threshold: 0.2 })
+  const servicesStagger = useStaggeredIntersection(filteredServices.length, { threshold: 0.1 })
+  const portfolioStagger = useStaggeredIntersection(filteredPortfolio.length, { threshold: 0.1 })
 
   return (
     <div className="min-h-screen bg-off-white">
@@ -905,7 +913,7 @@ const Home = () => {
 
           <div className="text-center mt-8">
             <Link 
-              to="/portfolio" 
+              to={getWorldPath('/portfolio')} 
               className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all hover:text-blue-700"
               aria-label="View full portfolio of completed projects"
             >
