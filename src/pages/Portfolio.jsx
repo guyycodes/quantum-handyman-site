@@ -268,11 +268,11 @@ const PROJECTS_DATA = [
     date: '2024 - Present',
     location: 'Denver',
     duration: '',
-    images: ['/images/web-dev/Dandymen_io.png'],  // Use actual Dandymen image
+    images: ['/images/web-dev/Dandymen_io-optimized.webp'],  // Use actual Dandymen image
     testimonial: CONTENT.projects.dandymen.testimonial,
     client: CONTENT.projects.dandymen.client,
     rating: 5,
-    link: null,
+    link: 'https://dandymen.io',
     projectImg: '/images/web-dev/Dandymen_io-optimized.webp'
   },
   {

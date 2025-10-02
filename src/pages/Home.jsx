@@ -271,7 +271,7 @@ const PORTFOLIO_DATA = [
     title: 'Realtime SaaS Platform',
     description: 'Realtime jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
     image: '/images/web-dev/Dandymen_io-optimized.webp',
-    link: null // Optional link to project
+    link: 'https://dandymen.io' // Link to live platform
   },
   {
     category: 'Web Development',
