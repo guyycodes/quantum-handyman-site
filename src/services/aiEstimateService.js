@@ -35,7 +35,7 @@ export const generateAIEstimate = async (estimateData) => {
     // Prepare the system message for the AI
     const systemMessage = {
       role: 'system',
-      content: `You are an expert service estimator for Quantum Handyman which is a handyman servicce for your property & technology needs (Craftsman + CS-degree).
+      content: `You are an expert service estimator for Quantum Technician which is a technician service for your property & technology needs (Craftsman + CS-degree).
 
       Your task is to provide accurate project estimates based on descriptions and images provided. Try not to underestimate the project.
 

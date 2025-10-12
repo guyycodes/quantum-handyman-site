@@ -115,7 +115,7 @@ const PaymentSuccess = () => {
         return {
           title: '💰 Payment Complete!',
           subtitle: 'Thank you for your payment',
-          description: 'Your service invoice has been paid in full. Thank you for choosing Quantum Handyman!',
+          description: 'Your service invoice has been paid in full. Thank you for choosing Quantum Technician!',
           icon: '🏡',
           nextSteps: [
             'Payment receipt sent to your email',
@@ -253,11 +253,11 @@ const PaymentSuccess = () => {
                   Need help? Contact our support team:
                 </p>
                 <a 
-                  href="mailto:support@quantumhandyman.com" 
+                  href="mailto:support@quantumtechnician.com" 
                   className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
                 >
                   <Mail className="w-4 h-4" />
-                  support@quantumhandyman.com
+                  support@quantumtechnician.com
                 </a>
               </div>
             </div>

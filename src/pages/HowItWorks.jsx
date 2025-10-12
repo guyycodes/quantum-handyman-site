@@ -61,7 +61,7 @@ const CONTENT = {
   mobileApp: {
     badge: 'Coming Soon',
     title: 'Mobile App in Development',
-    subtitle: 'Track projects, book services, communicate with your Quantum handyman, and more! - all from your device!',
+    subtitle: 'Track projects, book services, communicate with your Quantum technician, and more! - all from your device!',
     form: {
       placeholder: 'Enter your email for early access',
       submitButton: 'Get Early Access',
@@ -134,7 +134,7 @@ const HowItWorks = () => {
     {
       icon: MessageSquare,
       title: 'Communication Hub',
-      description: 'Access notes, updates, and communicate with your handyman',
+      description: 'Access notes, updates, and communicate with your technician',
       gradient: 'from-green-500 to-emerald-500'
     }
   ];

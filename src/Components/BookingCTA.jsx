@@ -7,7 +7,7 @@ const BookingModal = lazy(() => import('./BookingModal'))
 // Content Management - All text content in one place
 const CONTENT = {
   defaultButtonText: 'Book Service',
-  ariaLabel: 'Book {service} with Quantum Handyman',
+  ariaLabel: 'Book {service} with Quantum Technician',
   defaultService: 'a service',
   defaultHelperText: '⚡ Instant AI estimates available'
 }

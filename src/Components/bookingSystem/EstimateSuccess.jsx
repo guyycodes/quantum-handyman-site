@@ -45,7 +45,7 @@ const CONTENT = {
   },
   contactInfo: {
     title: 'Need to reach us sooner?',
-    email: 'hello@quantumhandyman.com',
+    email: 'hello@quantumtechnician.com',
     hours: 'Mon-Fri 8AM-6PM, Sat 9AM-4PM'
   },
   portalTracking: {

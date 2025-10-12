@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* World-specific theme variables */
-[data-world="handyman"] {
+[data-world="technician"] {
   --color-world-primary: #3b82f6; /* Blue */
   --color-world-secondary: #10b981; /* Green */
   --color-world-accent: #f59e0b; /* Amber */
@@ -22,7 +22,7 @@
 }
 
 /* Optional: Apply world colors to existing elements */
-[data-world="handyman"] .world-themed {
+[data-world="technician"] .world-themed {
   color: var(--color-world-primary);
 }
 

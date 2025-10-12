@@ -20,13 +20,14 @@ import TypewriterDisplay from '../Components/TypewriterDisplay';
 import ConfirmModal from '../Components/ConfirmModal';
 import { usePostHog } from '../hooks/usePostHog';
 import { gaEvent, gaConversion } from '../contexts/GoogleAnalyticsProvider';
+import { useSmsNotification } from '../hooks/useSmsNotification';
 
 // Content Management - All text content in one place
 const CONTENT = {
   header: {
     title: '⚡ Book Your Service',
     estimateTitle: '📋 Pick a Package or Generate an Estimate',
-    subtitle: 'Schedule your Quantum Handyman appointment',
+    subtitle: 'Schedule your Quantum Technician appointment',
     estimateSubtitle: '',
     closeButtonAriaLabel: 'Close modal'
   },
@@ -48,6 +49,7 @@ const CONTENT = {
 
 const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   const { trackFunnelStep, trackEvent, trackBookingComplete, trackError } = usePostHog();
+  const { sendNotification } = useSmsNotification();
   const [currentStep, setCurrentStep] = useState(0); // Start at 0 for intent selection
   const [selectedIntent, setSelectedIntent] = useState(null);
   const [bookingData, setBookingData] = useState({
@@ -270,7 +272,10 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
   };
 
   const submitEstimateRequest = async (withAI = false, hasValidPromo = false, promoCode = '') => {
-    setIsSubmitting(true);
+    // Only set isSubmitting for non-AI flows (AI uses isProcessingAI instead)
+    if (!withAI) {
+      setIsSubmitting(true);
+    }
     try {
       if (isEstimateFlow) {
         // Handle estimate request submission
@@ -366,6 +371,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         }
         
         await sendEstimateRequestEmail(estimateData);
+        
+        // Send SMS notification for estimate
+        await sendNotification('estimate');
 
         // Store the results in bookingData for the success screen
           setBookingData(prev => ({
@@ -394,6 +402,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
           // If AI was used and successful, show the result with typewriter effect
           if (withAI && aiEstimateResult.success) {
             setIsProcessingAI(false);
+            setIsSubmitting(false);
             setShowAIResult(true);
           } else {
             setIsProcessingAI(false);
@@ -414,6 +423,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     } catch (error) {
       console.error('Estimate submission failed:', error);
       setIsSubmitting(false);
+      setIsProcessingAI(false);
+      setAIProcessingMessage('');
       // You might want to show an error state here
     }
   };
@@ -475,6 +486,9 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         };
         
         await sendBookingEmail(emailData);
+        
+        // Send SMS notification for booking
+        await sendNotification('booking');
         
         // Store the booking reference in bookingData for the success screen
         setBookingData(prev => ({

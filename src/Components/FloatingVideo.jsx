@@ -49,7 +49,7 @@ const FloatingVideo = () => {
               <video 
                 ref={videoRef}
                 src="/QH_VID1.mp4"
-                alt="Professional handyman service showcase"
+                alt="Professional technician service showcase"
                 className="w-full h-[320px] object-cover transform scale-110 transition-transform duration-700"
                 autoPlay
                 muted
@@ -72,7 +72,7 @@ const FloatingVideo = () => {
               /* Placeholder before video loads */
               <div className="w-full h-[320px] bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
                 <div className="text-center text-white p-8 animate-pulse">
-                  <div className="text-2xl font-bold mb-2">Quantum Handyman</div>
+                  <div className="text-2xl font-bold mb-2">Quantum Technician</div>
                   <p className="text-white/80">Professional Service • Quality Guaranteed</p>
                 </div>
               </div>
@@ -102,7 +102,7 @@ const FloatingVideo = () => {
           /* Fallback if video fails to load */
           <div className="w-full h-[320px] md:h-[400px] bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
             <div className="text-center text-white p-8">
-              <div className="text-2xl font-bold mb-2">Quantum Handyman</div>
+              <div className="text-2xl font-bold mb-2">Quantum Technician</div>
               <p className="text-white/80">Professional Service • Quality Guaranteed</p>
             </div>
           </div>

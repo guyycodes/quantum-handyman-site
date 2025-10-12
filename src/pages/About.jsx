@@ -12,21 +12,21 @@ import {
 // Content Management - All text content in one place
 const CONTENT = {
   hero: {
-    title: 'About Quantum Handyman',
+    title: 'About Quantum Technician',
     subtitle: 'Where traditional craftsmanship meets cutting-edge technology'
   },
   
   story: {
     title: 'The Story Behind',
-    brandName: 'Quantum Handyman',
+    brandName: 'Quantum Technician',
     paragraphs: [
-      'A new kind of handyman that bridges the gap between traditional trades and modern technology.',
+      'A new kind of technician that bridges the gap between traditional trades and modern technology.',
       'What started as a side hustle quickly revealed a passion for solving real-world problems. After 10 years in cross discipline trades & running a small business, then graduating with a CS + Business degree, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
-      'Quantum Handyman represents 10+ years of experience & a unique combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building apps & home maintenance the same attention to detail and engineering excellence is delivered for every project.'
+      'Quantum Technician represents 10+ years of experience & a unique combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building apps & home maintenance the same attention to detail and engineering excellence is delivered for every project.'
     ],
     mission: {
       title: 'Mission',
-      text: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.'
+      text: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.'
     }
   },
   
@@ -104,7 +104,7 @@ const CONTENT = {
       { year: '2022', event: 'Built outdoor patio with full landscaping, masonry, stamped concrete, drywalling & decking expanded services.' },
       { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework.' },
       { year: '2023', event: 'Graduated University of Denver Certified in Full Stack Development, added web development services.' },
-      { year: '2024', event: 'Began building a custom website for Quantum Handyman, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
+      { year: '2024', event: 'Began building a custom website for Quantum Technician, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
       { year: '2024', event: 'Built a custom Web SaaS platform, integrated LLM agents to handle booking & estimates.' },
       { year: '2025', event: 'Graduate CS Degree + Business Minor 3.95 GPA, Deeloper custom open source Ai package and Recieved over 2000+ downloads.' },
       { year: '2025', event: 'Began building a comprehensive job management platform to enhance the booking, estimation, and job management process for all users.'},
@@ -112,7 +112,7 @@ const CONTENT = {
   },
   
   cta: {
-    title: 'Ready to Work with Quantum Handyman?',
+    title: 'Ready to Work with Quantum Technician?',
     subtitle: 'Experience the difference of working with a true problem-solver who brings both technical expertise and traditional craftsmanship to every project.',
     buttons: {
       bookService: 'Book a Service',

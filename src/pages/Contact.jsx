@@ -4,6 +4,7 @@ import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
+import { useSmsNotification } from '../hooks/useSmsNotification'
 import { 
   Phone, Mail, MapPin, Clock, 
   Send, CheckCircle, AlertCircle,
@@ -67,8 +68,8 @@ const CONTENT = {
       {
         icon: Mail,
         label: 'Email',
-        value: 'hello@quantumhandyman.com',
-        link: 'mailto:hello@quantumhandyman.com'
+        value: 'hello@quantumtechnician.com',
+        link: 'mailto:hello@quantumtechnician.com'
       },
       {
         icon: MapPin,
@@ -88,9 +89,9 @@ const CONTENT = {
   social: {
     title: 'Follow Us',
     links: [
-      { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumhandyman' },
-      { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumhandyman' },
-      { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumhandyman' }
+      { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumtechnician' },
+      { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumtechnician' },
+      { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician' }
     ]
   },
   
@@ -127,6 +128,9 @@ const Contact = () => {
   
   // Staggered animations
   const contactInfoStagger = useStaggeredIntersection(4, { threshold: 0.1 })
+  
+  // SMS notification hook
+  const { sendNotification } = useSmsNotification()
   
   const [formData, setFormData] = useState({
     name: '',
@@ -334,6 +338,9 @@ const Contact = () => {
       const result = await sendContactEmail(finalData)
       
       if (result.success) {
+        // Send SMS notification
+        await sendNotification('contact')
+        
         setSubmitStatus('success')
         // Reset form after successful submission
         setFormData({

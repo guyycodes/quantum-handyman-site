@@ -8,8 +8,8 @@ import { useWorld } from '../contexts/WorldContext'
 const CONTENT = {
   logo: {
     text: 'Quantum',
-    highlight: 'Handyman',
-    ariaLabel: 'Quantum Handyman Home'
+    highlight: 'Technician',
+    ariaLabel: 'Quantum Technician Home'
   },
   navigation: [
     { name: 'Home', href: '/' },
@@ -28,7 +28,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
-  const { currentWorld, isHandyman, isWeb } = useWorld()
+  const { currentWorld, isTechnician, isWeb } = useWorld()
 
   // Get the world-aware path
   const getWorldPath = (path) => {
@@ -47,7 +47,7 @@ const Header = () => {
 
   const isActive = (href) => {
     // Check if the current path matches, accounting for world prefix
-    const currentPath = location.pathname.replace(/^\/(handyman|web)/, '')
+    const currentPath = location.pathname.replace(/^\/(technician|web)/, '')
     const checkPath = href === '/' ? currentPath === '/' || currentPath === '' : currentPath === href
     return checkPath
   }
@@ -59,9 +59,9 @@ const Header = () => {
 
   // Switch between worlds
   const handleWorldSwitch = () => {
-    const otherWorld = isHandyman ? 'web' : 'handyman'
+    const otherWorld = isTechnician ? 'web' : 'technician'
     // Get the current path without the world prefix
-    const currentPath = location.pathname.replace(/^\/(handyman|web)/, '') || '/'
+    const currentPath = location.pathname.replace(/^\/(technician|web)/, '') || '/'
     // Navigate to the same page in the other world
     navigate(`/${otherWorld}${currentPath}`)
   }
@@ -115,13 +115,13 @@ const Header = () => {
             <button
               onClick={handleWorldSwitch}
               className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group"
-              aria-label={`Switch to ${isHandyman ? 'Web Development' : 'Handyman Services'}`}
+              aria-label={`Switch to ${isTechnician ? 'Web Development' : 'Technician Services'}`}
             >
-              <div className={`flex items-center gap-1.5 ${isHandyman ? 'text-blue-600' : 'text-green-600'}`}>
-                {isHandyman ? (
+              <div className={`flex items-center gap-1.5 ${isTechnician ? 'text-blue-600' : 'text-green-600'}`}>
+                {isTechnician ? (
                   <>
                     <Wrench className="w-4 h-4" />
-                    <span className="text-sm font-medium">Handyman</span>
+                    <span className="text-sm font-medium">Technician</span>
                   </>
                 ) : (
                   <>
@@ -132,7 +132,7 @@ const Header = () => {
               </div>
               <ArrowLeftRight className="w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-colors" />
               <div className="text-gray-400 text-sm">
-                {isHandyman ? 'Web' : 'Handyman'}
+                {isTechnician ? 'Web' : 'Technician'}
               </div>
             </button>
             
@@ -212,13 +212,13 @@ const Header = () => {
                   setIsMenuOpen(false)
                 }}
                 className="flex items-center justify-between w-full px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group border border-gray-200 shadow-sm"
-                aria-label={`Switch to ${isHandyman ? 'Web Development' : 'Handyman Services'}`}
+                aria-label={`Switch to ${isTechnician ? 'Web Development' : 'Technician Services'}`}
               >
-                <div className={`flex items-center gap-2 ${isHandyman ? 'text-blue-600' : 'text-green-600'}`}>
-                  {isHandyman ? (
+                <div className={`flex items-center gap-2 ${isTechnician ? 'text-blue-600' : 'text-green-600'}`}>
+                  {isTechnician ? (
                     <>
                       <Wrench className="w-4 h-4" />
-                      <span className="text-sm font-medium">Viewing: Handyman</span>
+                      <span className="text-sm font-medium">Viewing: Technician</span>
                     </>
                   ) : (
                     <>
@@ -228,7 +228,7 @@ const Header = () => {
                   )}
                 </div>
                 <div className="flex items-center gap-1 text-gray-500 text-sm">
-                  <span>Switch to {isHandyman ? 'Web' : 'Handyman'}</span>
+                  <span>Switch to {isTechnician ? 'Web' : 'Technician'}</span>
                   <ArrowLeftRight className="w-3 h-3" />
                 </div>
               </button>

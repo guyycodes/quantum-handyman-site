@@ -1,6 +1,6 @@
 import googleScriptService from './googleScriptService';
 
-// Google Calendar Service for Quantum Handyman
+// Google Calendar Service for Quantum Technician
 // Using fetch instead of axios to avoid CORS issues with Google Apps Script
 class GoogleCalendarService {
   constructor() {

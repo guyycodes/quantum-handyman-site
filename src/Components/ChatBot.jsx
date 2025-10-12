@@ -22,7 +22,7 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
-    { sender: 'bot', text: 'Hello! I\'m your Quantum Handyman assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
+    { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
   ]);
   const [currentStage, setCurrentStage] = useState('initial');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -345,7 +345,7 @@ const ChatBot = () => {
 
   const resetConversation = () => {
     setConversation([
-      { sender: 'bot', text: 'Hello! I\'m your Quantum Handyman assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
+      { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
     ]);
     setCurrentStage('initial');
     setIsComplaintTicket(false);
@@ -681,7 +681,7 @@ const ChatBot = () => {
           onClick={toggleChat}
           className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-110 chatbot-animate-pulse-slow"
           aria-label="Open chat assistant"
-          title="Chat with Quantum Handyman AI Assistant"
+          title="Chat with Quantum Technician AI Assistant"
         >
           <FaComments className="text-2xl" />
         </button>
@@ -697,7 +697,7 @@ const ChatBot = () => {
                 <FaTools className="text-white" />
               </div>
               <div>
-                <h3 className="text-white font-bold">Quantum Handyman</h3>
+                <h3 className="text-white font-bold">Quantum Technician</h3>
                 <p className="text-gray-400 text-xs">AI Assistant</p>
               </div>
             </div>

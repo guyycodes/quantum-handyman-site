@@ -3,7 +3,7 @@ import { Wrench, Code } from 'lucide-react';
 
 const ThemeToggle = ({ className = '' }) => {
   const [currentWorld, setCurrentWorld] = useState(() => {
-    return localStorage.getItem('qh_world') || 'handyman';
+    return localStorage.getItem('qh_world') || 'technician';
   });
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const ThemeToggle = ({ className = '' }) => {
   }, [currentWorld]);
 
   const toggleWorld = () => {
-    const newWorld = currentWorld === 'handyman' ? 'web' : 'handyman';
+    const newWorld = currentWorld === 'technician' ? 'web' : 'technician';
     setCurrentWorld(newWorld);
     
     // Optional: Add a subtle animation
@@ -27,16 +27,16 @@ const ThemeToggle = ({ className = '' }) => {
     <button
       onClick={toggleWorld}
       className={`relative inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 transition-all duration-300 hover:scale-105 ${className}`}
-      aria-label={`Switch to ${currentWorld === 'handyman' ? 'Web Dev' : 'Handyman'} theme`}
+      aria-label={`Switch to ${currentWorld === 'technician' ? 'Web Dev' : 'Technician'} theme`}
     >
       {/* Toggle Track */}
       <div className="relative w-14 h-7 bg-gray-300 dark:bg-gray-600 rounded-full">
         {/* Toggle Thumb */}
         <div 
           className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 flex items-center justify-center
-            ${currentWorld === 'handyman' ? 'left-0.5' : 'left-7'}`}
+            ${currentWorld === 'technician' ? 'left-0.5' : 'left-7'}`}
         >
-          {currentWorld === 'handyman' ? (
+          {currentWorld === 'technician' ? (
             <Wrench className="w-3 h-3 text-blue-500" />
           ) : (
             <Code className="w-3 h-3 text-purple-500" />
@@ -46,7 +46,7 @@ const ThemeToggle = ({ className = '' }) => {
       
       {/* Label */}
       <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {currentWorld === 'handyman' ? 'Handyman' : 'Web Dev'}
+        {currentWorld === 'technician' ? 'Technician' : 'Web Dev'}
       </span>
     </button>
   );

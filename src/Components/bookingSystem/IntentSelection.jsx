@@ -4,12 +4,12 @@ import { useWorld } from '../../contexts/WorldContext';
 
 const IntentSelection = ({ onIntentSelect }) => {
 
-  const { isHandyman } = useWorld();
+  const { isTechnician } = useWorld();
 
   const intents = [
     {
-      id: 'handyman',
-      title: 'Book Handyman Service',
+      id: 'technician',
+      title: 'Book Technician Service',
       subtitle: 'Home repairs, home tech setup, or property maintenance',
       icon: Wrench,
       color: 'from-blue-500 to-blue-600',
@@ -39,13 +39,13 @@ const IntentSelection = ({ onIntentSelect }) => {
     }
   ];
 
-  // Filter intents based on isHandyman state
+  // Filter intents based on isTechnician state
   const filteredIntents = intents.filter(intent => {
-    if (isHandyman && intent.id === 'tech') {
-      return false; // Don't show tech if user is handyman
+    if (isTechnician && intent.id === 'tech') {
+      return false; // Don't show tech if user is technician
     }
-    if (!isHandyman && intent.id === 'handyman') {
-      return false; // Don't show handyman if user is not handyman
+    if (!isTechnician && intent.id === 'technician') {
+      return false; // Don't show technician if user is not technician
     }
     return true;
   });

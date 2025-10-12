@@ -144,7 +144,7 @@ DESCRIPTION:
 ${ticketData.description}
 
 ---
-Submitted via: Quantum Handyman AI Assistant
+Submitted via: Quantum Technician AI Assistant
 Time: ${new Date().toLocaleString()}
     `.trim();
 
@@ -336,7 +336,7 @@ export const sendBookingEmail = async (bookingData) => {
 
     // NOTE: Admin notification is now handled via CC in the EmailJS template
     // This avoids sending duplicate emails
-    // Make sure your EmailJS template has CC: hello@quantumhandyman.com
+    // Make sure your EmailJS template has CC: hello@quantumtechnician.com
 
     return {
       success: true,
@@ -415,7 +415,7 @@ export const sendEstimateRequestEmail = async (estimateData) => {
       `- Review this estimate%0A` +
       `- Contact customer to discuss%0A` +
       `- Schedule service if approved%0A` +
-      `%0AView full details at: quantumhandyman.com/portal`
+      `%0AView full details at: quantumtechnician.com/portal`
       : 
       `Estimate Ref: ${finalEstimateRef}%0A` +
       `Type: Manual Estimate Request%0A` +
@@ -428,7 +428,7 @@ export const sendEstimateRequestEmail = async (estimateData) => {
       `- Prepare manual estimate%0A` +
       `- Contact customer with pricing%0A` +
       `- Schedule service if approved%0A` +
-      `%0AView full details at: quantumhandyman.com/portal`;
+      `%0AView full details at: quantumtechnician.com/portal`;
 
     // Create the base template parameters
     const templateParams = {

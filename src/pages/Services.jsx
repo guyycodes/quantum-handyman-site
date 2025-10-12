@@ -17,7 +17,7 @@ import {
 const CONTENT = {
   hero: {
     title: 'Our Services',
-    subtitle: 'Deliver traditional handyman services, equipped with deep modern tech expertise'
+    subtitle: 'Deliver traditional technician services, equipped with deep modern tech expertise'
   },
   
   categories: [
@@ -51,7 +51,7 @@ const CONTENT = {
   
   cta: {
     title: 'Ready to Get Started?',
-    subtitle: 'Book your service today and experience the Quantum Handyman difference',
+    subtitle: 'Book your service today and experience the Quantum Technician difference',
     buttons: {
       bookNow: 'Book Now',
       getQuote: 'Get Free Quote',
@@ -62,7 +62,7 @@ const CONTENT = {
 
 // Services Data - Aligned with Home.jsx offerings
 const SERVICES_DATA = [
-  // Property Services (Handyman)
+  // Property Services (Technician)
   {
     id: 'home-repairs',
     category: 'property',
@@ -273,7 +273,7 @@ const SERVICES_DATA = [
 ]
 
 const Services = () => {
-  const { currentWorld, isHandyman, isWeb } = useWorld()
+  const { currentWorld, isTechnician, isWeb } = useWorld()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [expandedService, setExpandedService] = useState(null)
   const [worldKey, setWorldKey] = useState(currentWorld || 'default')
@@ -296,7 +296,7 @@ const Services = () => {
 
   // Filter services based on current world
   const worldFilteredServices = SERVICES_DATA.filter(service => {
-    if (isHandyman) return service.category === 'property' || service.category === 'tech'
+    if (isTechnician) return service.category === 'property' || service.category === 'tech'
     if (isWeb) return service.category === 'digital'
     return true
   })
@@ -316,10 +316,10 @@ const Services = () => {
           ref={heroSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-fade-down ${heroSection.isVisible ? 'visible' : ''}`}>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {isHandyman ? 'Handyman Services' : isWeb ? 'Web Development Services' : CONTENT.hero.title}
+            {isTechnician ? 'Technician Services' : isWeb ? 'Web Development Services' : CONTENT.hero.title}
           </h1>
           <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            {isHandyman 
+            {isTechnician 
               ? 'Professional home repair and maintenance services with a tech-savvy approach'
               : isWeb 
               ? 'Full-stack development and digital solutions for your business needs'
@@ -332,13 +332,13 @@ const Services = () => {
       <section className="section-padding">
         <div className="container-max mx-auto">
           {/* Category Filter */}
-          {/* Only show category filter when not in a specific world, or when in handyman world (since it has multiple categories) */}
+          {/* Only show category filter when not in a specific world, or when in technician world (since it has multiple categories) */}
           {(!isWeb) && (
             <div 
               ref={categoryFilter.ref}
               className={`flex flex-wrap justify-center gap-4 mb-12 animate-fade-up ${categoryFilter.isVisible ? 'visible' : ''}`}>
               {/* Dynamic categories based on world */}
-              {isHandyman ? (
+              {isTechnician ? (
                 <>
                   <button
                     onClick={() => setSelectedCategory('all')}
@@ -521,14 +521,14 @@ const Services = () => {
             ref={additionalNote.ref}
             className={`mt-12 bg-blue-50 border-l-4 border-primary rounded-r-lg p-6 animate-scale ${additionalNote.isVisible ? 'visible' : ''}`}>
             <h3 className="font-semibold text-primary mb-2">
-              {isHandyman 
+              {isTechnician 
                 ? "Need Something Else Fixed?" 
                 : isWeb 
                 ? "Need Custom Development?"
                 : CONTENT.additionalServices.title}
             </h3>
             <p className="text-muted mb-4">
-              {isHandyman 
+              {isTechnician 
                 ? 'We offer many additional repair and maintenance services not listed here. From minor fixes to major home improvements, we can help!'
                 : isWeb 
                 ? 'We specialize in custom web solutions tailored to your specific needs. From complex applications to unique integrations, let\'s discuss your project!'
@@ -551,15 +551,15 @@ const Services = () => {
           ref={ctaSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {isHandyman 
+            {isTechnician 
               ? 'Ready to Fix Your Property?' 
               : isWeb 
               ? 'Ready to Build Your Digital Presence?'
               : CONTENT.cta.title}
           </h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            {isHandyman 
-              ? 'Professional handyman services with transparent pricing and satisfaction guaranteed'
+            {isTechnician 
+              ? 'Professional technician services with transparent pricing and satisfaction guaranteed'
               : isWeb 
               ? 'Transform your ideas into powerful web applications with expert development'
               : CONTENT.cta.subtitle}

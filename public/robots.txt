@@ -1,5 +1,5 @@
-# Quantum Handyman Robots.txt
-# https://quantumhandyman.com/robots.txt
+# Quantum Technician Robots.txt
+# https://quantumtechnician.com/robots.txt
 
 # Default rule - Allow all legitimate crawlers
 User-agent: *
@@ -106,7 +106,7 @@ User-agent: LinkpadBot
 Disallow: /
 
 # Sitemap location
-Sitemap: https://quantumhandyman.com/sitemap.xml
+Sitemap: https://quantumtechnician.com/sitemap.xml
 
 # Host
-Host: https://quantumhandyman.com
+Host: https://quantumtechnician.com

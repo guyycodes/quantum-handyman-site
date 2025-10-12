@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Service Inquiry - Quantum Technician</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">
+    <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        
+        <!-- Header with gradient background and logo -->
+        <div style="background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%); padding: 30px 20px; text-align: center;">
+            <img alt="Quantum Technician Logo" src="https://imgur.com/XHCocGq.png" style="height: 75px; width: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                Quantum Technician
+            </h1>
+            <p style="color: rgba(255, 255, 255, 0.95); margin: 10px 0 0 0; font-size: 14px; font-weight: 500;">
+                From Code to Craftsmanship
+            </p>
+        </div>
+
+        <!-- Main Content -->
+        <div style="padding: 30px;">
+            <h2 style="color: #1F2937; margin-top: 0;">New Service Inquiry</h2>
+            
+            <p style="color: #4B5563; margin-bottom: 25px;">
+                You've received a new service inquiry from your website. Here are the details:
+            </p>
+            
+            <!-- Customer Information Box -->
+            <div style="background-color: #F9FAFB; border-radius: 8px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #3B82F6;">
+                <h3 style="color: #1F2937; margin-top: 0; margin-bottom: 15px; font-size: 18px;">Customer Information</h3>
+                
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 8px 0; color: #6B7280; width: 120px; vertical-align: top;">
+                            <strong>Name:</strong>
+                        </td>
+                        <td style="padding: 8px 0; color: #1F2937;">
+                            {{from_name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #6B7280; vertical-align: top;">
+                            <strong>Email:</strong>
+                        </td>
+                        <td style="padding: 8px 0; color: #1F2937;">
+                            <a href="mailto:{{reply_to}}" style="color: #3B82F6; text-decoration: none;">{{reply_to}}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #6B7280; vertical-align: top;">
+                            <strong>Phone:</strong>
+                        </td>
+                        <td style="padding: 8px 0; color: #1F2937;">
+                            {{phone}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0; color: #6B7280; vertical-align: top;">
+                            <strong>Service Type:</strong>
+                        </td>
+                        <td style="padding: 8px 0; color: #1F2937;">
+                            {{service_type}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Message Box -->
+            <div style="background-color: #F3F4F6; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                <h3 style="color: #1F2937; margin-top: 0; margin-bottom: 10px; font-size: 18px;">Message</h3>
+                <p style="color: #374151; margin: 0; white-space: pre-wrap;">{{message}}</p>
+            </div>
+
+            <!-- Call to Action -->
+            <div style="text-align: center; margin: 30px 0;">
+                <p style="color: #6B7280; margin-bottom: 15px;">Respond promptly to convert this inquiry into a booking!</p>
+                <a href="mailto:{{reply_to}}" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    Reply to Customer
+                </a>
+            </div>
+
+            <!-- Service Categories Reminder -->
+            <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%); border-radius: 8px; padding: 20px; margin-top: 30px;">
+                <h4 style="color: #1F2937; margin-top: 0; margin-bottom: 15px; text-align: center;">Your Service Categories</h4>
+                <div style="text-align: center;">
+                    <span style="display: inline-block; background-color: #3B82F6; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin: 5px;">Home Repairs</span>
+                    <span style="display: inline-block; background-color: #10B981; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin: 5px;">Landscaping</span>
+                    <span style="display: inline-block; background-color: #8B5CF6; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin: 5px;">Web Development</span>
+                    <span style="display: inline-block; background-color: #06B6D4; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; margin: 5px;">Smart Home</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #F9FAFB; padding: 25px 20px; text-align: center; border-top: 1px solid #E5E7EB;">
+            <p style="color: #6B7280; font-style: italic; margin: 0 0 15px 0; font-size: 14px;">
+                "The technician with a Computer Science degree - solving problems at every level"
+            </p>
+            
+            <!-- Social Media Links -->
+            <div style="margin: 20px 0;">
+                <a href="https://www.facebook.com/quantumtechnician" style="text-decoration: none; margin: 0 8px;">
+                    <img src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-512.png" alt="Facebook" style="width: 28px; height: 28px; vertical-align: middle;">
+                </a>
+                <a href="https://www.instagram.com/quantumtechnician" style="text-decoration: none; margin: 0 8px;">
+                    <img src="https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Instagram_colored_svg_copy-512.png" alt="Instagram" style="width: 28px; height: 28px; vertical-align: middle;">
+                </a>
+                <a href="https://www.tiktok.com/@quantumtechnician" style="text-decoration: none; margin: 0 8px;">
+                    <img src="https://cdn4.iconfinder.com/data/icons/social-media-flat-7/64/Social-media_Tiktok-512.png" alt="TikTok" style="width: 28px; height: 28px; vertical-align: middle;">
+                </a>
+            </div>
+            
+            <p style="font-size: 13px; color: #9CA3AF; margin: 15px 0 0 0;">
+                Quantum Technician<br>
+                Licensed & Insured | Satisfaction Guaranteed<br>
+                <a href="tel:555-123-4567" style="color: #3B82F6; text-decoration: none;">(555) 123-4567</a> | 
+                <a href="https://quantumtechnician.com" style="color: #3B82F6; text-decoration: none;">quantumtechnician.com</a>
+            </p>
+        </div>
+
+        <!-- Auto-generated notice -->
+        <div style="padding: 15px 20px; background-color: #FAFAFA; border-top: 1px solid #E5E7EB;">
+            <p style="font-size: 11px; color: #9CA3AF; text-align: center; margin: 0;">
+                This is an automated notification from your website contact form. The customer is expecting a response within 24-48 hours.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+code <div class=""></div>

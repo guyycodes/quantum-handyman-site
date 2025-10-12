@@ -12,7 +12,7 @@ import { useWorld } from '../contexts/WorldContext'
 const CONTENT = {
   logo: {
     text: 'Quantum',
-    highlight: 'Handyman'
+    highlight: 'Technician'
   },
   tagline: 'Fixing problems on every level - from leaky pipes to custom websites. Your one-stop solution for modern living.',
   
@@ -42,9 +42,9 @@ const CONTENT = {
   ],
   
   social: [
-    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumhandyman', color: 'hover:text-blue-600' },
-    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumhandyman', color: 'hover:text-pink-600' },
-    { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumhandyman', color: 'hover:text-pink-600' },
+    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumtechnician', color: 'hover:text-blue-600' },
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumtechnician', color: 'hover:text-pink-600' },
+    { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician', color: 'hover:text-pink-600' },
   ],
   
   contact: {
@@ -54,7 +54,7 @@ const CONTENT = {
     },
     email: {
       label: 'Email',
-      value: 'hello@quantumhandyman.com'
+      value: 'hello@quantumtechnician.com'
     },
     hours: {
       label: 'Hours',
@@ -67,7 +67,7 @@ const CONTENT = {
   },
   
   footer: {
-    copyright: '© {year} Quantum Handyman. All rights reserved.',
+    copyright: '© {year} Quantum Technician. All rights reserved.',
     // booking: {
     //   emoji: '📅',
     //   text: 'Online booking powered by',
@@ -76,7 +76,7 @@ const CONTENT = {
     // },
     credit: {
       text: 'Built from scratch by',
-      company: 'Quantum Handyman'
+      company: 'Quantum Technician'
     }
   }
 }
@@ -89,8 +89,8 @@ const Footer = () => {
   // Get world-aware path for quick links
   const getWorldPath = (path) => {
     // Check if we're in a world-specific route
-    if (location.pathname.includes('/handyman')) {
-      return `/handyman${path}`
+    if (location.pathname.includes('/technician')) {
+      return `/technician${path}`
     } else if (location.pathname.includes('/web')) {
       return `/web${path}`
     } else if (currentWorld && currentWorld !== 'default') {

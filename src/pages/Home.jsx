@@ -31,9 +31,9 @@ const CONTENT = {
     badge: 'Est. 2015',
     title: {
       line1: 'Quantum',
-      line2: 'Handyman'
+      line2: 'Technician'
     },
-    subtitle: 'A new kind of handyman for your property & technology needs. No collars. Just capability.',
+    subtitle: 'A new kind of technician for your property & technology needs. No collars. Just capability.',
     cta: {
       bookService: 'Book a Service',
       seeWork: 'View Portfolio',
@@ -81,7 +81,7 @@ const CONTENT = {
   
   services: {
     title: 'Our Services',
-    subtitle: 'Deliver a traditional handyman, equipped with deep modern tech expertise.',
+    subtitle: 'Deliver a traditional technician, equipped with deep modern tech expertise.',
     categories: {
       all: 'All Services',
       property: 'Property',
@@ -92,11 +92,11 @@ const CONTENT = {
   },
   
   about: {
-    title: 'Mission: Quantum Handyman',
-    description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Handyman achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
+    title: 'Mission: Quantum Technician',
+    description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'A new kind of handyman for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.'
+      text: 'A new kind of technician for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.'
     },
     whyChoose: {
       title: 'Why Choose Us?',
@@ -168,7 +168,7 @@ const CONTENT = {
     subtitle: 'Check out our reviews and ratings from satisfied customers',
     googleTitle: 'Google Reviews',
     rating: '5.0 Rating • 100% Satisfaction',
-    description: 'Read verified customer reviews and see why homeowners trust Quantum Handyman for both their tech and traditional service needs.',
+    description: 'Read verified customer reviews and see why homeowners trust Quantum Technician for both their tech and traditional service needs.',
     googleButton: 'View Reviews on Google',
     googleUrl: 'https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review', // Replace with your actual Google Business URL
     helperText: 'See verified customer reviews on Google Business'
@@ -176,7 +176,7 @@ const CONTENT = {
   
   cta: {
     title: 'Experience Quantum Advantage.',
-    subtitle: 'Hire a handyman who can solve problems at every level.',
+    subtitle: 'Hire a technician who can solve problems at every level.',
     buttons: {
       bookNow: 'Book Now',
       // call: 'Call (555) 123-4567',
@@ -195,7 +195,7 @@ const CONTENT = {
 
 // Data objects with their text content
 const SERVICES_DATA = [
-  // Handyman Services
+  // Technician Services
   {
     id: 'home-repairs',
     title: 'Home Repairs & Maintenance',
@@ -319,7 +319,7 @@ const STATS_DATA = [
 ]
 
 const Home = () => {
-  const { currentWorld, isHandyman, isWeb } = useWorld()
+  const { currentWorld, isTechnician, isWeb } = useWorld()
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [tabJustChanged, setTabJustChanged] = useState(false)
@@ -343,14 +343,14 @@ const Home = () => {
   
   // Filter portfolio based on current world first to get accurate count
   const filteredPortfolio = PORTFOLIO_DATA.filter(item => {
-    if (isHandyman) return item.category === 'Property Maintenance' || item.category === 'Landscape'
+    if (isTechnician) return item.category === 'Property Maintenance' || item.category === 'Landscape'
     if (isWeb) return item.category === 'Web Development'
     return true
   })
   
   // Filter services based on current world
   const filteredServices = SERVICES_DATA.filter(service => {
-    if (isHandyman) return service.category === 'property'
+    if (isTechnician) return service.category === 'property'
     if (isWeb) return service.category === 'digital'
     return true
   })
@@ -386,12 +386,12 @@ const Home = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 {CONTENT.hero.title.line1} <br />
                 <span className="gradient-text bg-gradient-to-r from-yellow-300 to-orange-400">
-                  {isHandyman ? 'Handyman' : isWeb ? 'Web Solutions' : CONTENT.hero.title.line2}
+                  {isTechnician ? 'Technician' : isWeb ? 'Web Solutions' : CONTENT.hero.title.line2}
                 </span>
               </h1>
               
               <p className="text-xl text-white/90">
-                {isHandyman 
+                {isTechnician 
                   ? 'Property • Repairs • Pro Service • Tech-Savvy Edge'
                   : isWeb 
                   ? 'Web development • Creator Packages • Custom Solutions'
@@ -418,7 +418,7 @@ const Home = () => {
 
               {/* Show badges on desktop only - filtered by world */}
               <div className="flex gap-8 pt-4">
-                {isHandyman ? (
+                {isTechnician ? (
                   <>
                     <div className="flex items-center gap-2">
                       <Shield className="w-5 h-5 text-yellow-300" />
@@ -578,10 +578,10 @@ const Home = () => {
             ref={servicesTitle.ref}
             className={`text-center mb-12 animate-fade-up ${servicesTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {isHandyman ? 'Handyman' : isWeb ? 'Web Development' : 'Our'} <span className="gradient-text">Services</span>
+              {isTechnician ? 'Technician' : isWeb ? 'Web Development' : 'Our'} <span className="gradient-text">Services</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto mb-3">
-              {isHandyman 
+              {isTechnician 
                 ? 'Professional home repair and property maintenance services.' 
                 : isWeb 
                 ? 'Full-stack web development and digital solutions for your business.'
@@ -594,7 +594,7 @@ const Home = () => {
           </div>
 
           {/* Service category tabs - Hidden when filtering by world */}
-          {!isHandyman && !isWeb && (
+          {!isTechnician && !isWeb && (
             <div className="flex justify-center gap-4 mb-8">
               <button
                 onClick={() => {
@@ -657,7 +657,7 @@ const Home = () => {
 
           <div key={selectedServiceCategory} className={`grid md:grid-cols-2 ${isWeb ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-6`}>
             {filteredServices
-              .filter(service => !isHandyman && !isWeb ? (selectedServiceCategory === 'all' || service.category === selectedServiceCategory) : true)
+              .filter(service => !isTechnician && !isWeb ? (selectedServiceCategory === 'all' || service.category === selectedServiceCategory) : true)
               .map((service, index) => (
               <div 
                 key={service.id}
@@ -709,8 +709,8 @@ const Home = () => {
               ref={aboutSection.ref}
               className={`space-y-6 animate-fade-right ${aboutSection.isVisible ? 'visible' : ''}`}>
               <h2 className="text-3xl md:text-4xl font-bold">
-                {CONTENT.about.title.split('Quantum Handyman')[0]}
-                <span className="gradient-text">Quantum Handyman</span>
+                {CONTENT.about.title.split('Quantum Technician')[0]}
+                <span className="gradient-text">Quantum Technician</span>
               </h2>
               
               <p className="text-lg text-muted">
@@ -774,7 +774,7 @@ const Home = () => {
               <div className="relative">
                 <FramedImage
                   src="/images/profile/Me-and-Pops.jpg"
-                  alt="Morgan B. - Quantum Handyman"
+                  alt="Morgan B. - Quantum Technician"
                   frameStyle="modern"
                   aspectRatio="portrait"
                   objectFit="cover"
@@ -784,7 +784,7 @@ const Home = () => {
                   maxWidth="max-w-sm"
                   maxHeight="max-h-md"
                   width="w-full"
-                  caption="Morgan B. - Quantum Handyman"
+                  caption="Morgan B. - Quantum Technician"
                   captionPosition="bottom"
                   className="mx-auto"
                   preferThumb={true}
@@ -802,10 +802,10 @@ const Home = () => {
             ref={portfolioTitle.ref}
             className={`text-center mb-12 animate-fade-up ${portfolioTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {isHandyman ? 'Handyman' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Portfolio</span>
+              {isTechnician ? 'Technician' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Portfolio</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto">
-              {isHandyman 
+              {isTechnician 
                 ? 'Quality craftsmanship and property improvements.'
                 : isWeb 
                 ? 'Custom websites and digital solutions we\'ve built.'
@@ -994,15 +994,15 @@ const Home = () => {
           ref={ctaSection.ref}
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {isHandyman 
+            {isTechnician 
               ? 'Ready to Fix Your Home?'
               : isWeb 
               ? 'Ready to Build Your Digital Presence?'
               : CONTENT.cta.title}
           </h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            {isHandyman 
-              ? 'Professional handyman services with transparent pricing and quality guarantee.'
+            {isTechnician 
+              ? 'Professional technician services with transparent pricing and quality guarantee.'
               : isWeb 
               ? 'Transform your ideas into powerful web applications with expert development.'
               : CONTENT.cta.subtitle}

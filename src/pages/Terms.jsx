@@ -14,11 +14,11 @@ const CONTENT = {
   sections: [
     {
       title: '1. Agreement to Terms',
-      content: 'By accessing and using Quantum Handyman services, you agree to be bound by these Terms of Service and all applicable laws and regulations.'
+      content: 'By accessing and using Quantum Technician services, you agree to be bound by these Terms of Service and all applicable laws and regulations.'
     },
     {
       title: '2. Services',
-      content: 'Quantum Handyman provides home repair, landscaping, web development, smart home automation, and automotive scratch repair/paint correction services. Specific service details will be agreed upon before work commences.'
+      content: 'Quantum Technician provides home repair, landscaping, web development, smart home automation, and automotive scratch repair/paint correction services. Specific service details will be agreed upon before work commences.'
     },
     {
       title: '3. Booking and Scheduling',
@@ -34,7 +34,7 @@ const CONTENT = {
     },
     {
       title: '6. Limitation of Liability',
-      content: 'Quantum Handyman shall not be liable for any indirect, incidental, or consequential damages arising from our services. Our total liability shall not exceed the amount paid for the specific service.'
+      content: 'Quantum Technician shall not be liable for any indirect, incidental, or consequential damages arising from our services. Our total liability shall not exceed the amount paid for the specific service.'
     },
     {
       title: '7. Property Access',
@@ -42,7 +42,7 @@ const CONTENT = {
     },
     {
       title: '8. Insurance',
-      content: 'Quantum Handyman maintains appropriate insurance coverage. Proof of insurance is available upon request.'
+      content: 'Quantum Technician maintains appropriate insurance coverage. Proof of insurance is available upon request.'
     },
     {
       title: '9. Intellectual Property',
@@ -62,7 +62,7 @@ const CONTENT = {
     },
     {
       title: '13. Contact Information',
-      content: 'For questions about these Terms, please contact us at info@quantumhandyman.com or (555) 123-4567.'
+      content: 'For questions about these Terms, please contact us at info@quantumtechnician.com or (555) 123-4567.'
     }
   ]
 }

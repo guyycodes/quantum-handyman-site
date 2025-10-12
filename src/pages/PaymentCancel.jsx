@@ -213,11 +213,11 @@ const PaymentCancel = () => {
                 </p>
                 <div className="space-y-3">
                   <a 
-                    href="mailto:support@quantumhandyman.com" 
+                    href="mailto:support@quantumtechnician.com" 
                     className="flex items-center gap-3 text-blue-600 hover:text-blue-700 font-medium"
                   >
                     <Mail className="w-5 h-5" />
-                    support@quantumhandyman.com
+                    support@quantumtechnician.com
                   </a>
                   <a 
                     href="tel:555-123-4567" 

@@ -20,9 +20,9 @@ export const WorldProvider = ({ children }) => {
     }
     // Otherwise derive from URL path
     if (location.pathname.startsWith('/web')) return 'web';
-    if (location.pathname.startsWith('/handyman')) return 'handyman';
+    if (location.pathname.startsWith('/technician')) return 'technician';
     // Fallback to localStorage or default
-    return localStorage.getItem('qh_world') || 'handyman';
+    return localStorage.getItem('qh_world') || 'technician';
   });
 
   useEffect(() => {
@@ -30,16 +30,16 @@ export const WorldProvider = ({ children }) => {
     if (location.pathname.startsWith('/web')) {
       setCurrentWorld('web');
       localStorage.setItem('qh_world', 'web');
-    } else if (location.pathname.startsWith('/handyman')) {
-      setCurrentWorld('handyman');
-      localStorage.setItem('qh_world', 'handyman');
+    } else if (location.pathname.startsWith('/technician')) {
+      setCurrentWorld('technician');
+      localStorage.setItem('qh_world', 'technician');
     }
     // Note: data-world is already set by HTML shell, no need to update
   }, [location.pathname]);
 
   const value = {
     currentWorld,
-    isHandyman: currentWorld === 'handyman',
+    isTechnician: currentWorld === 'technician',
     isWeb: currentWorld === 'web',
   };
 

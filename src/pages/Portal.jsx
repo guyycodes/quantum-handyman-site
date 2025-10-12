@@ -5,7 +5,7 @@ import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import EstimateCard from '../Components/portal/EstimateCard';
 import JobCard from '../Components/portal/JobCard';
-import JobPaymentModal from '../components/portal/JobPaymentModal';
+import JobPaymentModal from '../Components/portal/JobPaymentModal';
 import useStripe from '../hooks/useStripe';
 import useGoogleScript from '../hooks/useGoogleScript';
 import { useWorld } from '../contexts/WorldContext';
@@ -13,8 +13,8 @@ import { useWorld } from '../contexts/WorldContext';
 // Content Management
 const CONTENT = {
   meta: {
-    title: 'Portal | Quantum Handyman',
-    description: 'Track your estimates, jobs, and payments with Quantum Handyman'
+    title: 'Portal | Quantum Technician',
+    description: 'Track your estimates, jobs, and payments with Quantum Technician'
   },
   hero: {
     title: 'Portal',
@@ -143,8 +143,8 @@ const Portal = () => {
   // Get the world-aware home path
   const getHomePath = () => {
     // Check if we're in a world-specific route
-    if (location.pathname.includes('/handyman')) {
-      return '/handyman';
+    if (location.pathname.includes('/technician')) {
+      return '/technician';
     } else if (location.pathname.includes('/web')) {
       return '/web';
     } else if (currentWorld) {
@@ -359,7 +359,7 @@ const Portal = () => {
   const handleVenmoPayment = (paymentDetails) => {
     console.log('💜 Venmo payment selected with details:', paymentDetails);
     
-    const venmoUsername = "QuantumHandyman";
+    const venmoUsername = "QuantumTechnician";
     const note = `Payment for Job ${selectedJob['Booking Reference']} - ${selectedJob['Service']}`;
     
     const amount = paymentDetails.totalAmount.toFixed(2);

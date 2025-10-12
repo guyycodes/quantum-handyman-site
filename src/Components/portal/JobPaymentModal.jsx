@@ -16,7 +16,7 @@ const CONTENT = {
   },
   venmo: {
     label: 'Pay with Venmo',
-    username: '@QuantumHandyman',
+    username: '@QuantumTechnician',
     appInstructions: 'Authorize Venmo to open with payment details pre-filled',
     webInstructions: 'Not using Venmo mobile? You\'ll redirect to Venmo\'s website'
   },

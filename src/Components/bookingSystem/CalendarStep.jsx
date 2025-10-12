@@ -42,7 +42,7 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
   const [hoveredDate, setHoveredDate] = useState(null);
   const [isUrgent, setIsUrgent] = useState(false);
 
-  const { isHandyman } = useWorld();
+  const { isTechnician } = useWorld();
 
   const monthNames = CONTENT.monthNames;
   const weekDays = CONTENT.weekDays;
@@ -132,7 +132,7 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
         {CONTENT.title}
       </h3>
 
-      {isHandyman && (
+      {isTechnician && (
         /* Urgent Booking Checkbox - Moved to top and made compact */
       <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
         <label className="flex items-center gap-3 cursor-pointer">

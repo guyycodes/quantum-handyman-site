@@ -13,12 +13,12 @@ const CONTENT = {
   // Brand
   brand: {
     name: 'Quantum',
-    nameSuffix: 'Handyman'
+    nameSuffix: 'Technician'
   },
   
-  // Handyman Side
-  handyman: {
-    title: 'Handyman',
+  // Technician Side
+  technician: {
+    title: 'Technician',
     subtitle: 'Professional repairs & home improvements with a tech-savvy edge',
     features: [
       'Home Repairs & Maintenance',
@@ -31,8 +31,8 @@ const CONTENT = {
       jobs: { value: '500+', label: 'Projects' },
       pricing: { value: '$125', label: 'Starting' }
     },
-    button: 'Handyman Services',
-    sideLabel: 'Handyman Services',
+    button: 'Technician Services',
+    sideLabel: 'Technician Services',
     
     // Right Brain Elements
     brainElements: {
@@ -169,7 +169,7 @@ const leftBrainElements = [
   { icon: Activity, label: 'Performance', color: '#84cc16' }
 ];
 
-// Right Brain Elements - Creative/Spatial (Handyman)
+// Right Brain Elements - Creative/Spatial (Technician)
 const rightBrainElements = [
   { icon: Hammer, label: 'Repairs', color: '#fbbf24' },
   { icon: Drill, label: 'Power Tools', color: '#fb923c' },
@@ -219,7 +219,7 @@ const SplitLanding = () => {
     
     // Keyboard navigation
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') handleSelection('handyman');
+      if (e.key === 'ArrowLeft') handleSelection('technician');
       if (e.key === 'ArrowRight') handleSelection('web');
     };
     
@@ -365,14 +365,14 @@ const SplitLanding = () => {
           </div>
         </div>
 
-          {/* Right Brain - Handyman Side */}
+          {/* Right Brain - Technician Side */}
           <div 
             className={`absolute w-full h-full flex items-center justify-center transition-all duration-1200 ${
-              hoveredSide === 'handyman' ? 'opacity-100 z-20' : 'opacity-40 z-10'
+              hoveredSide === 'technician' ? 'opacity-100 z-20' : 'opacity-40 z-10'
             }`}
             style={{
               transform: `translateX(${
-                hoveredSide === 'handyman' 
+                hoveredSide === 'technician' 
                   ? 'calc(17% + 15px)' 
                   : isSmallScreen
                     ? 'calc(11.5% + 30px)'  // Shift 1% right for screens 391-429px (was 10%)
@@ -388,14 +388,14 @@ const SplitLanding = () => {
               alt="" 
               aria-hidden="true"
               className={`h-[300px] md:h-[400px] lg:h-[500px] object-contain transition-all duration-1200 ${
-                hoveredSide === 'handyman' ? 'md:scale-110 scale-105' : 'scale-100'
+                hoveredSide === 'technician' ? 'md:scale-110 scale-105' : 'scale-100'
               }`}
               style={{ 
-                filter: `drop-shadow(0 0 ${hoveredSide === 'handyman' ? '50px' : '15px'} rgba(251, 191, 36, 0.4))`
+                filter: `drop-shadow(0 0 ${hoveredSide === 'technician' ? '50px' : '15px'} rgba(251, 191, 36, 0.4))`
               }}
             />
-            {/* QuantumSphere for Right Brain - Only visible when Handyman is hovered */}
-            {hoveredSide === 'handyman' && (
+            {/* QuantumSphere for Right Brain - Only visible when Technician is hovered */}
+            {hoveredSide === 'technician' && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none" style={{ transform: 'translateX(50px)' }}>
                 <Suspense fallback={<div className="animate-pulse" />}>
                   <QuantumSphere 
@@ -417,34 +417,34 @@ const SplitLanding = () => {
       {/* Split Container */}
       <div className="relative h-full flex">
         
-        {/* Handyman Side */}
+        {/* Technician Side */}
         <div 
           role="button"
           tabIndex={0}
-          aria-label="Enter Handyman services"
-          data-world="handyman"
+          aria-label="Enter Technician services"
+          data-world="technician"
           className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-inset
-            ${hoveredSide === 'handyman' ? 'flex-[1.5]' : 'flex-1'}
+            ${hoveredSide === 'technician' ? 'flex-[1.5]' : 'flex-1'}
             ${hoveredSide === 'web' ? 'flex-[0.5]' : 'flex-1'}`}
-          onMouseEnter={() => !isMobile && setHoveredSide('handyman')}
+          onMouseEnter={() => !isMobile && setHoveredSide('technician')}
           onMouseLeave={() => !isMobile && setHoveredSide(null)}
-          onTouchStart={() => handleTouchStart('handyman')}
-          onTouchEnd={() => handleTouchEnd('handyman')}
+          onTouchStart={() => handleTouchStart('technician')}
+          onTouchEnd={() => handleTouchEnd('technician')}
           onTouchCancel={() => handleTouchCancel()}
           onClick={() => {
             // Only handle click on desktop
             if (!isMobile) {
-              setHoveredSide(hoveredSide === 'handyman' ? null : 'handyman');
+              setHoveredSide(hoveredSide === 'technician' ? null : 'technician');
             }
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              handleSelection('handyman');
+              handleSelection('technician');
             }
           }}
           style={{
-            clipPath: hoveredSide === 'handyman' 
+            clipPath: hoveredSide === 'technician' 
               ? isMobile ? 'polygon(0 0, 80% 0, 80% 100%, 0% 100%)' : 'polygon(0 0, 60% 0, 60% 100%, 0% 100%)'
               : hoveredSide === 'web'
               ? isMobile ? 'polygon(0 0, 10% 0, 10% 100%, 0% 100%)' : 'polygon(0 0, 35% 0, 35% 100%, 0% 100%)' 
@@ -453,7 +453,7 @@ const SplitLanding = () => {
         >
           {/* Background Gradient with adjustable opacity on hover */}
           <div className={`absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-primary transition-opacity duration-1200 ${
-            hoveredSide === 'handyman' ? 'opacity-70' : 'opacity-90'
+            hoveredSide === 'technician' ? 'opacity-70' : 'opacity-90'
           }`} />
           
           {/* Pattern Overlay */}
@@ -465,7 +465,7 @@ const SplitLanding = () => {
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-center h-full px-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'handyman' ? isMobile ? 'scale-90 -translate-x-5' : 'scale-110 -translate-x-40' : 'scale-50'} ${hoveredSide === 'web' ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'technician' ? isMobile ? 'scale-90 -translate-x-5' : 'scale-110 -translate-x-40' : 'scale-50'} ${hoveredSide === 'web' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -476,27 +476,27 @@ const SplitLanding = () => {
 
               {/* Title */}
               <h2 className="font-heading text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-                {CONTENT.handyman.title}
+                {CONTENT.technician.title}
               </h2>
 
               {/* Subtitle */}
               <p className={`text-lg mb-8 opacity-90 text-center max-w-sm transition-all duration-1200 ${
-                hoveredSide === 'handyman' ? 'opacity-100' : 'opacity-80'
+                hoveredSide === 'technician' ? 'opacity-100' : 'opacity-80'
               }`}>
-                {CONTENT.handyman.subtitle}
+                {CONTENT.technician.subtitle}
               </p>
 
               {/* Features - Only show on hover */}
               <div className={`transition-all duration-1200 overflow-hidden ${
-                hoveredSide === 'handyman' ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                hoveredSide === 'technician' ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
               }`}>
                 <ul className="space-y-2 mb-6">
-                  {CONTENT.handyman.features.map((feature, index) => (
+                  {CONTENT.technician.features.map((feature, index) => (
                     <li 
                       key={feature}
                       className="flex items-center gap-2 text-sm"
                       style={{
-                        animation: hoveredSide === 'handyman' ? `fade-in-up 0.5s ease-out ${index * 0.1}s backwards` : 'none'
+                        animation: hoveredSide === 'technician' ? `fade-in-up 0.5s ease-out ${index * 0.1}s backwards` : 'none'
                       }}
                     >
                       <Home className="w-4 h-4 opacity-70" />
@@ -508,19 +508,19 @@ const SplitLanding = () => {
 
               {/* Stats */}
               <div className={`flex gap-6 mb-8 transition-all duration-500 ${
-                hoveredSide === 'handyman' ? 'opacity-100 translate-y-0' : 'opacity-60 translate-y-2'
+                hoveredSide === 'technician' ? 'opacity-100 translate-y-0' : 'opacity-60 translate-y-2'
               }`}>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{CONTENT.handyman.stats.experience.value}</div>
-                  <div className="text-xs opacity-80">{CONTENT.handyman.stats.experience.label}</div>
+                  <div className="text-2xl font-bold">{CONTENT.technician.stats.experience.value}</div>
+                  <div className="text-xs opacity-80">{CONTENT.technician.stats.experience.label}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{CONTENT.handyman.stats.jobs.value}</div>
-                  <div className="text-xs opacity-80">{CONTENT.handyman.stats.jobs.label}</div>
+                  <div className="text-2xl font-bold">{CONTENT.technician.stats.jobs.value}</div>
+                  <div className="text-xs opacity-80">{CONTENT.technician.stats.jobs.label}</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{CONTENT.handyman.stats.pricing.value}</div>
-                  <div className="text-xs opacity-80">{CONTENT.handyman.stats.pricing.label}</div>
+                  <div className="text-2xl font-bold">{CONTENT.technician.stats.pricing.value}</div>
+                  <div className="text-xs opacity-80">{CONTENT.technician.stats.pricing.label}</div>
                 </div>
               </div>
 
@@ -528,13 +528,13 @@ const SplitLanding = () => {
               <button
                 className={`group flex items-center gap-2 px-7 py-6 bg-white text-blue-600 rounded-xl 
                   text-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
-                  ${hoveredSide === 'handyman' ? 'scale-105' : 'scale-100'}`}
+                  ${hoveredSide === 'technician' ? 'scale-105' : 'scale-100'}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleSelection('handyman');
+                  handleSelection('technician');
                 }}
               >
-                {CONTENT.handyman.button}
+                {CONTENT.technician.button}
                 <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
@@ -547,7 +547,7 @@ const SplitLanding = () => {
             }`}>
               <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase" 
                 style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-                {CONTENT.handyman.sideLabel}
+                {CONTENT.technician.sideLabel}
               </div>
             </div>
           )}
@@ -561,7 +561,7 @@ const SplitLanding = () => {
           data-world="web"
           className={`relative flex-1 transition-all duration-1200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-inset
             ${hoveredSide === 'web' ? 'flex-[1.5]' : 'flex-1'}
-            ${hoveredSide === 'handyman' ? 'flex-[0.5]' : 'flex-1'}`}
+            ${hoveredSide === 'technician' ? 'flex-[0.5]' : 'flex-1'}`}
           onMouseEnter={() => !isMobile && setHoveredSide('web')}
           onMouseLeave={() => !isMobile && setHoveredSide(null)}
           onTouchStart={() => handleTouchStart('web')}
@@ -582,7 +582,7 @@ const SplitLanding = () => {
           style={{
             clipPath: hoveredSide === 'web'
               ? isMobile ? 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)' :'polygon(40% 0, 100% 0, 100% 100%, 40% 100%)'
-              : hoveredSide === 'handyman'
+              : hoveredSide === 'technician'
               ? isMobile ? 'polygon(68% 0, 100% 0, 100% 100%, 68% 100%)' : 'polygon(65% 0, 100% 0, 100% 100%, 65% 100%)'
               : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
             transform: isMobile ? 'translateX(-20%)' : undefined
@@ -604,7 +604,7 @@ const SplitLanding = () => {
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-center h-full pr-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? isMobile ? 'scale-90 -translate-x-3' : 'scale-110 translate-x-60' : 'scale-50'} ${hoveredSide === 'handyman' ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? isMobile ? 'scale-90 -translate-x-3' : 'scale-110 translate-x-60' : 'scale-50'} ${hoveredSide === 'technician' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -682,7 +682,7 @@ const SplitLanding = () => {
           {/* Side Label (vertical) - Hidden on mobile */}
           {!isMobile && (
             <div className={`absolute right-8 top-1/2 -translate-y-1/2 transition-opacity duration-500 ${
-              hoveredSide === 'handyman' ? 'opacity-100' : 'opacity-0'
+              hoveredSide === 'technician' ? 'opacity-100' : 'opacity-0'
             }`}>
               <div className="text-white/50 text-sm font-medium tracking-[0.3em] uppercase z-50" 
                 style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>

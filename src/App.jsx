@@ -64,23 +64,23 @@ function App() {
         {/* Root - Split Landing Page */}
         <Route path="/" element={<SplitLanding />} />
         
-        {/* Handyman World - All routes nested under /handyman */}
-        <Route path="/handyman/*" element={<WorldApp />} />
+        {/* Technician World - All routes nested under /technician */}
+        <Route path="/technician/*" element={<WorldApp />} />
         
         {/* Web Dev World - All routes nested under /web */}
         <Route path="/web/*" element={<WorldApp />} />
         
-        {/* Fallback for old routes without world prefix - redirect to handyman by default */}
-        <Route path="/about" element={<Navigate to="/handyman/about" replace />} />
-        <Route path="/services" element={<Navigate to="/handyman/services" replace />} />
-        <Route path="/portfolio" element={<Navigate to="/handyman/portfolio" replace />} />
-        <Route path="/how-it-works" element={<Navigate to="/handyman/how-it-works" replace />} />
-        <Route path="/contact" element={<Navigate to="/handyman/contact" replace />} />
-        <Route path="/portal" element={<Navigate to="/handyman/portal" replace />} />
-        <Route path="/privacy" element={<Navigate to="/handyman/privacy" replace />} />
-        <Route path="/terms" element={<Navigate to="/handyman/terms" replace />} />
-        <Route path="/payment-success" element={<Navigate to="/handyman/payment-success" replace />} />
-        <Route path="/payment-cancel" element={<Navigate to="/handyman/payment-cancel" replace />} />
+        {/* Fallback for old routes without world prefix - redirect to technician by default */}
+        <Route path="/about" element={<Navigate to="/technician/about" replace />} />
+        <Route path="/services" element={<Navigate to="/technician/services" replace />} />
+        <Route path="/portfolio" element={<Navigate to="/technician/portfolio" replace />} />
+        <Route path="/how-it-works" element={<Navigate to="/technician/how-it-works" replace />} />
+        <Route path="/contact" element={<Navigate to="/technician/contact" replace />} />
+        <Route path="/portal" element={<Navigate to="/technician/portal" replace />} />
+        <Route path="/privacy" element={<Navigate to="/technician/privacy" replace />} />
+        <Route path="/terms" element={<Navigate to="/technician/terms" replace />} />
+        <Route path="/payment-success" element={<Navigate to="/technician/payment-success" replace />} />
+        <Route path="/payment-cancel" element={<Navigate to="/technician/payment-cancel" replace />} />
         
         {/* 404 for everything else */}
         <Route path="*" element={<NotFound />} />

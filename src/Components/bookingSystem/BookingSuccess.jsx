@@ -41,7 +41,7 @@ const CONTENT = {
   contact: {
     needHelp: 'Need to make changes or have questions?',
     phone: '(303) 495-8899',
-    email: 'hello@quantumhandyman.com',
+    email: 'hello@quantumtechnician.com',
     or: 'or'
   },
   portalTracking: {
@@ -56,10 +56,10 @@ const CONTENT = {
     done: 'Done'
   },
   footer: {
-    thankYou: 'Thank you for choosing Quantum Handyman!'
+    thankYou: 'Thank you for choosing Quantum Technician!'
   },
   calendar: {
-    eventTitle: 'Quantum Handyman - ',
+    eventTitle: 'Quantum Technician - ',
     eventDetails: (data) => `Service: ${data.service.name}
 Address: ${data.customerInfo.address}
 Phone: ${data.customerInfo.phone}

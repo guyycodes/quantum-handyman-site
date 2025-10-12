@@ -18,7 +18,7 @@ const CONTENT = {
     subtitle: 'See the quality and range of our work across different service categories'
   },
   
-  categoriesHandyman: [
+  categoriesTechnician: [
     { id: 'all', name: 'All' },
     { id: 'home-repair', name: 'Property & Maintenance' },
     { id: 'landscaping', name: 'Landscape & Outdoor' },
@@ -433,7 +433,7 @@ const PROJECTS_DATA = [
 ]
 
 const Portfolio = () => {
-  const { currentWorld, isHandyman, isWeb } = useWorld()
+  const { currentWorld, isTechnician, isWeb } = useWorld()
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
   
@@ -444,7 +444,7 @@ const Portfolio = () => {
   
   // Filter projects based on world context first
   const worldFilteredProjects = PROJECTS_DATA.filter(project => {
-    if (isHandyman) {
+    if (isTechnician) {
       return ['home-repair', 'landscaping', 'smart-home'].includes(project.category)
     }
     if (isWeb) {
@@ -462,7 +462,7 @@ const Portfolio = () => {
   const projectsStagger = useStaggeredIntersection(filteredProjects.length, { threshold: 0.1 })
   
   // Get categories based on current world
-  const categories = isWeb ? CONTENT.categoriesWeb : CONTENT.categoriesHandyman
+  const categories = isWeb ? CONTENT.categoriesWeb : CONTENT.categoriesTechnician
 
   return (
     <div className="min-h-screen bg-off-white">

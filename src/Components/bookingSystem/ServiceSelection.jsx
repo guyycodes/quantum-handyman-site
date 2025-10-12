@@ -218,7 +218,7 @@ const CONTENT = {
 const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 'all' }) => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [expandedCards, setExpandedCards] = useState(new Set());
-  const { isHandyman } = useWorld();
+  const { isTechnician } = useWorld();
 
   // Update category when initialCategory prop changes
   useEffect(() => {
@@ -253,7 +253,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
   const getCategoryTitle = () => {
     switch (selectedCategory) {
       case 'property':
-        return 'Select Your Handyman Service';
+        return 'Select Your Technician Service';
       case 'tech':
         return 'Select Your Digital Service';
       case 'estimates':
@@ -267,7 +267,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
   const getCategorySubtitle = () => {
     switch (selectedCategory) {
       case 'property':
-        return 'Choose from our handyman packages or hourly services';
+        return 'Choose from our technician packages or hourly services';
       case 'tech':
         return 'Select a web development or digital service package';
       case 'estimates':
@@ -428,7 +428,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
 
       {/* Informational Notes */}
           <div className="mt-4 space-y-2">
-            {isHandyman && (
+            {isTechnician && (
               <div className="flex items-start gap-2 text-xs text-gray-500">
                 <span className="text-gray-400">ℹ️</span>
                 <span>No licensed electrical/plumbing/HVAC. Referrals available.</span>
@@ -436,7 +436,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
             )}
             <div className="flex items-start gap-2 text-xs text-gray-500">
               <span className="text-gray-400">💳</span>
-              <span>${isHandyman ? '25' : '25'} deposit required to secure appointments.</span>
+              <span>${isTechnician ? '25' : '25'} deposit required to secure appointments.</span>
             </div>
           </div>
 
