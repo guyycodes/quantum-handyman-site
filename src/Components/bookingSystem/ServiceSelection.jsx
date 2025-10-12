@@ -117,7 +117,7 @@ const CONTENT = {
     {
       id: 'website-pro',
       name: 'Website PRO',
-      price: '$399',
+      price: '$499',
       materials: false,
       duration: 1, // Fixed: probably meant 2 weeks, not -2
       icon: Globe,
@@ -131,8 +131,8 @@ const CONTENT = {
         'Mobile optimized + contact forms', 
         'Google Business Profile setup',
         '30 day support included',
-        '📈 Additional pages: +$250 each',
-        '🚀 Popular add-ons: Booking (+$400) • Payments (+$400) • APIs (+$500) • Analytics (+$800)'
+        '📈 Additional pages: +$250 each (no custom integrations)',
+        '🚀 Add-ons: Booking (+$400) • Payments (+$400) • APIs (+$500) • Analytics (+$800) • Zapier Automation (+$450)'
       ]
     },
     {

@@ -14,7 +14,7 @@ import {
 // Content Management - All text content in one place
 const CONTENT = {
   hero: {
-    title: 'Our Portfolio',
+    title: 'Portfolio',
     subtitle: 'See the quality and range of our work across different service categories'
   },
   
@@ -34,6 +34,7 @@ const CONTENT = {
   projectModal: {
     projectDetails: 'Project Details',
     clientTestimonial: 'Client Testimonial',
+    deliverables: 'Deliverables',
     date: 'Date:',
     location: 'Location:',
     duration: 'Duration:',
@@ -103,19 +104,19 @@ const CONTENT = {
     aiIntegration: {
       title: 'AI Integration Tool for Business',
       description: 'Professional NPM package for Compliant AI integration - @guyycodes/plugin-sdk. Enterprise-ready AI integration tool for businesses.',
-      testimonial: 'Powerful SDK that simplifies plugin development and AI integration for businesses.',
+      deliverables: '• Enterprise-ready SDK for AI integration\n• Compliant architecture for business use\n• Published NPM package with documentation\n• Simplified plugin development workflow',
       client: 'NPM Community'
     },
     whealthApp: {
       title: 'Custom CMS integration',
       description: 'Custom CMS integration with Whealth App - Mobile health and fitness application',
-      testimonial: 'Seamless integration of content management with health app.',
+      deliverables: '• Custom CMS backend integration\n• Mobile-responsive health tracking features\n• Content management system setup\n• API integration for real-time data sync',
       client: 'Whealth App'
     },
     dandymen: {
       title: 'Job Management Platform',
       description: 'Service dispatch platform for professional services',
-      testimonial: 'Platform for managing professional services efficiently!',
+      deliverables: '• Real-time job dispatch system\n• Payment processing integration\n• Automated messaging & notifications\n• AI-powered dispute resolution',
       client: 'Levelup Apps & Software'
     },
     storageSheds: {
@@ -151,14 +152,26 @@ const CONTENT = {
     luxuryRealtorSite: {
       title: 'Luxury Realtor Portfolio',
       description: 'Premium real estate agent website featuring 3D property tours, interactive MLS integration, virtual staging tools, and AI-powered property analysis. Built with React, Three.js, and modern web technologies.',
-      testimonial: 'This website has completely transformed how I showcase properties to my clients. The virtual tours and AI features are game-changers!',
+      deliverables: '• 3D virtual property tours with Three.js\n• MLS/IDX integration for live listings\n• AI-powered property value analysis\n• Virtual staging & customization tools',
       client: 'Sarah Thompson Real Estate'
     },
+    multiplayerPhysicsSandbox: {
+      title: 'Multiplayer Physics Sandbox v1',
+      description: 'Single Player & Multiplayer Real-time 3D collaborative environment with server-authoritative physics (hosted on private infrastructure), WebGL graphics, sub-50ms latency synchronization, and Rapier physics engine. Built with React Three Fiber, Node.js WebSockets, and Docker.',
+      deliverables: '• Real-time multiplayer synchronization (<50ms)\n• Server-authoritative physics engine\n• WebGL 3D graphics with React Three Fiber\n• Docker containerized deployment',
+      client: 'Open Source Project'
+    },
     realtyBrokerage: {
-      title: 'Premier Realty Brokerage Platform',
-      description: 'Full-service real estate brokerage platform with advanced MLS/IDX integration, mortgage calculator, agent management system, lead capture, CRM integration, and property management tools. Enterprise-grade solution for modern real estate agencies.',
-      testimonial: 'The platform handles everything from lead generation to closing. Our agents love the tools, and our conversion rates have increased 40%.',
+      title: 'Premier Realty Brokerage',
+      description: 'Full-service real estate brokerage platform with MLS search, mortgage calculator, agent profiles, and property management tools.',
+      deliverables: '• Advanced MLS search functionality\n• Mortgage calculator with rate comparisons\n• Agent management & profile system\n• Property management dashboard',
       client: 'Premier Realty'
+    },
+    swiftTriviaApp: {
+      title: 'Swift Trivia Game App 🎮',
+      description: 'Comprehensive iOS trivia game built with Swift featuring customizable game options, multiple categories, difficulty levels, timer functionality, and beautiful gradient UI. Supports both Multiple Choice and True/False questions with detailed score tracking and answer review.',
+      deliverables: '• Native iOS app built with Swift\n• Customizable quiz settings & categories\n• Timer system with auto-submission\n• Score tracking & answer review system',
+      client: 'iOS App Store Ready'
     }
   }
 }
@@ -239,7 +252,7 @@ const PROJECTS_DATA = [
     duration: 'Ongoing',
     images: ['/images/web-dev/Ai_description.png'],  // Show AI logo and feature description
     projectImg: '/images/web-dev/Ai.png',  // Use AI image as thumbnail
-    testimonial: CONTENT.projects.aiIntegration.testimonial,
+    testimonial: CONTENT.projects.aiIntegration.deliverables,
     client: CONTENT.projects.aiIntegration.client,
     rating: 5,
     link: 'https://www.npmjs.com/package/@guyycodes/plugin-sdk'
@@ -252,13 +265,13 @@ const PROJECTS_DATA = [
     date: '2024',
     location: 'Remote',
     duration: '',
-    images: [],  // Video will be shown in modal
+    images: ['/images/web-dev/CMS.png'],  // Video will be shown in modal
     projectImg: '/images/web-dev/whealth_app.png',  // Thumbnail image for grid
-    testimonial: CONTENT.projects.whealthApp.testimonial,
+    testimonial: CONTENT.projects.whealthApp.deliverables,
     client: CONTENT.projects.whealthApp.client,
     rating: 5,
     link: 'https://www.youtube.com/watch?v=FUmcR7h17VM&t=474s',
-    videoUrl: 'https://www.youtube.com/embed/FUmcR7h17VM?start=474&autoplay=1'  // Embed URL with autoplay
+    //videoUrl: 'https://www.youtube.com/embed/FUmcR7h17VM?start=474&autoplay=1'  // Embed URL with autoplay
   },
   {
     id: 7,
@@ -269,7 +282,7 @@ const PROJECTS_DATA = [
     location: 'Denver',
     duration: '',
     images: ['/images/web-dev/Dandymen_io-optimized.webp'],  // Use actual Dandymen image
-    testimonial: CONTENT.projects.dandymen.testimonial,
+    testimonial: CONTENT.projects.dandymen.deliverables,
     client: CONTENT.projects.dandymen.client,
     rating: 5,
     link: 'https://dandymen.io',
@@ -365,7 +378,7 @@ const PROJECTS_DATA = [
     location: 'Remote',
     duration: '3 weeks',
     images: ['/images/web-dev/sarah-thompson-realtor.png'],
-    testimonial: CONTENT.projects.luxuryRealtorSite.testimonial,
+    testimonial: CONTENT.projects.luxuryRealtorSite.deliverables,
     client: CONTENT.projects.luxuryRealtorSite.client,
     rating: 5,
     link: 'https://realtor-template-theta.vercel.app/',
@@ -378,13 +391,44 @@ const PROJECTS_DATA = [
     description: CONTENT.projects.realtyBrokerage.description,
     date: '2025',
     location: 'Remote',
-    duration: '4 weeks',
-    images: ['/images/web-dev/premier-realty-brokerage.png'],
-    testimonial: CONTENT.projects.realtyBrokerage.testimonial,
+  duration: '4 weeks',
+  images: ['/images/web-dev/premier-realty-brokerage.png'],
+  testimonial: CONTENT.projects.realtyBrokerage.deliverables,
     client: CONTENT.projects.realtyBrokerage.client,
     rating: 5,
     link: 'https://realty-brokerage-template.vercel.app/',
     projectImg: '/images/web-dev/premier-realty-brokerage.png'
+  },
+  {
+    id: 15,
+    category: 'web-dev',
+    title: CONTENT.projects.multiplayerPhysicsSandbox.title,
+    description: CONTENT.projects.multiplayerPhysicsSandbox.description,
+    date: '2025',
+    location: 'Remote/Self-Hosted',
+  duration: 'Ongoing',
+  images: ['https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=800&q=80'],
+  testimonial: CONTENT.projects.multiplayerPhysicsSandbox.deliverables,
+    client: CONTENT.projects.multiplayerPhysicsSandbox.client,
+    rating: 5,
+    link: 'https://tug-o-war.vercel.app',
+    projectImg: 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=800&q=80'
+  },
+  {
+    id: 16,
+    category: 'web-dev',
+    title: CONTENT.projects.swiftTriviaApp.title,
+    description: CONTENT.projects.swiftTriviaApp.description,
+    date: '2024',
+    location: 'iOS Platform',
+    duration: '12 hours',
+    images: ['/images/web-dev/trivia-app.png'],
+    testimonial: CONTENT.projects.swiftTriviaApp.deliverables,
+    client: CONTENT.projects.swiftTriviaApp.client,
+    rating: 5,
+    link: 'https://www.loom.com/share/b1ecb931c5804df38d81d1afa64bc255',
+    projectImg: 'https://cdn.loom.com/sessions/thumbnails/b1ecb931c5804df38d81d1afa64bc255-f9b0e1e5c18e4cff-full-play.gif'
+    // NO videoUrl - so the modal will show the image from the images array instead
   }
 ]
 
@@ -715,17 +759,29 @@ const Portfolio = () => {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-3">{CONTENT.projectModal.clientTestimonial}</h3>
+                  <h3 className="font-semibold mb-3">
+                    {selectedProject.category === 'web-dev' ? CONTENT.projectModal.deliverables : CONTENT.projectModal.clientTestimonial}
+                  </h3>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-muted italic mb-3">"{selectedProject.testimonial}"</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">- {selectedProject.client}</span>
-                      <div className="flex gap-0.5">
-                        {[...Array(selectedProject.rating)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    {selectedProject.category === 'web-dev' ? (
+                      <div className="space-y-2 text-muted">
+                        {selectedProject.testimonial.split('\n').map((item, index) => (
+                          <div key={index}>{item}</div>
                         ))}
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <p className="text-muted italic mb-3">"{selectedProject.testimonial}"</p>
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">- {selectedProject.client}</span>
+                          <div className="flex gap-0.5">
+                            {[...Array(selectedProject.rating)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

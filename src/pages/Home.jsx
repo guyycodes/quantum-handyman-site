@@ -282,10 +282,10 @@ const PORTFOLIO_DATA = [
   },
   {
     category: 'Web Development',
-    title: 'Premier Realty Brokerage',
-    description: 'Full-service real estate brokerage platform with MLS search, mortgage calculator, agent profiles, and property management tools.',
-    image: '/images/web-dev/premier-realty-brokerage.png', 
-    link: 'https://realty-brokerage-template.vercel.app/' 
+    title: 'Multiplayer Physics Sandbox v1',
+    description: 'Single Player & Multiplayer Real-time 3D collaborative environment w/server-authoritative physics server, WebGL graphics, and sub-50ms latency multiplayer synchronization (sandbox-v1).',
+    image: 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=800&q=80', // Gaming/physics placeholder
+    link: 'https://tug-o-war.vercel.app' 
   },
   {
     category: 'Property Maintenance',

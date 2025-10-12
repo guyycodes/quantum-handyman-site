@@ -174,17 +174,18 @@ const SERVICES_DATA = [
     title: 'Website PRO',
     icon: Code,
     color: 'bg-purple-500',
-    description: '1-page professional website with SEO - Custom Code or WordPress, Wix etc. $399',
+    description: '1-page professional website with SEO - Custom Code or WordPress, Wix etc. $499',
     shortDesc: 'Professional website development',
-    priceRange: '$399 (1 page)',
+    priceRange: '$499 (1 page)',
     timeEstimate: '2 weeks typical',
     subServices: [
       { name: '1 Page Responsive Website', desc: 'Mobile optimized + SEO included' },
       { name: 'Contact Forms', desc: 'Professional contact forms with validation' },
       { name: 'Google Business Profile', desc: 'Complete setup and optimization' },
       { name: '30 Day Support', desc: 'Post-launch support included' },
-      { name: 'Additional Pages', desc: '+$250 per additional page' },
-      { name: 'Popular Add-ons', desc: 'Booking (+$400), Payments (+$400), APIs (+$500)' }
+      { name: 'Additional Pages', desc: '+$250 each (no custom integrations)' },
+      { name: 'Popular Add-ons', desc: 'Booking (+$400), Payments (+$400), APIs (+$500)' },
+      { name: 'Zapier Automation', desc: 'Workflow automation & integrations (+$450)' }
     ],
     benefits: [
       'CS degree + certified developer',
@@ -199,9 +200,9 @@ const SERVICES_DATA = [
     title: 'WordPress, Wix & Squarespace',
     icon: Globe,
     color: 'bg-indigo-500',
-    description: 'Professional websites on popular platforms - Part of Website PRO package ($399)',
+    description: 'Professional websites on popular platforms - Part of Website PRO package ($499)',
     shortDesc: 'CMS and website builder solutions',
-    priceRange: '$399 (1 page)',
+    priceRange: '$499 (1 page)',
     timeEstimate: '2 weeks typical',
     subServices: [
       { name: 'WordPress Development', desc: 'Custom themes and plugin configuration' },
@@ -209,7 +210,8 @@ const SERVICES_DATA = [
       { name: 'Squarespace Setup', desc: 'Complete Squarespace configuration' },
       { name: 'Platform Migration', desc: 'Moving sites between platforms' },
       { name: 'SEO & Google Business', desc: 'On-page SEO and GMB setup included' },
-      { name: 'Additional Pages', desc: '+$250 per additional page' }
+      { name: 'Additional Pages', desc: '+$250 each (no custom integrations)' },
+      { name: 'Zapier Integration', desc: 'Connect to 5000+ apps (+$450)' }
     ],
     benefits: [
       'Mobile-responsive design',
