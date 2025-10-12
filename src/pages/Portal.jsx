@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, AlertCircle, Shield, Loader2, Mail, Hash, FileText, Briefcase, TrendingUp, Clock, CheckCircle2, Filter, RefreshCw, X, MapPin, Calendar, DollarSign, Bot, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import EstimateCard from '../Components/portal/EstimateCard';
 import JobCard from '../Components/portal/JobCard';
+import JobPaymentModal from '../components/portal/JobPaymentModal';
+import useStripe from '../hooks/useStripe';
+import useGoogleScript from '../hooks/useGoogleScript';
+import { useWorld } from '../contexts/WorldContext';
 
 // Content Management
 const CONTENT = {
@@ -67,24 +71,11 @@ const CONTENT = {
       options: {
         all: 'All',
         paid: 'Paid',
-        pending: 'Pending'
-      }
-    },
-    jobStatus: {
-      label: 'Job Status',
-      options: {
-        all: 'All',
-        upcoming: 'Upcoming',
-        inProgress: 'In Progress',
-        completed: 'Completed'
+        pending: 'Pending',
+        completedUnpaid: 'Completed Unpaid'
       }
     },
     
-    // Estimate Filters
-    customerAddress: {
-      label: 'Customer Address',
-      placeholder: 'Search by address...'
-    },
     estimateType: {
       label: 'Estimate Type',
       options: {
@@ -93,16 +84,6 @@ const CONTENT = {
         manual: 'Manual Estimates'
       }
     },
-    priceRange: {
-      label: 'Price Range',
-      options: {
-        all: 'All Prices',
-        under100: 'Under $100',
-        range100to500: '$100 - $500',
-        range500to1000: '$500 - $1,000',
-        over1000: 'Over $1,000'
-      }
-    }
   },
   stats: {
     total: 'Total Items',
@@ -132,27 +113,57 @@ const CONTENT = {
 const Portal = () => {
   const [searchType, setSearchType] = useState('reference'); // 'reference' or 'email'
   const [searchValue, setSearchValue] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [items, setItems] = useState([]);
   const [filter, setFilter] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(false); // Always starts closed
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [paymentPopupBlocked, setPaymentPopupBlocked] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
   
   // Job-specific filters
   const [addressFilter, setAddressFilter] = useState('');
   const [dateFilter, setDateFilter] = useState('');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState('all');
-  const [bookingStatusFilter, setBookingStatusFilter] = useState('all');
   
   // Estimate-specific filters
-  const [priceRangeFilter, setPriceRangeFilter] = useState('all');
   const [estimateTypeFilter, setEstimateTypeFilter] = useState('all');
-  const [estimateAddressFilter, setEstimateAddressFilter] = useState('');
   
-  // Scroll to top on mount
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Use custom hooks
+  const { createJobPayment, openStripeCheckout } = useStripe();
+  const { loading, error, setError, lookupByReference, lookupByEmail } = useGoogleScript();
+  
+  // Use world context to determine the correct home path
+  const { currentWorld } = useWorld();
+  const location = useLocation();
+  
+  // Get the world-aware home path
+  const getHomePath = () => {
+    // Check if we're in a world-specific route
+    if (location.pathname.includes('/handyman')) {
+      return '/handyman';
+    } else if (location.pathname.includes('/web')) {
+      return '/web';
+    } else if (currentWorld) {
+      // Use the current world context
+      return `/${currentWorld}`;
+    }
+    // Default to root
+    return '/';
+  };
+  
+  // Initialize and scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsMobile(isMobileDevice());
+    
+    // Ensure filters are closed on component mount
+    setShowFilters(false);
+    // Optionally clear all filters on mount (uncomment if desired)
+    clearAllFilters();
   }, []);
   
   // Validate reference format
@@ -170,6 +181,22 @@ const Portal = () => {
     
     return patterns.some(pattern => pattern.test(ref));
   };
+
+  // Better mobile detection
+  const isMobileDevice = () => {
+    // Method 1: Touch capability + screen size
+    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
+    
+    // Method 2: User agent (as backup)
+    const mobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // Method 3: Check for mobile-specific APIs
+    const hasMobileApis = 'orientation' in window || 'DeviceMotionEvent' in window;
+    
+    // Combine checks: must have touch AND (small screen OR mobile user agent OR mobile APIs)
+    return hasTouchScreen && (isSmallScreen || mobileUserAgent || hasMobileApis);
+  };
   
   // Validate email format
   const validateEmail = (email) => {
@@ -182,6 +209,10 @@ const Portal = () => {
     setError('');
     setItems([]);
     
+    // Reset filters when performing a new search
+    setShowFilters(false); // Close the filter panel
+    clearAllFilters(); // Clear all filter values
+   
     // Validate input
     if (searchType === 'reference') {
       if (!validateReference(searchValue)) {
@@ -195,41 +226,19 @@ const Portal = () => {
       }
     }
     
-    setLoading(true);
+    // Use the hook to perform the lookup
+    const result = searchType === 'reference'
+      ? await lookupByReference(searchValue)
+      : await lookupByEmail(searchValue);
     
-    try {
-      const scriptUrl = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
-      
-      if (!scriptUrl) {
-        throw new Error('Portal system configuration missing');
-      }
-      
-      const payload = searchType === 'reference'
-        ? { action: 'lookupByReference', reference: searchValue }
-        : { action: 'lookupByEmail', email: searchValue };
-      
-      const response = await fetch(scriptUrl, {
-        method: 'POST',
-        // DO NOT set Content-Type header to avoid CORS preflight with Google Apps Script
-        body: JSON.stringify(payload)
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        if (result.items && result.items.length > 0) {
-          setItems(result.items);
-        } else {
-          setError(CONTENT.errors.notFound);
-        }
+    if (result.success) {
+      if (result.items && result.items.length > 0) {
+        setItems(result.items);
       } else {
-        setError(result.error || CONTENT.errors.notFound);
+        setError(CONTENT.errors.notFound);
       }
-    } catch (error) {
-      console.error('Search error:', error);
-      setError(CONTENT.errors.serverError);
-    } finally {
-      setLoading(false);
+    } else {
+      setError(result.error || CONTENT.errors.notFound);
     }
   };
   
@@ -241,11 +250,143 @@ const Portal = () => {
     setRefreshing(false);
   };
   
-  // Handle payment navigation
+  // Handle payment navigation - shows intermediate modal
   const handlePayment = async (job) => {
-    // Create Stripe checkout session or redirect to payment
-    const paymentUrl = `/portal/pay/${job['Booking Reference']}`;
-    window.location.href = paymentUrl;
+    // Reset any previous payment state
+    setPaymentPopupBlocked(false);
+    setCheckoutUrl(null);
+    // Set selected job and show payment modal
+    setSelectedJob(job);
+    setShowPaymentModal(true);
+  };
+  
+  // Handle Stripe payment from modal
+  const handleStripePayment = async (paymentDetails) => {
+    console.log('💳 Processing Stripe payment with tip:', paymentDetails);
+    
+    // If we already have a checkout URL (popup was blocked), just retry with existing URL
+    if (paymentPopupBlocked && checkoutUrl) {
+      handleRetryPayment();
+      return;
+    }
+    
+    try {
+      // Use the useStripe hook to create job payment with tip
+      const result = await createJobPayment(selectedJob['Booking Reference'], paymentDetails.tipAmount);
+      
+      if (result.success) {
+        // Store the checkout URL in case we need it for retry
+        setCheckoutUrl(result.url);
+        
+        // Show payment details briefly (optional)
+        if (result.jobDetails) {
+          console.log('Payment details:', {
+            total: `$${result.jobDetails.totalAmount}`,
+            depositPaid: `$${result.jobDetails.depositPaid}`,
+            amountDue: `$${result.jobDetails.amountDue}`,
+            tip: `$${paymentDetails.tipAmount}`
+          });
+        }
+        
+        // Open Stripe checkout in popup
+        const checkoutResult = openStripeCheckout(
+          result.url,
+          async (paymentResult) => {
+            if (paymentResult.success) {
+              // Payment successful - refresh the list to update payment status
+              setShowPaymentModal(false);
+              setSelectedJob(null);
+              setPaymentPopupBlocked(false);
+              setCheckoutUrl(null);
+              await handleRefresh();
+              alert('Payment successful! Thank you for your payment.');
+            } else if (paymentResult.cancelled) {
+              // Payment cancelled
+              alert('Payment was cancelled. You can try again when ready.');
+            } else if (paymentResult.closed) {
+              // Popup was closed
+              alert('Payment window was closed. You can try again when ready.');
+            }
+          },
+          (blockedInfo) => {
+            // Popup was blocked - show in modal instead of alert
+            setPaymentPopupBlocked(true);
+            // checkoutUrl already set above
+          }
+        );
+      } else {
+        alert(result.error || 'Unable to process payment. Please try again or contact support.');
+        console.error('Payment error:', result.error);
+      }
+    } catch (error) {
+      alert('Payment system error. Please contact support.');
+      console.error('Payment error:', error);
+    }
+  };
+  
+  // Handle retry payment after popup was blocked
+  const handleRetryPayment = () => {
+    if (checkoutUrl) {
+      const checkoutResult = openStripeCheckout(
+        checkoutUrl,
+        async (result) => {
+          if (result.success) {
+            console.log('✅ Job payment completed successfully!');
+            setShowPaymentModal(false);
+            setSelectedJob(null);
+            setPaymentPopupBlocked(false);
+            setCheckoutUrl(null);
+            await handleRefresh();
+            alert('Payment successful! Thank you for your payment.');
+          } else if (result.cancelled) {
+            console.log('❌ Payment cancelled');
+            // Keep modal open so user can try again
+          } else if (result.closed) {
+            console.log('🔴 Payment window closed');
+            // Keep modal open so user can try again
+          }
+        },
+        (blockInfo) => {
+          // alert('Popup still blocked...');
+          console.warn('🚫 Payment popup still blocked');
+          // Keep the blocked state - popup is still blocked
+        }
+      );
+    }
+  };
+  
+  // Handle Venmo payment from modal
+  const handleVenmoPayment = (paymentDetails) => {
+    console.log('💜 Venmo payment selected with details:', paymentDetails);
+    
+    const venmoUsername = "QuantumHandyman";
+    const note = `Payment for Job ${selectedJob['Booking Reference']} - ${selectedJob['Service']}`;
+    
+    const amount = paymentDetails.totalAmount.toFixed(2);
+    
+    const venmoAppLink = `venmo://paycharge?txn=pay&recipients=${venmoUsername}&amount=${amount}&note=${encodeURIComponent(note)}`;
+    const venmoWebLink = `https://venmo.com/${venmoUsername}`;
+    
+    console.log('📱 Mobile detection details:', {
+      isMobile,
+      hasTouchScreen: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+      isSmallScreen: window.matchMedia("(max-width: 768px)").matches,
+      userAgent: navigator.userAgent,
+      maxTouchPoints: navigator.maxTouchPoints
+    });
+    
+    if (isMobile) {
+      // Try app first
+      window.location.href = venmoAppLink;
+      
+      // Fallback to web
+      // setTimeout(() => {
+      //   window.open(venmoWebLink, '_blank');
+      // }, 100);
+    } else {
+      // Desktop: go straight to web
+      window.open(venmoWebLink, '_blank');
+    }
   };
   
   const handleSubmit = (e) => {
@@ -254,21 +395,29 @@ const Portal = () => {
   };
   
   // Clear all filters
-  const clearAllFilters = () => {
+  const clearAllFilters = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    // Clear all filter states
     setAddressFilter('');
     setDateFilter('');
     setPaymentStatusFilter('all');
-    setBookingStatusFilter('all');
-    setPriceRangeFilter('all');
     setEstimateTypeFilter('all');
-    setEstimateAddressFilter('');
+    
+    // Force state update by using a callback
+    setTimeout(() => {
+      // This forces React to re-evaluate hasActiveFilters
+      setShowFilters(prevState => prevState);
+    }, 0);
   };
   
   // Check if any filters are active
   const hasActiveFilters = () => {
     return addressFilter || dateFilter || paymentStatusFilter !== 'all' || 
-           bookingStatusFilter !== 'all' || priceRangeFilter !== 'all' || 
-           estimateTypeFilter !== 'all' || estimateAddressFilter;
+           estimateTypeFilter !== 'all';
   };
   
   // Filter items based on selected filter and additional filters
@@ -288,7 +437,8 @@ const Portal = () => {
       case 'needsAction':
         filtered = items.filter(item => 
           (item.itemType === 'estimate' && item.displayStatus === 'pending') ||
-          (item.itemType === 'booking' && item.displayStatus === 'completed_unpaid')
+          (item.itemType === 'booking' && item['Payment Status'] === 'completed_unpaid') ||
+          (item.itemType === 'booking' && item['Progress'].toLowerCase().includes('on hold'))
         );
         break;
     }
@@ -302,8 +452,12 @@ const Portal = () => {
         }
         
         // Date filter for jobs
-        if (dateFilter && item['Date'] !== dateFilter) {
-          return false;
+        if (dateFilter) {
+          // Extract just the date part (YYYY-MM-DD) from the ISO string
+          const jobDateOnly = item['Date'] ? item['Date'].split('T')[0] : '';
+          if (jobDateOnly !== dateFilter) {
+            return false;
+          }
         }
         
         // Payment status filter
@@ -311,50 +465,17 @@ const Portal = () => {
           const paymentStatus = item['Payment Status'] || 'Pending';
           if (paymentStatusFilter === 'paid' && paymentStatus !== 'Paid') return false;
           if (paymentStatusFilter === 'pending' && paymentStatus !== 'Pending') return false;
-        }
-        
-        // Booking status filter
-        if (bookingStatusFilter !== 'all') {
-          if (bookingStatusFilter === 'upcoming' && item.displayStatus !== 'upcoming') return false;
-          if (bookingStatusFilter === 'in_progress' && item.displayStatus !== 'in_progress') return false;
-          if (bookingStatusFilter === 'completed' && !item.displayStatus?.includes('completed')) return false;
+          if (paymentStatusFilter === 'completedUnpaid' && paymentStatus !== 'completed_unpaid') return false;
         }
       }
       
       // Apply additional filters for estimates
       if (item.itemType === 'estimate') {
-        // Address filter for estimates
-        if (estimateAddressFilter && !item['Customer Address']?.toLowerCase().includes(estimateAddressFilter.toLowerCase())) {
-          return false;
-        }
-        
         // Estimate type filter
         if (estimateTypeFilter !== 'all') {
           const isAI = item['Type'] === 'AI' || item['AI Processed'] === 'Yes';
           if (estimateTypeFilter === 'ai' && !isAI) return false;
           if (estimateTypeFilter === 'manual' && isAI) return false;
-        }
-        
-        // Price range filter
-        if (priceRangeFilter !== 'all' && item['AI Price']) {
-          const priceStr = item['AI Price'].replace(/[^0-9-]/g, '');
-          const prices = priceStr.split('-').map(p => parseInt(p));
-          const maxPrice = Math.max(...prices.filter(p => !isNaN(p)));
-          
-          switch (priceRangeFilter) {
-            case 'under100':
-              if (maxPrice >= 100) return false;
-              break;
-            case '100to500':
-              if (maxPrice < 100 || maxPrice > 500) return false;
-              break;
-            case '500to1000':
-              if (maxPrice < 500 || maxPrice > 1000) return false;
-              break;
-            case 'over1000':
-              if (maxPrice <= 1000) return false;
-              break;
-          }
         }
       }
       
@@ -389,9 +510,9 @@ const Portal = () => {
       <Header />
       <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 pt-6">
         <div className="container-max mx-auto px-6 py-4">
-          {/* Back Button */}
+          {/* Back Button - World Aware */}
           <Link 
-            to="/"
+            to={getHomePath()}
             className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-8"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -420,6 +541,8 @@ const Portal = () => {
                       setSearchType('reference');
                       setSearchValue('');
                       setError('');
+                      setItems([]); // Clear previous results
+                      setShowFilters(false); // Close filters when switching search type
                     }}
                     className={`px-6 py-2 rounded-md transition-all ${
                       searchType === 'reference'
@@ -435,6 +558,8 @@ const Portal = () => {
                       setSearchType('email');
                       setSearchValue('');
                       setError('');
+                      setItems([]); // Clear previous results
+                      setShowFilters(false); // Close filters when switching search type
                     }}
                     className={`px-6 py-2 rounded-md transition-all ${
                       searchType === 'email'
@@ -541,9 +666,13 @@ const Portal = () => {
                       key={key}
                       onClick={() => {
                         setFilter(key);
-                        // Close filters panel if switching to Needs Action
-                        if (key === 'needsAction') {
+                        // Close filters panel if switching to All Items or Needs Action
+                        if (key === 'all' || key === 'needsAction') {
                           setShowFilters(false);
+                          // Optionally clear filters when switching to All Items
+                          if (key === 'all') {
+                            clearAllFilters();
+                          }
                         }
                       }}
                       className={`px-4 py-2 rounded-lg font-medium transition-all ${
@@ -562,7 +691,7 @@ const Portal = () => {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  {filter !== 'needsAction' && (
+                  {filter !== 'needsAction' && filter !== 'all' && (
                     <button
                       onClick={() => setShowFilters(!showFilters)}
                       className={`flex items-center gap-2 px-4 py-2 ${showFilters ? 'bg-blue-600 text-white' : 'bg-white text-gray-700'} rounded-lg shadow hover:shadow-lg transition-all`}
@@ -588,15 +717,16 @@ const Portal = () => {
               </div>
               
               {/* Advanced Filters Panel */}
-              {showFilters && filter !== 'needsAction' && (
+              {showFilters && filter !== 'needsAction' && filter !== 'all' && (
                 <div className="bg-white rounded-lg shadow-lg p-6 mb-6 animate-fadeIn">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">{CONTENT.advancedFilters.title}</h3>
                     <div className="flex gap-2">
                       {hasActiveFilters() && (
                         <button
-                          onClick={clearAllFilters}
+                          onClick={(e) => clearAllFilters(e)}
                           className="text-sm text-red-600 hover:text-red-800 transition-colors"
+                          type="button"
                         >
                           {CONTENT.advancedFilters.clearAll}
                         </button>
@@ -657,47 +787,16 @@ const Portal = () => {
                             <option value="all">{CONTENT.advancedFilters.paymentStatus.options.all}</option>
                             <option value="paid">{CONTENT.advancedFilters.paymentStatus.options.paid}</option>
                             <option value="pending">{CONTENT.advancedFilters.paymentStatus.options.pending}</option>
+                            <option value="completedUnpaid">{CONTENT.advancedFilters.paymentStatus.options.completedUnpaid}</option>
                           </select>
                         </div>
                         
-                        {/* Booking Status Filter */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            <Clock className="w-4 h-4 inline mr-1" />
-                            {CONTENT.advancedFilters.jobStatus.label}
-                          </label>
-                          <select
-                            value={bookingStatusFilter}
-                            onChange={(e) => setBookingStatusFilter(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          >
-                            <option value="all">{CONTENT.advancedFilters.jobStatus.options.all}</option>
-                            <option value="upcoming">{CONTENT.advancedFilters.jobStatus.options.upcoming}</option>
-                            <option value="in_progress">{CONTENT.advancedFilters.jobStatus.options.inProgress}</option>
-                            <option value="completed">{CONTENT.advancedFilters.jobStatus.options.completed}</option>
-                          </select>
-                        </div>
                       </>
                     )}
                     
                     {/* Estimate Filters - Show when viewing all or estimates */}
                     {(filter === 'all' || filter === 'estimates') && (
                       <>
-                        {/* Estimate Address Filter */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            <MapPin className="w-4 h-4 inline mr-1" />
-                            {CONTENT.advancedFilters.customerAddress.label}
-                          </label>
-                          <input
-                            type="text"
-                            value={estimateAddressFilter}
-                            onChange={(e) => setEstimateAddressFilter(e.target.value)}
-                            placeholder={CONTENT.advancedFilters.customerAddress.placeholder}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          />
-                        </div>
-                        
                         {/* Estimate Type Filter */}
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -712,25 +811,6 @@ const Portal = () => {
                             <option value="all">{CONTENT.advancedFilters.estimateType.options.all}</option>
                             <option value="ai">{CONTENT.advancedFilters.estimateType.options.ai}</option>
                             <option value="manual">{CONTENT.advancedFilters.estimateType.options.manual}</option>
-                          </select>
-                        </div>
-                        
-                        {/* Price Range Filter */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            <DollarSign className="w-4 h-4 inline mr-1" />
-                            {CONTENT.advancedFilters.priceRange.label}
-                          </label>
-                          <select
-                            value={priceRangeFilter}
-                            onChange={(e) => setPriceRangeFilter(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                          >
-                            <option value="all">{CONTENT.advancedFilters.priceRange.options.all}</option>
-                            <option value="under100">{CONTENT.advancedFilters.priceRange.options.under100}</option>
-                            <option value="100to500">{CONTENT.advancedFilters.priceRange.options.range100to500}</option>
-                            <option value="500to1000">{CONTENT.advancedFilters.priceRange.options.range500to1000}</option>
-                            <option value="over1000">{CONTENT.advancedFilters.priceRange.options.over1000}</option>
                           </select>
                         </div>
                       </>
@@ -803,6 +883,23 @@ const Portal = () => {
         </div>
       </main>
       <Footer />
+      
+      {/* Payment Modal */}
+      <JobPaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => {
+          setShowPaymentModal(false);
+          setSelectedJob(null);
+          setPaymentPopupBlocked(false);
+          setCheckoutUrl(null); // Clear checkout URL when closing
+        }}
+        job={selectedJob}
+        onStripePayment={handleStripePayment}
+        onVenmoPayment={handleVenmoPayment}
+        popupBlocked={paymentPopupBlocked}
+        onRetryPayment={handleRetryPayment}
+        isMobile={isMobile}
+      />
     </>
   );
 };

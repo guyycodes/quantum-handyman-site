@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { CreditCard, Lock, AlertCircle, Loader } from 'lucide-react';
-import stripePaymentService from '../services/stripePaymentService';
+import React, { useState, useEffect } from 'react';
+import { CreditCard, Lock, AlertCircle, Loader, ExternalLink, RefreshCw } from 'lucide-react';
+import useStripe from '../hooks/useStripe';
 
 const CONTENT = {
   title: '💳 Secure Payment',
@@ -30,49 +30,149 @@ const CONTENT = {
 const StripePaymentModal = ({ isOpen, onClose, onPaymentSuccess, customerInfo }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [isTestMode, setIsTestMode] = useState(!stripePaymentService.validateStripeConfig().isValid);
+  const [popupRef, setPopupRef] = useState(null);
+  const [popupBlocked, setPopupBlocked] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
+  
+  // Use the useStripe hook
+  const { createAIEstimatePayment, openStripeCheckout, isStripeConfigured } = useStripe();
+  const [isTestMode, setIsTestMode] = useState(!isStripeConfigured);
 
   const handlePayment = async () => {
     setIsProcessing(true);
     setError(null);
 
     try {
-      let result;
-      
       if (isTestMode) {
-        // Use mock payment for testing
-        result = await stripePaymentService.mockPayment(customerInfo);
-      } else {
-        // Create checkout session and redirect
-        const session = await stripePaymentService.createAIEstimateCheckoutSession(customerInfo);
+        // Use mock payment for testing (90% success rate)
+        console.log("your running in test mode - check your env vars")
+        // await new Promise(resolve => setTimeout(resolve, 2000));
+        // const success = Math.random() > 0.1;
         
-        if (session.success) {
-          // Store payment status in session storage for return
-          sessionStorage.setItem('pendingAIEstimate', JSON.stringify({
-            customerInfo,
-            timestamp: Date.now()
-          }));
-          
-          // Redirect to Stripe checkout
-          await stripePaymentService.redirectToCheckout(session.sessionId);
-          return; // User will be redirected
+        if (success) {
+          // onPaymentSuccess({
+          //   success: true,
+          //   paymentId: `mock_${Date.now()}`,
+          //   amount: 195,
+          //   currency: 'usd'
+          // });
+          console.log('Mock payment successful');
         } else {
-          result = session;
+          setError('Mock payment failed for testing');
         }
-      }
-
-      if (result.success) {
-        onPaymentSuccess(result);
+        setIsProcessing(false);
       } else {
-        setError(result.error || 'Payment failed. Please try again.');
+        // Create real Stripe checkout session using the hook
+        const result = await createAIEstimatePayment({
+          name: customerInfo.name,
+          email: customerInfo.email,
+          phone: customerInfo.phone,
+          description: customerInfo.description
+        });
+        
+        if (result.success) {
+          // Save the checkout URL in case we need to retry
+          setCheckoutUrl(result.url);
+          
+          // Open Stripe checkout in popup
+          const checkoutResult = openStripeCheckout(
+            result.url,
+            (paymentResult) => {
+              // Payment completion callback
+              setIsProcessing(false);
+              setPopupBlocked(false);
+              setCheckoutUrl(null);
+              
+              if (paymentResult.success) {
+                // Payment successful
+                onPaymentSuccess({
+                  success: true,
+                  sessionId: paymentResult.data?.sessionId,
+                  customerInfo
+                });
+              } else if (paymentResult.cancelled) {
+                // Payment cancelled
+                setError('Payment was cancelled. Please try again.');
+              } else if (paymentResult.closed) {
+                // Popup was closed
+                setError('Payment window was closed. Please try again.');
+              }
+            },
+            (blockedInfo) => {
+              // Popup was blocked callback
+              setIsProcessing(false);
+              setPopupBlocked(true);
+              setError(null); // Clear any previous errors
+              console.log('Popup blocked, URL saved for retry:', blockedInfo.url);
+            }
+          );
+          
+          // Store popup reference if successful
+          if (checkoutResult) {
+            setPopupRef(checkoutResult);
+            setPopupBlocked(false);
+          }
+        } else {
+          setError(result.error || 'Payment failed. Please try again.');
+          setIsProcessing(false);
+        }
       }
     } catch (err) {
       console.error('Payment error:', err);
       setError('An unexpected error occurred. Please try again.');
-    } finally {
       setIsProcessing(false);
     }
   };
+  
+  // Retry payment after enabling popups
+  const retryPayment = () => {
+    if (checkoutUrl) {
+      setError(null);
+      setPopupBlocked(false);
+      
+      // Try to open the popup again
+      const checkoutResult = openStripeCheckout(
+        checkoutUrl,
+        (paymentResult) => {
+          // Payment completion callback
+          setIsProcessing(false);
+          setPopupBlocked(false);
+          setCheckoutUrl(null);
+          
+          if (paymentResult.success) {
+            onPaymentSuccess({
+              success: true,
+              sessionId: paymentResult.data?.sessionId,
+              customerInfo
+            });
+          } else if (paymentResult.cancelled) {
+            setError('Payment was cancelled. Please try again.');
+          } else if (paymentResult.closed) {
+            setError('Payment window was closed. Please try again.');
+          }
+        },
+        (blockedInfo) => {
+          // Still blocked
+          setPopupBlocked(true);
+          setError(null);
+        }
+      );
+      
+      if (checkoutResult) {
+        setPopupRef(checkoutResult);
+        setPopupBlocked(false);
+      }
+    }
+  };
+  
+  // Clean up popup on unmount
+  useEffect(() => {
+    return () => {
+      if (popupRef?.cleanup) {
+        popupRef.cleanup();
+      }
+    };
+  }, [popupRef]);
 
   if (!isOpen) return null;
 
@@ -123,17 +223,49 @@ const StripePaymentModal = ({ isOpen, onClose, onPaymentSuccess, customerInfo })
                   <button
                     onClick={() => setIsTestMode(false)}
                     className="text-sm text-blue-600 hover:underline mt-2"
-                    disabled={!stripePaymentService.validateStripeConfig().isValid}
+                    disabled={!isStripeConfigured}
                   >
-                    {stripePaymentService.validateStripeConfig().isValid 
+                    {isStripeConfigured 
                       ? CONTENT.testMode.useRealPayment 
                       : 'Stripe not configured'}
                   </button>
                 </div>
               )}
 
-              {/* Error Message */}
-              {error && (
+              {/* Popup Blocked Warning */}
+              {popupBlocked && (
+                <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 mb-2">Popup Blocked - Action Required</h4>
+                      <p className="text-sm text-gray-700 mb-3">
+                        Your browser blocked the payment window. Please allow popups for this site.
+                      </p>
+                      
+                      <div className="bg-white rounded p-3 mb-3">
+                        <p className="font-semibold text-xs text-gray-900 mb-2">Quick Fix:</p>
+                        <ol className="space-y-1 text-xs text-gray-600">
+                          <li>1. Look for the popup blocker icon in your address bar (right side)</li>
+                          <li>2. Click it and select "Always allow popups from this site"</li>
+                          <li>3. Click the button below to retry</li>
+                        </ol>
+                      </div>
+                      
+                      <button
+                        onClick={retryPayment}
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-yellow-500 text-white font-medium rounded hover:bg-yellow-600 transition-colors"
+                      >
+                        <RefreshCw className="w-4 h-4" />
+                        Try Payment Again
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Regular Error Message */}
+              {error && !popupBlocked && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4 flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-red-700">{error}</p>

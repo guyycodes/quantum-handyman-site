@@ -84,7 +84,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     }
     
     // If on success page (step 6) or initial pages, close directly
-    if (currentStep === 0 || currentStep === 1 || currentStep === 6) {
+    if (currentStep === 0 || currentStep === 1) {
       onClose();
     } else {
       // Otherwise show confirmation
@@ -217,31 +217,47 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
     trackFunnelStep('Confirmation', { stepNumber: 5 });
   };
 
-  const handleBookingConfirm = async (useAI = false, hasValidPromo = false, promoCode = '') => {
-    // Update booking data with AI preference and promo code
-    setBookingData(prev => ({ 
-      ...prev, 
-      useAIEstimate: useAI,
-      promoCode: promoCode,
-      hasValidPromo: hasValidPromo 
-    }));
+  const handleBookingConfirm = async (useAIOrDepositPaid = false, hasValidPromo = false, promoCode = '') => {
+    // For regular bookings, useAIOrDepositPaid indicates if deposit was paid
+    // For estimates, it indicates if AI should be used
     
-    // If AI estimate is selected and NO valid promo, show payment modal
-    if (isEstimateFlow && useAI && !hasValidPromo) {
-      setShowPaymentModal(true);
-      return;
+    if (isEstimateFlow) {
+      // Update booking data with AI preference and promo code
+      setBookingData(prev => ({ 
+        ...prev, 
+        useAIEstimate: useAIOrDepositPaid,
+        promoCode: promoCode,
+        hasValidPromo: hasValidPromo 
+      }));
+      
+      // If AI estimate is selected and NO valid promo, show payment modal
+      if (useAIOrDepositPaid && !hasValidPromo) {
+        setShowPaymentModal(true);
+        return;
+      }
+      
+      // If AI estimate with valid promo, process directly
+      if (useAIOrDepositPaid && hasValidPromo) {
+        setIsProcessingAI(true);
+        setAIProcessingMessage('Processing your FREE AI estimate...');
+        await submitEstimateRequest(true, hasValidPromo, promoCode);
+        return;
+      }
+      
+      // Otherwise proceed with regular submission
+      await submitEstimateRequest(false);
+    } else {
+      // Regular booking - useAIOrDepositPaid indicates if deposit was paid
+      console.log('📝 Booking confirmed, deposit paid:', useAIOrDepositPaid);
+      
+      setBookingData(prev => ({ 
+        ...prev, 
+        depositPaid: useAIOrDepositPaid
+      }));
+      
+      // Proceed with booking submission
+      await submitBookingRequest(useAIOrDepositPaid);
     }
-    
-    // If AI estimate with valid promo, process directly
-    if (isEstimateFlow && useAI && hasValidPromo) {
-      setIsProcessingAI(true);
-      setAIProcessingMessage('Processing your FREE AI estimate...');
-      await submitEstimateRequest(true, hasValidPromo, promoCode);
-      return;
-    }
-    
-    // Otherwise proceed with regular submission
-    await submitEstimateRequest(false);
   };
 
   const handlePaymentSuccess = async (paymentResult) => {
@@ -392,8 +408,23 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             }, 250);
           }
       } else {
+        // This is now handled by submitBookingRequest
+        return;
+      }
+    } catch (error) {
+      console.error('Estimate submission failed:', error);
+      setIsSubmitting(false);
+      // You might want to show an error state here
+    }
+  };
+  
+  const submitBookingRequest = async (depositPaid = false) => {
+    console.log('🚀 Starting booking submission, deposit paid:', depositPaid);
+    setIsSubmitting(true);
+    try {
         // Handle regular booking submission
         const bookingRef = generateBookingRef();
+        console.log('📋 Generated booking reference:', bookingRef);
         
         // Compress images for regular bookings too (if any)
         let imageDataBase64 = '';
@@ -419,10 +450,11 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         let calendarResult = null;
         
         try {
-          // Include urgent flag in booking data for Google Sheets
+          // Include urgent flag and deposit paid status in booking data for Google Sheets
           const bookingWithUrgent = {
             ...bookingDataWithImages,
-            isUrgent: bookingData.isUrgent || false
+            isUrgent: bookingData.isUrgent || false,
+            depositPaid: depositPaid || false
           };
           calendarResult = await googleCalendarService.createBooking(bookingWithUrgent);
           if (import.meta.env.DEV) {
@@ -473,6 +505,8 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
         }
         
         setCurrentStep(6); // Success step
+        setIsSubmitting(false); // IMPORTANT: Clear loading state after success!
+        
         // Scroll modal to top after success
         setTimeout(() => {
           const modalContent = document.getElementById('modal-content');
@@ -480,76 +514,20 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             modalContent.scrollTop = 0;
           }
         }, 250);
-      }
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('Submission error:', error);
+        console.error('Booking submission error:', error);
       }
       
       // Track submission error
       trackError('submission_failed', {
         error_message: error.message,
-        is_estimate_flow: isEstimateFlow,
+        is_estimate_flow: false, // This is for booking flow
         service: bookingData.service?.name
       });
       
-      if (isEstimateFlow) {
-        // Fallback for estimate - make sure images are compressed
-        try {
-          let fallbackImageData = '';
-          if (bookingData.customerInfo?.images && bookingData.customerInfo.images.length > 0) {
-            fallbackImageData = await compressMultipleImages(bookingData.customerInfo.images);
-          }
-          
-          await sendEstimateRequestEmail({
-            ...bookingData,
-            imageDataBase64: fallbackImageData
-          });
-          alert('Estimate request submitted. Our team will review and respond shortly.');
-          setCurrentStep(6);
-          // Scroll modal to top after success
-          setTimeout(() => {
-            const modalContent = document.getElementById('modal-content');
-            if (modalContent) {
-              modalContent.scrollTop = 0;
-            }
-          }, 100);
-        } catch (emailError) {
-          if (import.meta.env.DEV) {
-            console.error('Email also failed:', emailError);
-          }
-          alert('There was an error submitting your estimate request. Please try again.');
-        }
-      } else {
-        // Fallback for booking - make sure images are compressed
-        try {
-          let fallbackImageData = '';
-          if (bookingData.customerInfo?.images && bookingData.customerInfo.images.length > 0) {
-            fallbackImageData = await compressMultipleImages(bookingData.customerInfo.images);
-          }
-          
-          await sendBookingEmail({
-            ...bookingData,
-            imageDataBase64: fallbackImageData
-          });
-          alert('Booking submitted via email. Our team will confirm your appointment shortly.');
-          setCurrentStep(6);
-          // Scroll modal to top after success
-          setTimeout(() => {
-            const modalContent = document.getElementById('modal-content');
-            if (modalContent) {
-              modalContent.scrollTop = 0;
-            }
-          }, 100);
-        } catch (emailError) {
-          if (import.meta.env.DEV) {
-            console.error('Email also failed:', emailError);
-          }
-          alert(CONTENT.errors.bookingSubmission);
-        }
-      }
-    } finally {
       setIsSubmitting(false);
+      // You might want to show an error modal here
     }
   };
 

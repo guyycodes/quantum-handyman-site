@@ -1,3 +1,5 @@
+import googleScriptService from './googleScriptService';
+
 // Lazy load Stripe to improve initial page load
 let stripeModule = null;
 let stripeLoadPromise = null;
@@ -36,35 +38,22 @@ const getStripe = async () => {
  */
 export const createAIEstimateCheckoutSession = async (customerInfo) => {
   try {
-    // Use Google Apps Script URL from environment or fallback to mock
-    const scriptUrl = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
-    
-    if (!scriptUrl && STRIPE_CONFIG.publishableKey) {
+    if (!googleScriptService.isConfigured() && STRIPE_CONFIG.publishableKey) {
       throw new Error('Google Apps Script URL not configured for Stripe payments');
     }
     
     // Call Google Apps Script to create checkout session
-    const response = await fetch(scriptUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'createStripeCheckoutSession',
-        amount: STRIPE_CONFIG.aiEstimatePrice,
-        currency: STRIPE_CONFIG.currency,
-        customerEmail: customerInfo.email,
-        customerName: customerInfo.name,
-        metadata: {
-          service: 'ai_estimate',
-          customerPhone: customerInfo.phone,
-          timestamp: new Date().toISOString()
-        }
-      })
+    const result = await googleScriptService.createStripeCheckoutSession({
+      amount: STRIPE_CONFIG.aiEstimatePrice,
+      currency: STRIPE_CONFIG.currency,
+      customerEmail: customerInfo.email,
+      customerName: customerInfo.name,
+      metadata: {
+        service: 'ai_estimate',
+        customerPhone: customerInfo.phone,
+        timestamp: new Date().toISOString()
+      }
     });
-
-    if (!response.ok) {
-      throw new Error('Failed to create checkout session');
-    }
-
-    const result = await response.json();
     
     if (!result.success) {
       throw new Error(result.error || 'Failed to create checkout session');

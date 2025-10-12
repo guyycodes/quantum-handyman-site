@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircle, Calendar, Clock, Mail, Phone, Home, Printer, Download } from 'lucide-react';
+import { CheckCircle, Calendar, Clock, Mail, Phone, Home, Printer, Download, FileSearch, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { generateBookingRef } from '../../utils/uniqueIdGenerator';
 
 // Content Management - All text content in one place
@@ -39,9 +40,15 @@ const CONTENT = {
   },
   contact: {
     needHelp: 'Need to make changes or have questions?',
-    phone: '(555) 123-4567',
-    email: 'support@quantumhandyman.com',
+    phone: '(303) 495-8899',
+    email: 'hello@quantumhandyman.com',
     or: 'or'
+  },
+  portalTracking: {
+    title: '🔍 Track Your Appointment',
+    subtitle: 'Monitor your appointment status anytime in the Portal',
+    buttonText: 'Go to Portal',
+    hint: 'Use your booking reference to view appointment details'
   },
   buttons: {
     addToCalendar: 'Add to Calendar',
@@ -140,6 +147,45 @@ const BookingSuccess = ({ bookingData, onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Portal Tracking Instructions */}
+      {bookingRef && (
+        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-lg p-5 mb-6">
+          <h4 className="font-semibold text-gray-900 mb-2 flex items-center justify-center gap-2">
+            <FileSearch className="w-5 h-5 text-indigo-600" />
+            {CONTENT.portalTracking.title}
+          </h4>
+          <p className="text-sm text-gray-600 mb-4 text-center">{CONTENT.portalTracking.subtitle}</p>
+          
+          {/* Visual Steps */}
+          <div className="flex items-center justify-center gap-2 mb-4 bg-white rounded-lg p-3">
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">Portal</span>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">Enter {bookingRef}</span>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">Track Status</span>
+              <CheckCircle className="w-4 h-4 text-green-500" />
+            </div>
+          </div>
+
+          {/* Go to Portal Button */}
+          <Link
+            to="/portal"
+            className="block w-full py-2 px-4 bg-green-50 border border-indigo-300 text-indigo-700 rounded-lg text-center hover:bg-indigo-50 transition-colors font-medium"
+          >
+            {CONTENT.portalTracking.buttonText} →
+          </Link>
+          
+          <p className="text-xs text-gray-500 text-center mt-2">
+            {CONTENT.portalTracking.hint}
+          </p>
+        </div>
+      )}
 
       {/* What Happens Next */}
       <div className="bg-blue-50 rounded-xl border border-blue-200 p-6 mb-6">

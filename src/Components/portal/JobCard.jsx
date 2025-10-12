@@ -67,16 +67,22 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
     const jobStatus = job['Status'] || '';
     const paymentStatus = job['Payment Status'] || 'Pending';
     
-    // Check if job is marked as completed
-    if (progressStr.includes('100%') || progressStr.toLowerCase().includes('complete') || 
-        jobStatus.toLowerCase().includes('complete')) {
-      return paymentStatus === 'Paid' ? 'completed_paid' : 'completed_unpaid';
-    }
-    
     // Check if job is in progress
-    if (progressStr.includes('%') && !progressStr.includes('100%')) {
+    if (!progressStr.includes('100%') && jobStatus.toLowerCase().includes('confirmed')) {
       return 'in_progress';
     }
+    
+    // Check if job is completed
+    if (progressStr.includes('100%') && paymentStatus.toLowerCase().includes('completed_unpaid')) {
+      return 'completed_unpaid';
+    }
+
+    if (progressStr.includes('100%') 
+        && paymentStatus.toLowerCase().includes('completed_paid') 
+        && jobStatus.toLowerCase().includes('confirmed')) {
+      return 'completed_paid';
+    }
+    // check if job is paid
     
     // Check if job time has passed
     const jobDate = job['Date'];
@@ -116,7 +122,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
       
       if (now > bufferTime) {
         // Job time has passed, should be marked completed or needs attention
-        return paymentStatus === 'Paid' ? 'completed_paid' : 'completed_unpaid';
+        return paymentStatus === 'Paid' && progressStr.includes('100%') ? 'completed_paid' : 'completed_unpaid';
       } else if (now >= jobDateTime && now <= bufferTime) {
         // Job is happening now or just happened
         return 'in_progress';
@@ -333,12 +339,18 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
     return timeStr;
   };
   
-  const handlePayment = async () => {
+  const handlePayment = async (e) => {
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
     setIsProcessingPayment(true);
     
     // Call the payment handler passed from parent
     if (onPayment) {
       await onPayment(job);
+    } else {
+      console.log('❌ No onPayment handler provided!');
     }
     
     setIsProcessingPayment(false);
@@ -402,6 +414,10 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="w-4 h-4 text-gray-500" />
             <span className="font-semibold text-gray-900">{job['Price']}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <DollarSign className="w-4 h-4 text-gray-500" />
+            <span className="font-semibold text-gray-900">{job['Deposit Paid']}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <User className="w-4 h-4 text-gray-500" />
@@ -481,13 +497,13 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
         )}
         
         {/* Description Preview */}
-        {job['Description'] && (
+        {/* {job['Description'] && (
           <div className="mb-4">
             <p className="text-gray-700 line-clamp-2">
               {job['Description']}
             </p>
           </div>
-        )}
+        )} */}
         
         {/* Expandable Details */}
         {isExpanded && (
@@ -528,7 +544,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
             
             {/* Status Information */}
             <div className="bg-gray-50 rounded-lg p-3">
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-3 gap-3 text-sm">
                 <div>
                   <span className="text-gray-500">Booking Status:</span>
                   <p className="font-medium text-gray-900">{job['Status'] || 'Confirmed'}</p>
@@ -536,6 +552,10 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
                 <div>
                   <span className="text-gray-500">Payment Status:</span>
                   <p className="font-medium text-gray-900">{job['Payment Status'] || 'Pending'}</p>
+                </div>
+                <div>
+                  <span className="text-gray-500">Deposit Paid:</span>
+                  <p className="font-medium text-gray-900">{job['Deposit Paid'] || 'Pending'}</p>
                 </div>
               </div>
             </div>

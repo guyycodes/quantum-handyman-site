@@ -197,13 +197,21 @@ const Header = () => {
               </Link>
             ))}
             <div className="pt-4 pb-2 space-y-2">
-              {/* Mobile World Switcher */}
+              {/* Book Now Button - Placed First */}
+              <BookingCTA 
+                buttonStyle="primary" 
+                className="w-full" 
+                onClick={() => setIsMenuOpen(false)}
+                showHelperText={true}
+              />
+              
+              {/* Mobile World Switcher - Now Below Book Now */}
               <button
                 onClick={() => {
                   handleWorldSwitch()
                   setIsMenuOpen(false)
                 }}
-                className="flex items-center justify-between w-full px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group"
+                className="flex items-center justify-between w-full px-4 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-lg transition-all group border border-gray-200 shadow-sm"
                 aria-label={`Switch to ${isHandyman ? 'Web Development' : 'Handyman Services'}`}
               >
                 <div className={`flex items-center gap-2 ${isHandyman ? 'text-blue-600' : 'text-green-600'}`}>
@@ -225,23 +233,18 @@ const Header = () => {
                 </div>
               </button>
               
+              {/* Portal Button - Last */}
               <Link
                 to={getWorldPath('/portal')}
                 onClick={() => {
                   setIsMenuOpen(false)
                   scrollToTop()
                 }}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all"
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all border border-gray-300 shadow-sm"
               >
                 <Monitor className="w-4 h-4" />
                 Portal
               </Link>
-              <BookingCTA 
-                buttonStyle="primary" 
-                className="w-full" 
-                onClick={() => setIsMenuOpen(false)}
-                showHelperText={true}
-              />
             </div>
           </div>
         </div>

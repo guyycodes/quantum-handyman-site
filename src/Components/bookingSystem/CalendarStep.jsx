@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import {useWorld} from '../../contexts/WorldContext';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -26,9 +27,7 @@ const CONTENT = {
     title: 'ℹ️ Scheduling Notes:',
     items: [
       '• Available Monday through Saturday',
-      '• Emergency services available on Sundays (Custom Project only)',
       '• Book up to 2 months in advance',
-      '• Same-day service may be available - call us!'
     ]
   },
   urgentBooking: {
@@ -42,6 +41,8 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [hoveredDate, setHoveredDate] = useState(null);
   const [isUrgent, setIsUrgent] = useState(false);
+
+  const { isHandyman } = useWorld();
 
   const monthNames = CONTENT.monthNames;
   const weekDays = CONTENT.weekDays;
@@ -130,8 +131,9 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
         <Calendar className="w-6 h-6 text-blue-600" />
         {CONTENT.title}
       </h3>
-      
-      {/* Urgent Booking Checkbox - Moved to top and made compact */}
+
+      {isHandyman && (
+        /* Urgent Booking Checkbox - Moved to top and made compact */
       <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
         <label className="flex items-center gap-3 cursor-pointer">
           <input
@@ -152,7 +154,8 @@ const CalendarStep = ({ onDateSelect, selectedDate, service }) => {
           </div>
         </label>
       </div>
-      
+      )}
+
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         {/* Calendar Header */}
         <div className="flex justify-between items-center mb-6">

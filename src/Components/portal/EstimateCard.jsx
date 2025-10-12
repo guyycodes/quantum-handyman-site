@@ -316,12 +316,12 @@ const EstimateCard = ({ estimate, onRefresh }) => {
           setShowBookingModal(false);
           if (onRefresh) onRefresh();
         }}
-        initialService={{
-          id: 'custom',
-          name: estimate['Service Type'] || 'Service from Estimate',
-          price: estimate['AI Price'] || 'TBD',
-          estimateRef: estimate['Estimate Reference']
-        }}
+        // initialService={{
+        //   id: 'custom',
+        //   name: estimate['Service Type'] || 'Service from Estimate',
+        //   price: estimate['AI Price'] || 'TBD',
+        //   estimateRef: estimate['Estimate Reference']
+        // }}
       />
       
       {/* Image Gallery Modal */}

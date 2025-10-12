@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { CheckCircle, Mail, Clock, Phone, ArrowRight, Calculator } from 'lucide-react';
+import { CheckCircle, Mail, Clock, Phone, ArrowRight, Calculator, FileSearch, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -47,6 +48,17 @@ const CONTENT = {
     email: 'hello@quantumhandyman.com',
     hours: 'Mon-Fri 8AM-6PM, Sat 9AM-4PM'
   },
+  portalTracking: {
+    title: '🔍 Track Your Estimate Status',
+    subtitle: 'View your estimate anytime in the Portal',
+    steps: [
+      '1. Go to Portal',
+      '2. Enter your reference number',
+      '3. View estimate status & details'
+    ],
+    buttonText: 'Go to Portal',
+    hint: 'Save your reference number to track your estimate'
+  },
   closeButton: 'Close',
   newEstimateButton: 'Request Another Estimate'
 };
@@ -73,10 +85,62 @@ const EstimateSuccess = ({ estimateData, onClose, aiResultText, onNewEstimate })
 
       {/* Reference Number */}
       {estimateRef && (
-        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-8">
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-gray-600 mb-1">{CONTENT.referenceNumber}</p>
           <p className="text-sm text-green-600 mb-1">{CONTENT.reminder}</p>
           <p className="text-2xl font-bold text-blue-600">{estimateRef}</p>
+        </div>
+      )}
+
+      {/* Portal Tracking Instructions */}
+      {estimateRef && (
+        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-lg p-5 mb-8">
+          <h4 className="font-semibold text-gray-900 mb-2 flex items-center justify-center gap-2">
+            <FileSearch className="w-5 h-5 text-indigo-600" />
+            {CONTENT.portalTracking.title}
+          </h4>
+          <p className="text-sm text-gray-600 mb-4">{CONTENT.portalTracking.subtitle}</p>
+          
+          {/* Visual Steps */}
+          <div className="flex items-center justify-center gap-2 mb-4 bg-white rounded-lg p-3">
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">Portal</span>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">Enter {estimateRef}</span>
+              <ArrowRight className="w-4 h-4 text-gray-400" />
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-sm font-medium text-gray-700">View Status</span>
+              <CheckCircle className="w-4 h-4 text-green-500" />
+            </div>
+          </div>
+          
+          {/* Steps List */}
+          <div className="space-y-1 mb-4">
+            {CONTENT.portalTracking.steps.map((step, index) => (
+              <div key={index} className="flex items-start gap-2">
+                <ArrowRight className="w-3 h-3 text-indigo-500 mt-1 flex-shrink-0" />
+                <span className="text-xs text-gray-600">{step}</span>
+              </div>
+            ))}
+          </div>
+          
+          {/* Portal Button */}
+          <Link
+            to="/portal"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            {CONTENT.portalTracking.buttonText}
+          </Link>
+          
+          <p className="text-xs text-gray-500 text-center mt-3">
+            💡 {CONTENT.portalTracking.hint}
+          </p>
         </div>
       )}
 

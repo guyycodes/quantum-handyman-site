@@ -1,7 +1,11 @@
 import React from 'react';
 import { Wrench, Calculator, Globe, ArrowRight } from 'lucide-react';
+import { useWorld } from '../../contexts/WorldContext';
 
 const IntentSelection = ({ onIntentSelect }) => {
+
+  const { isHandyman } = useWorld();
+
   const intents = [
     {
       id: 'handyman',
@@ -35,11 +39,22 @@ const IntentSelection = ({ onIntentSelect }) => {
     }
   ];
 
+  // Filter intents based on isHandyman state
+  const filteredIntents = intents.filter(intent => {
+    if (isHandyman && intent.id === 'tech') {
+      return false; // Don't show tech if user is handyman
+    }
+    if (!isHandyman && intent.id === 'handyman') {
+      return false; // Don't show handyman if user is not handyman
+    }
+    return true;
+  });
+
   return (
     <div className="py-6">
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-3">
-          What would you like to do today?
+          What would you like to do?
         </h3>
         <p className="text-gray-600">
           Choose the option that best fits your needs
@@ -47,7 +62,7 @@ const IntentSelection = ({ onIntentSelect }) => {
       </div>
 
       <div className="space-y-4 max-w-2xl mx-auto">
-        {intents.map((intent) => {
+        {filteredIntents.map((intent, index) => {
           const Icon = intent.icon;
           return (
             <button

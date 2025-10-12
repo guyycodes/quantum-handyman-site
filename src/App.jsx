@@ -16,6 +16,8 @@ const HowItWorks = lazy(() => import('./pages/HowItWorks'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Privacy = lazy(() => import('./pages/Privacy'))
 const Terms = lazy(() => import('./pages/Terms'))
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'))
+const PaymentCancel = lazy(() => import('./pages/PaymentCancel'))
 
 // Lazy load ChatBot
 const ChatBot = lazy(() => import('./Components/ChatBot'))
@@ -43,6 +45,8 @@ const WorldApp = () => {
           <Route path="/portal" element={<Portal />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
@@ -75,6 +79,8 @@ function App() {
         <Route path="/portal" element={<Navigate to="/handyman/portal" replace />} />
         <Route path="/privacy" element={<Navigate to="/handyman/privacy" replace />} />
         <Route path="/terms" element={<Navigate to="/handyman/terms" replace />} />
+        <Route path="/payment-success" element={<Navigate to="/handyman/payment-success" replace />} />
+        <Route path="/payment-cancel" element={<Navigate to="/handyman/payment-cancel" replace />} />
         
         {/* 404 for everything else */}
         <Route path="*" element={<NotFound />} />

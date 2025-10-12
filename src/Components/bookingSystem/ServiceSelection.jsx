@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calculator, Clock, Wrench, Star, Zap, Tv, Wifi, Globe, Camera, Home, ChevronDown, Code, Sparkles } from 'lucide-react';
+import { useWorld } from '../../contexts/WorldContext';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -18,193 +19,207 @@ const CONTENT = {
     text: 'All packages include our satisfaction guarantee.'
   },
   services: [
+
     {
       id: 'estimate',
       name: 'Free Estimate',
       price: 'Free',
       materials: false,
-      duration: 'ai', // -2 for blank
+      duration: 'ai',
       icon: Calculator,
       color: 'bg-green-500',
       category: 'estimates',
       hot: false,
       popular: true,
-      description: 'Upload project photos & we\'ll provide a free estimate OR use AI for an instant assessment.',
-      features: ['No obligation Free Professional Estimate', 'AI assessment - (Free w/promo code)', 'Written quote w/range & Project Breakdown & Roadmap']
+      description: 'Upload photos for instant quote OR get AI assessment',
+      features: [
+        'Professional written estimate',
+        'Project breakdown + timeline', 
+        'AI assessment free with promo code',
+      ]
     },
     {
       id: 'consultation',
       name: 'Project Consultation',
       price: 'Free',
       materials: false,
-      duration: 1, // -1 for infinity
+      duration: 1,
       icon: Clock,
       color: 'bg-gray-600',
       category: 'estimates',
       hot: false,
       popular: false,
-      description: 'Discuss your project needs & get expert advice',
-      features: ['30 minute consultation', 'Project proposal & roadmap', 'Custom quote with options']
+      description: '30min expert consultation + custom project roadmap',
+      features: [
+        'In-person or video consultation',
+        'Custom project proposal + timeline',
+        'Material recommendations + sourcing',
+      ]
     },
     {
       id: 'basic-home',
-      name: 'Basic Tasks',
-      price: '$95+',
-      materials: false,
+      name: 'Quick Fix',
+      price: '$125',
+      materials: true,
       duration: 1,
       icon: Home,
       color: 'bg-teal-500',
       category: 'property',
-      hot: true,
+      hot: false,
       popular: false,
-      description: 'Simple home tasks - First hour $95 (includes trip fee)',
+      description: '1 hour service call - perfect for small repairs',
       features: [
-        'Basic tasks ONLY: curtains, furniture assembly, filter replacements',
-        'First hour: $95 (trip fee + labor included)',
-        'Additional hours: $35/hr',
-        'Basic Tech help & setup'
+        'Trip fee + first hour included',
+        'Weather stripping, caulking, filters, small items assembly',
+        'Same day completion',
+        '📈 Extend: +30min blocks ($35 each)',
       ]
     },
     {
-      id: 'package195',
-      name: 'Turnover Package',
-      price: '$195',
+      id: 'punch-list',
+      name: 'Punch List Pro',
+      price: '$169',
       materials: true,
       duration: 2,
       icon: Wrench,
       color: 'bg-blue-500',
       category: 'property',
       hot: false,
-      popular: false,
-      description: '3 small small jobs completed in up to ~2.5 hours',
-      features: ['Perfect for quick fixes', 'Doors, Locks, Hinges, etc.', 'Same day completion']
-    },
-    {
-      id: 'package295',
-      name: 'Make-Ready Package',
-      price: '$295',
-      materials: true,
-      duration: 3,
-      icon: Star,
-      color: 'bg-purple-500',
-      category: 'property',
-      hot: false,
       popular: true,
-      description: '3 moderate-complexity jobs completed in up to ~3.5 hours',
-      features: ['Mix of moderate-complexity & Simple tasks', 'Drywall, Hinges, Furniture, etc.', 'Comprehensive service']
-    },
-    {
-      id: 'package395',
-      name: 'Premium Package',
-      price: '$395',
-      materials: true,
-      duration: 4,
-      icon: Zap,
-      color: 'bg-orange-500',
-      category: 'property',
-      hot: false,
-      popular: false,
-      description: '3 larger jobs completed in up to ~4.5 hours',
-      features: ['Complex projects', 'Painting, flooring, etc.', 'Priority scheduling']
+      description: '2 hour block - tackle your entire to-do list',
+      features: [
+        'Trip fee + 2 hours included',
+        'Furniture assembly, locks, hinges, gutters, doors, roofs, windows, etc.',
+        'Multi-task efficiency guarantee', 
+        '📈 Extend: +30min blocks ($35 each)',
+      ]
     },
     {
       id: 'home-tech',
       name: 'Home Tech Setup',
-      price: '$95-$495',
-      materials: false,
-      duration: -2,
+      price: '$199',
+      materials: true,
+      duration: 3,
       icon: Wifi,
       color: 'bg-teal-500',
       category: 'property',
       hot: false,
-      popular: true,
-      description: 'Complete home technology installation & setup',
+      popular: false,
+      description: '2-3 device smart home setup + TV mounting (up to 65")',
       features: [
-        'TV mounting & streaming setup (<65")',
-        'Smart locks & keypad entry',
-        'Security cameras & doorbells',
-        'Wi-Fi optimization & smart speakers',
-        'PC & device support',
-        'Smart home automation & training'
+        'TV mounting + streaming optimization',
+        'Smart locks, cameras, or speakers (2-3 devices)',
+        'Network setup + device training',
+        'Mac/PC/mobile integration',
+        '📈 Extra devices (+$49 each) • Home network (+$149)',
       ]
     },
     {
-      id: 'website-starter',
-      name: 'Website Starter',
-      price: '$499-$1299',
+      id: 'website-pro',
+      name: 'Website PRO',
+      price: '$399',
       materials: false,
-      duration: -2,
+      duration: 1, // Fixed: probably meant 2 weeks, not -2
       icon: Globe,
       color: 'bg-blue-500',
       category: 'tech',
       hot: true,
       popular: false,
-      description: 'Professional website for small businesses (WordPress/Wix/Custom)',
-      features: ['1-3 page responsive website', 'Mobile optimized design', 'Contact forms & basic SEO', 'Google Business Profile setup', '30 days of support']
-    },
-    {
-      id: 'website-pro',
-      name: 'Website Pro',
-      price: '$1,299-$2,499',
-      materials: false,
-      duration: -2,
-      icon: Code,
-      color: 'bg-purple-500',
-      category: 'tech',
-      hot: false,
-      popular: true,
-      description: 'Custom web development with advanced features',
-      features: ['5-10 page custom React/Next.js site', 'E-commerce or booking system', 'API integrations & automation', 'SEO & performance optimization', '90 days of support + training']
+      description: '1-page professional website with SEO (Custom/WordPress/Wix)',
+      features: [
+        '1 page responsive website + SEO',
+        'Mobile optimized + contact forms', 
+        'Google Business Profile setup',
+        '30 day support included',
+        '📈 Additional pages: +$250 each',
+        '🚀 Popular add-ons: Booking (+$400) • Payments (+$400) • APIs (+$500) • Analytics (+$800)'
+      ]
     },
     {
       id: 'creator-package',
-      name: 'Creator/Influencer Package',
-      price: '$199-$1,999',
+      name: 'Creator Package',
+      price: '$299',
       materials: false,
-      duration: -2,
+      duration: 1, // 3 days setup
       icon: Camera,
       color: 'bg-pink-500',
       category: 'tech',
       hot: false,
       popular: false,
-      description: 'Complete digital setup for content creators',
-      features: ['Link-in-bio site with custom domain', 'Social media integration', 'Instagram/TikTok shop setup', 'Monetization tools (Patreon, etc)', 'Analytics & growth strategy']
-    },
-    {
-      id: 'ai-automation',
-      name: 'AI & Automation',
-      price: '$999-$2,999',
-      materials: false,
-      duration: -2,
-      icon: Sparkles,
-      color: 'bg-orange-500',
-      category: 'tech',
-      hot: false,
-      popular: false,
-      description: 'AI integration and business automation',
-      features: ['ChatGPT/Claude integration', 'Custom AI chatbots', 'Sales funnel automation', 'Data analytics dashboards', 'Product telemetry setup']
+      description: 'Professional link-in-bio site + social setup for content creators',
+      features: [
+        'Custom link-in-bio site + domain',
+        'Social media integration + branding', 
+        'Payment links + tip jar setup',
+        '7 day launch support',
+        '📈 Add-ons: Content scheduling (+$199) • Fan management portal (+$399)',
+        '🚀 Premium: Analytics dashboard (+$299) • Custom subscriber portal (+$499) • Multi-platform automation (+$499)'
+      ]
     },
     {
       id: 'maintenance-plan',
       name: 'Care Plan',
-      price: '$99-$299/mo',
+      price: '$149/mo',
       materials: false,
-      duration: -2,
+      duration: 1, // Ongoing monthly
       icon: Clock,
       color: 'bg-green-500',
       category: 'tech',
       hot: false,
-      popular: false,
-      description: 'Ongoing website maintenance & support',
-      features: ['Monthly updates & backups', 'Security monitoring', 'Content updates (2-15 hrs/mo)', 'Performance optimization', 'Priority support']
-    }
+      popular: true,
+      description: 'Ongoing website maintenance + 3 hours monthly support',
+      features: [
+        '3 hours monthly updates + content',
+        'Security monitoring + backups', 
+        'Performance optimization + fixes',
+        'Priority email/text support',
+        '📈 Upgrade: 6 hours/mo (+$99) • 10 hours/mo (+$149)',
+        '🚀 Add-ons: Emergency fixes (+$79/hr) • Content creation (+$69/hr) • SEO monitoring (+$49/mo)'
+      ]
+    },
+    // {
+    //   id: 'custom-software',
+    //   name: 'Custom Software Add-on',
+    //   price: '$899',
+    //   materials: false,
+    //   duration: 0, // 1 week development
+    //   icon: Clock,
+    //   color: 'bg-green-500',
+    //   category: 'tech',
+    //   hot: true,
+    //   popular: false,
+    //   description: 'Advanced custom features for existing business systems',
+    //   features: [
+    //     'Custom dashboard or admin panel',
+    //     'Database integration + automation', 
+    //     'API connections + data sync',
+    //     '30 day implementation support',
+    //     '📈 Add complexity: Multi-user systems (+$599) • Advanced reporting (+$499)',
+    //     '🚀 Enterprise: Custom workflows (+$799) • Real-time analytics (+$699) • Multi-platform sync (+$899)'
+    //   ]
+    // },
+    // {
+    //   id: 'ai-automation',
+    //   name: 'AI & Automation',
+    //   price: '$999-$2,999',
+    //   materials: false,
+    //   duration: -2,
+    //   icon: Sparkles,
+    //   color: 'bg-orange-500',
+    //   category: 'tech',
+    //   hot: false,
+    //   popular: false,
+    //   description: 'AI integration and business automation',
+    //   features: ['ChatGPT/Claude integration', 'Custom AI chatbots', 'Sales funnel automation', 'Data analytics dashboards', 'Product telemetry setup']
+    // },
   ]
 };
 
 const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 'all' }) => {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [expandedCards, setExpandedCards] = useState(new Set());
-  
+  const { isHandyman } = useWorld();
+
   // Update category when initialCategory prop changes
   useEffect(() => {
     setSelectedCategory(initialCategory);
@@ -356,7 +371,7 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
                   <div className="flex items-baseline gap-2 mt-1">
                     <span className="text-2xl font-bold text-blue-600">{service.price}</span>
                     <span className="text-xs text-gray-500">{service.materials ? '+mat\'ls' : (service.duration !== -1 && service.duration !== 'ai') ? '' : (service.duration === 'ai') ? 'or 🤖 AI - (Beta)' : '' }</span>
-                    <span className="text-xs text-gray-500">{service.materials ? '/' : ''}{(service.duration >= 1) ? `${service.duration}hrs+` : (service.duration === 0) ? '∞' : service.duration === -2 ? '' : ''}</span>
+                    <span className="text-xs text-gray-500">{service.materials ? '/' : ''}{(service.duration >= 1) ? `${service.duration}hrs` : (service.duration === 0) ? '∞' : service.duration === -2 ? '' : ''}</span>
                   </div>
                 </div>
               </div>
@@ -410,6 +425,21 @@ const ServiceSelection = ({ onServiceSelect, selectedService, initialCategory = 
           <strong>{CONTENT.proTip.label}</strong> {CONTENT.proTip.text}
         </p>
       </div>
+
+      {/* Informational Notes */}
+          <div className="mt-4 space-y-2">
+            {isHandyman && (
+              <div className="flex items-start gap-2 text-xs text-gray-500">
+                <span className="text-gray-400">ℹ️</span>
+                <span>No licensed electrical/plumbing/HVAC. Referrals available.</span>
+              </div>
+            )}
+            <div className="flex items-start gap-2 text-xs text-gray-500">
+              <span className="text-gray-400">💳</span>
+              <span>${isHandyman ? '25' : '25'} deposit required to secure appointments.</span>
+            </div>
+          </div>
+
     </div>
   );
 };

@@ -14,7 +14,7 @@ const CONTENT = {
   },
   aiOption: {
     label: 'Get instant AI-powered estimate',
-    price: '$3.95',
+    price: '$1.95',
     priceWithPromo: 'FREE with promo code',
     description: '⚠️ IMPORTANT: Ensure your project description + photos are accurate & detailed to receive the best estimate.',
     checkboxHint: '✓ Check this box to add AI estimate (have a promo code? Enter it after checking!)',
@@ -36,13 +36,13 @@ const CONTENT = {
   },
   confirmButton: {
     normal: 'Submit Estimate Request',
-    withAI: 'Proceed to Payment ($3.95)',
+    withAI: 'Proceed to Payment ($1.95)',
     withAIFree: 'Submit AI Estimate Request (FREE)',
     submitting: 'Submitting...'
   },
   editPrompt: 'Need to make changes? Use the back button below to edit.',
   disclaimer: 'By submitting this request, you agree to be contacted regarding your free estimate.',
-  disclaimerWithAI: 'By proceeding, you agree to pay $3.95 for AI-powered instant estimate analysis.',
+  disclaimerWithAI: 'By proceeding, you agree to pay $1.95 for AI-powered instant estimate analysis.',
   disclaimerWithAIFree: 'By submitting, you agree to receive your FREE AI-powered instant estimate.'
 };
 

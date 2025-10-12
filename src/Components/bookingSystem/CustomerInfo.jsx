@@ -31,7 +31,7 @@ const CONTENT = {
       error: 'Please enter a valid phone number'
     },
     address: {
-      label: 'Service Address *',
+      label: 'Address *',
       placeholder: '123 Main Street\nCity, State ZIP',
       error: 'Please enter your complete address'
     },

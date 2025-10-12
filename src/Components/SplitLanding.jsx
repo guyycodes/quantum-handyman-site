@@ -29,7 +29,7 @@ const CONTENT = {
     stats: {
       experience: { value: '10+', label: 'Years' },
       jobs: { value: '500+', label: 'Projects' },
-      pricing: { value: '$195', label: 'Starting' }
+      pricing: { value: '$125', label: 'Starting' }
     },
     button: 'Handyman Services',
     sideLabel: 'Handyman Services',
@@ -76,18 +76,18 @@ const CONTENT = {
   // Web Dev Side
   web: {
     title: 'Web Dev',
-    subtitle: 'Full-stack development - Backed by a CS Degree, 3+ years experience, and a Certified Developer',
+    subtitle: 'Full-stack development - CS Degree, 3+ years exp, & Certified Developer',
     features: [
       'Custom Web Applications',
       'E-commerce Solutions',
       'SEO & Performance',
       'AI Integration',
-      'Creative Solutions'
+      'Creator Packages'
     ],
     stats: {
       education: { value: 'CS', label: 'Degree' },
-      sites: { value: '50+', label: 'Sites' },
-      pricing: { value: '$500', label: 'Starting' }
+      sites: { value: '10+', label: 'Sites' },
+      pricing: { value: '$399', label: 'Starting' }
     },
     button: 'Web Services',
     sideLabel: 'Web Development',
@@ -154,54 +154,6 @@ const CONTENT = {
 };
 
 // ============================================================================
-// CUSTOM LOOPING TYPEWRITER FOR MISSION STATEMENT
-// ============================================================================
-
-const useLoopingTypewriter = (texts, typingSpeed = 40, pauseDuration = 2000, erasingSpeed = 20) => {
-  const [displayText, setDisplayText] = useState('');
-  const [textIndex, setTextIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
-  const [charIndex, setCharIndex] = useState(0);
-
-  useEffect(() => {
-    const currentText = texts[textIndex];
-
-    if (isTyping) {
-      // Typing phase
-      if (charIndex < currentText.length) {
-        const timer = setTimeout(() => {
-          setDisplayText(currentText.slice(0, charIndex + 1));
-          setCharIndex(charIndex + 1);
-        }, typingSpeed);
-        return () => clearTimeout(timer);
-      } else {
-        // Finished typing, pause before erasing
-        const timer = setTimeout(() => {
-          setIsTyping(false);
-          setCharIndex(currentText.length);
-        }, pauseDuration);
-        return () => clearTimeout(timer);
-      }
-    } else {
-      // Erasing phase
-      if (charIndex > 0) {
-        const timer = setTimeout(() => {
-          setDisplayText(currentText.slice(0, charIndex - 1));
-          setCharIndex(charIndex - 1);
-        }, erasingSpeed);
-        return () => clearTimeout(timer);
-      } else {
-        // Finished erasing, move to next text
-        setIsTyping(true);
-        setTextIndex((textIndex + 1) % texts.length);
-      }
-    }
-  }, [charIndex, isTyping, textIndex, texts, typingSpeed, pauseDuration, erasingSpeed]);
-
-  return { displayText, isTyping };
-};
-
-// ============================================================================
 // QUANTUM ELEMENTS CONFIGURATION
 // ============================================================================
 
@@ -248,12 +200,8 @@ const SplitLanding = () => {
   const [touchedSide, setTouchedSide] = useState(null);
   const navigate = useNavigate();
   
-  // Looping typewriter for mission statement
-  const missionTexts = [
-    // "I didn't want to choose between coding and craftsmanship - so I didn't.",
-    "SMB's & homeowners deserve solutions driven from a unified ethos - not just another technician."
-  ];
-  const { displayText: missionText, isTyping } = useLoopingTypewriter(missionTexts, 60, 2500, 20);
+  // Mission statement text
+  const missionText = "Solutions driven from a unified ethos - not just another technician.";
 
   useEffect(() => {
     // Handle resize for all screen size detections
@@ -342,8 +290,12 @@ const SplitLanding = () => {
       setTouchTimer(null);
     }
     
-    // If the animation is not showing (short tap), navigate directly
-    if (hoveredSide !== side && touchedSide === side) {
+    // If something is already expanded, tap anywhere to collapse
+    if (hoveredSide) {
+      setHoveredSide(null);
+    }
+    // If nothing is expanded and it's a short tap, navigate directly
+    else if (touchedSide === side) {
       handleSelection(side);
     }
     
@@ -513,7 +465,7 @@ const SplitLanding = () => {
 
           {/* Content */}
           <div className="relative z-10 flex flex-col justify-center items-center h-full px-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'handyman' ? isMobile ? 'scale-90 -translate-x-6' : 'scale-110 -translate-x-40' : 'scale-50'} ${hoveredSide === 'web' ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'handyman' ? isMobile ? 'scale-90 -translate-x-5' : 'scale-110 -translate-x-40' : 'scale-50'} ${hoveredSide === 'web' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -574,8 +526,8 @@ const SplitLanding = () => {
 
               {/* CTA Button */}
               <button
-                className={`group flex items-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg 
-                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
+                className={`group flex items-center gap-2 px-7 py-6 bg-white text-blue-600 rounded-xl 
+                  text-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
                   ${hoveredSide === 'handyman' ? 'scale-105' : 'scale-100'}`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -583,7 +535,7 @@ const SplitLanding = () => {
                 }}
               >
                 {CONTENT.handyman.button}
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
           </div>
@@ -651,8 +603,8 @@ const SplitLanding = () => {
           </div>
 
           {/* Content */}
-          <div className="relative z-10 flex flex-col justify-center items-center h-full px-8 text-white">
-            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? isMobile ? 'scale-90 -translate-x-8' : 'scale-110 translate-x-60' : 'scale-50'} ${hoveredSide === 'handyman' ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="relative z-10 flex flex-col justify-center items-center h-full pr-8 text-white">
+            <div className={`transform transition-all duration-1200 ${hoveredSide === 'web' ? isMobile ? 'scale-90 -translate-x-3' : 'scale-110 translate-x-60' : 'scale-50'} ${hoveredSide === 'handyman' ? 'opacity-0' : 'opacity-100'}`}>
               {/* Icon */}
               <div className="mb-6 relative">
                 <div className="absolute inset-0 animate-ping">
@@ -713,16 +665,16 @@ const SplitLanding = () => {
 
               {/* CTA Button */}
               <button
-                className={`group flex items-center gap-2 px-6 py-3 bg-white text-emerald-600 rounded-lg 
-                  font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
-                  ${hoveredSide === 'web' ? 'scale-105' : 'scale-100'}`}
+                className={`group flex items-center gap-2 px-12 py-6 bg-white text-emerald-600 rounded-xl 
+                  text-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
+                  ${hoveredSide === 'web' ? 'scale-90' : 'scale-100'}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSelection('web');
                 }}
               >
                 {CONTENT.web.button}
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-8 h-8 transition-transform group-hover:translate-x-1" />
               </button>
             </div>
           </div>
@@ -760,6 +712,11 @@ const SplitLanding = () => {
               </div>
             </div>
             
+            {/* Established Date */}
+            <div className="text-white/70 text-xs md:text-sm font-medium tracking-[0.2em] uppercase">
+              EST. 2015
+            </div>
+            
             {/* Mobile hint below brand on small screens */}
             <div className="block sm:hidden text-white/60 text-[10px] font-medium tracking-wider animate-pulse">
               {CONTENT.ui.mobileBrandHint}
@@ -768,14 +725,26 @@ const SplitLanding = () => {
             {/* Mission Statement Below - Hidden on very small screens */}
             <div className="hidden sm:block bg-gray-800/80 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 rounded-lg shadow-lg max-w-[280px] md:max-w-md">
               <p className="text-[10px] md:text-sm text-white text-center leading-snug min-h-[2rem] md:min-h-[2.5rem] flex items-center justify-center">
-                <span>
-                  {missionText}
-                  {isTyping && (
-                    <span className="inline-block w-0.5 h-3 md:h-4 bg-gray-800 animate-pulse ml-0.5" />
-                  )}
-                </span>
+                {missionText}
               </p>
             </div>
+            
+            {/* Click to Enter CTA dont use for now*/}
+            {/* <div className="mt-2 md:mt-4 animate-bounce">
+              <div className="bg-gradient-to-r from-blue-500 to-emerald-500 text-white px-4 md:px-6 py-2 md:py-3 rounded-full shadow-lg transition-all duration-300">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-xs md:text-sm font-semibold">Select to Enter</span>
+                  <div className="flex gap-1 animate-pulse">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
 

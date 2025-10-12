@@ -69,49 +69,48 @@ const SERVICES_DATA = [
     title: 'Home Repairs & Maintenance',
     icon: HomeIcon,
     color: 'bg-blue-500',
-    description: 'Professional home repair services for all your property needs',
+    description: 'Professional home repair services - Quick Fix ($125/hr) or Punch List Pro ($169/2hr)',
     shortDesc: 'Professional home repair and maintenance services',
-    priceRange: '$95 - $495 + materials',
-    timeEstimate: '1-6 hours typical',
+    priceRange: '$125 - $169 + materials',
+    timeEstimate: '1-2 hours typical',
     subServices: [
+      { name: 'Quick Fix Package', desc: '1 hour service - weather stripping, caulking, filters, small assembly' },
+      { name: 'Punch List Pro', desc: '2 hour block - furniture assembly, locks, hinges, gutters, doors, windows' },
       { name: 'Drywall & Painting', desc: 'Repairs, patches, caulking and interior painting' },
-      { name: 'Roofing Repairs', desc: 'Minor roof repairs and maintenance' },
-      { name: 'Doors & Locks', desc: 'Door adjustments, locks, hinges & trim work' },
       { name: 'Property Preservation', desc: 'Maintenance and preservation services' },
       { name: 'General Maintenance', desc: 'No permit-required work' },
-      { name: 'Minor Repairs', desc: 'Non permit-required work' },
-
+      { name: 'Extensions Available', desc: '+30min blocks ($35 each)' }
     ],
     benefits: [
-      'Licensed and insured work',
+      'Trip fee included in price',
       'Same-day service available',
-      'Warranty on all repairs',
+      'Multi-task efficiency guarantee',
       'Transparent pricing'
     ]
   },
   {
     id: 'home-setup',
     category: 'property',
-    title: 'Home Setup & Installation',
+    title: 'Home Tech Setup',
     icon: Settings,
     color: 'bg-purple-500',
-    description: 'Complete home setup including furniture assembly and smart device installation',
-    shortDesc: 'Professional assembly and installation services',
-    priceRange: '$125 - $495',
-    timeEstimate: '2-5 hours typical',
+    description: '2-3 device smart home setup + TV mounting (up to 65") - Complete package for $199',
+    shortDesc: 'Professional smart home and TV installation',
+    priceRange: '$199 + materials',
+    timeEstimate: '3 hours typical',
     subServices: [
-      { name: 'Furniture Assembly', desc: 'IKEA and all major brands' },
-      { name: 'Security Camera Installation', desc: 'Professional camera setup and configuration' },
-      { name: 'TV Mounting', desc: 'Wall mounting with cable management' },
-      { name: 'Smart Home Devices', desc: 'Setup and configuration of smart home tech' },
-      { name: 'Shelving & Storage', desc: 'Installation of shelving and organization systems' },
-      { name: 'Baby Proofing', desc: 'Child safety installations' }
+      { name: 'TV Mounting', desc: 'Up to 65" TV mounting + streaming optimization' },
+      { name: 'Smart Devices (2-3)', desc: 'Smart locks, cameras, or speakers installation' },
+      { name: 'Network Setup', desc: 'WiFi optimization + device training' },
+      { name: 'Mac/PC Integration', desc: 'Computer and mobile device integration' },
+      { name: 'Extra Devices', desc: '+$49 per additional device' },
+      { name: 'Whole-Home Network', desc: '+$149 for complete network setup' }
     ],
     benefits: [
-      'Professional installation',
-      'All tools included',
-      'Clean workspace guaranteed',
-      'Setup assistance included'
+      'All mounting hardware included',
+      'Network setup + device training',
+      'Clean installation guaranteed',
+      'Mac/PC/mobile integration included'
     ]
   },
   {
@@ -141,61 +140,57 @@ const SERVICES_DATA = [
     ]
   },
 
-  // Tech Services (Smart Home)
+  // Tech Services (Estimates & Consultations)
   {
-    id: 'smart-home',
+    id: 'estimates-consultation',
     category: 'tech',
-    title: 'Smart Home & Tech Services',
+    title: 'Free Estimates & Consultations',
     icon: Wifi,
     color: 'bg-cyan-500',
-    description: 'Professional smart home setup, TV mounting, and tech automation services',
-    shortDesc: 'Smart home installation and tech configuration',
-    priceRange: '$95 - $495',
-    timeEstimate: '1.5-4.5 hours typical',
+    description: 'Get professional estimates with AI-powered instant quotes or expert consultations',
+    shortDesc: 'Free estimates and project consultations',
+    priceRange: 'Free',
+    timeEstimate: '30min - 1hr typical',
     subServices: [
-      { name: 'Basic Tech Setup', desc: 'Single device setup - smart speakers, cameras, etc.' },
-      { name: 'Stream Pro + Mount', desc: 'TV mount (≤65") + apps & soundbar setup' },
-      { name: 'Turnover Tech+', desc: 'Perfect for Airbnb - keypad entry, Wi-Fi, guest QR codes' },
-      { name: 'Smart Cameras', desc: 'Security camera installation and configuration' },
-      { name: 'Voice Assistants', desc: 'Alexa, Google Home setup and routines' },
-      { name: 'Smart Lighting', desc: 'Smart bulbs and switch automation' },
-      { name: 'Wi-Fi Optimization', desc: 'Network setup and dead zone elimination' },
-      { name: 'PC & Device Support', desc: 'Computer troubleshooting and optimization' }
+      { name: 'Free Estimate', desc: 'Upload photos for instant quote OR get AI assessment' },
+      { name: 'Written Estimate', desc: 'Professional written estimate with project breakdown' },
+      { name: 'Timeline Planning', desc: 'Detailed project timeline and milestone planning' },
+      { name: 'Project Consultation', desc: '30min expert consultation + custom project roadmap' },
+      { name: 'Material Recommendations', desc: 'Expert advice on materials and sourcing' },
+      { name: 'AI Assessment', desc: 'Free with promo code - instant property analysis' }
     ],
     benefits: [
-      'Professional installation',
-      'User training included',
-      'Wi-Fi optimization available',
-      'Flexible hourly rates'
+      'No obligation quotes',
+      'AI-powered instant estimates',
+      'In-person or video consultation',
+      'Custom project proposals included'
     ]
   },
 
   // Digital Services (Web Development)
   {
-    id: 'custom-dev',
+    id: 'website-pro',
     category: 'digital',
-    title: 'Custom Web Development',
+    title: 'Website PRO',
     icon: Code,
     color: 'bg-purple-500',
-    description: 'Full-stack custom web applications and digital solutions tailored to your needs',
-    shortDesc: 'Professional custom web development',
-    priceRange: '$500 - $2500+',
-    timeEstimate: '1-4 weeks typical',
+    description: '1-page professional website with SEO - Custom Code or WordPress, Wix etc. $399',
+    shortDesc: 'Professional website development',
+    priceRange: '$399 (1 page)',
+    timeEstimate: '2 weeks typical',
     subServices: [
-      { name: 'React Applications', desc: 'Modern React, Next.js applications' },
-      { name: 'Node.js Backend', desc: 'Scalable backend services and APIs' },
-      { name: 'Python Development', desc: 'Django, Flask, and data processing' },
-      { name: 'E-commerce', desc: 'Custom shopping platforms' },
-      { name: 'API Development', desc: 'RESTful and GraphQL APIs' },
-      { name: 'Database Design', desc: 'SQL and NoSQL database architecture' },
-      { name: 'Cloud Deployment', desc: 'AWS, Vercel, Netlify deployment' },
-      { name: 'Mobile Apps', desc: 'iOS and Android development' }
+      { name: '1 Page Responsive Website', desc: 'Mobile optimized + SEO included' },
+      { name: 'Contact Forms', desc: 'Professional contact forms with validation' },
+      { name: 'Google Business Profile', desc: 'Complete setup and optimization' },
+      { name: '30 Day Support', desc: 'Post-launch support included' },
+      { name: 'Additional Pages', desc: '+$250 per additional page' },
+      { name: 'Popular Add-ons', desc: 'Booking (+$400), Payments (+$400), APIs (+$500)' }
     ],
     benefits: [
-      'CS + Business degree + certified developer',
-      'Clean, maintainable code',
-      'Full documentation included',
-      'Post-launch support available'
+      'CS degree + certified developer',
+      'Mobile responsive design',
+      'SEO optimization included',
+      '30 day support included'
     ]
   },
   {
@@ -204,76 +199,73 @@ const SERVICES_DATA = [
     title: 'WordPress, Wix & Squarespace',
     icon: Globe,
     color: 'bg-indigo-500',
-    description: 'Professional website creation and management on popular platforms',
+    description: 'Professional websites on popular platforms - Part of Website PRO package ($399)',
     shortDesc: 'CMS and website builder solutions',
-    priceRange: '$500 - $2500+',
-    timeEstimate: '3-7 days typical',
+    priceRange: '$399 (1 page)',
+    timeEstimate: '2 weeks typical',
     subServices: [
-      { name: 'WordPress Custom Themes', desc: 'Custom theme development and customization' },
-      { name: 'WordPress Plugins', desc: 'Plugin installation and custom development' },
-      { name: 'Wix Design', desc: 'Professional Wix website design' },
+      { name: 'WordPress Development', desc: 'Custom themes and plugin configuration' },
+      { name: 'Wix Design', desc: 'Professional Wix website design and setup' },
       { name: 'Squarespace Setup', desc: 'Complete Squarespace configuration' },
-      { name: 'Site Migration', desc: 'Moving sites between platforms' },
-      { name: 'SEO Optimization', desc: 'On-page SEO and site speed' },
-      { name: 'Google Business Profile', desc: 'Complete GMB setup and optimization' },
-      { name: 'Ongoing Maintenance', desc: 'Monthly maintenance plans available' }
+      { name: 'Platform Migration', desc: 'Moving sites between platforms' },
+      { name: 'SEO & Google Business', desc: 'On-page SEO and GMB setup included' },
+      { name: 'Additional Pages', desc: '+$250 per additional page' }
     ],
     benefits: [
-      'Professional photography included',
       'Mobile-responsive design',
-      'Training documentation provided',
-      'Care Plan available ($99/mo)'
+      'SEO optimization included',
+      '30 day support included',
+      'Training documentation provided'
     ]
   },
   {
-    id: 'content-creator',
+    id: 'creator-package',
     category: 'digital',
-    title: 'Content Creator Setup',
+    title: 'Creator Package',
     icon: Smartphone,
     color: 'bg-pink-500',
-    description: 'Complete digital presence setup for influencers and content creators',
+    description: 'Professional link-in-bio site + social setup for content creators - Starting at $299',
     shortDesc: 'Creator economy solutions',
-    priceRange: '$199 - $1999',
-    timeEstimate: '1-2 weeks typical',
+    priceRange: '$299',
+    timeEstimate: '3 days typical',
     subServices: [
-      { name: 'Link-in-bio Pages', desc: 'Linktree alternatives with custom branding' },
-      { name: 'Photo & Video Support', desc: 'Content support for specific packages' },
-      { name: 'Instagram Shopping', desc: 'Instagram shop setup and product tagging' },
-      { name: 'YouTube Optimization', desc: 'Channel setup, SEO, and analytics' },
-      { name: 'TikTok Shop', desc: 'TikTok shopping integration' },
-      { name: 'Brand Partnerships Portal', desc: 'Custom portal for brand collaborations' },
-      { name: 'Creator Studio Setup', desc: 'Ring light & backdrop installation' }
+      { name: 'Custom Link-in-bio Site', desc: 'Professional site with custom domain' },
+      { name: 'Social Media Integration', desc: 'All platforms + branding consistency' },
+      { name: 'Payment Links', desc: 'Tip jar and payment setup included' },
+      { name: '7 Day Launch Support', desc: 'Support during initial launch period' },
+      { name: 'Content Scheduling', desc: '+$199 for scheduling tools setup' },
+      { name: 'Analytics Dashboard', desc: '+$299 for custom analytics' }
     ],
     benefits: [
-      'Social media optimization included',
-      'Content strategy consultation',
-      'Analytics dashboard setup',
-      'Growth strategy included'
+      'Custom domain included',
+      'Social media optimization',
+      'Payment integration included',
+      '7 day launch support'
     ]
   },
   {
-    id: 'ai-data-funnels',
+    id: 'website-care-plan',
     category: 'digital',
-    title: 'AI & Data Funnels',
+    title: 'Website Care Plan',
     icon: Sparkles,
     color: 'bg-orange-500',
-    description: 'Advanced AI integrations, data capture & analytics, product telemetry & sales funnels',
-    shortDesc: 'AI and automation solutions',
-    priceRange: '$$500 - $2500+',
-    timeEstimate: '2-6 weeks typical',
+    description: 'Ongoing website maintenance + 3 hours monthly support - $149/month',
+    shortDesc: 'Monthly maintenance and support',
+    priceRange: '$149/month',
+    timeEstimate: '3 hours/month',
     subServices: [
-      { name: 'ChatGPT Integration', desc: 'Custom ChatGPT and GPT-4 implementations' },
-      { name: 'Claude Integration', desc: 'Anthropic Claude AI integration' },
-      { name: 'Custom AI Chatbots', desc: 'Expert systems for your business' },
-      { name: 'Funnels', desc: 'Automated sequences' },
-      { name: 'Data Analytics Dashboards', desc: 'Custom analytics and reporting' },
-      { name: 'Product Telemetry', desc: 'User behavior tracking and insights' }
+      { name: '3 Hours Monthly Support', desc: 'Updates, content changes, and fixes' },
+      { name: 'Security Monitoring', desc: 'Regular security scans and updates' },
+      { name: 'Backups', desc: 'Automated daily/weekly backups' },
+      { name: 'Performance Optimization', desc: 'Speed optimization and monitoring' },
+      { name: 'Priority Support', desc: 'Email/text support with priority response' },
+      { name: 'Upgrade Options', desc: '6 hours/mo (+$99) or 10 hours/mo (+$149)' }
     ],
     benefits: [
-      'Custom AI training included',
-      'Real-time analytics',
-      'A/B testing setup',
-      'Ongoing optimization support'
+      '3 hours monthly support included',
+      'Security monitoring & backups',
+      'Performance optimization',
+      'Priority email/text support'
     ]
   }
 ]
@@ -405,13 +397,13 @@ const Services = () => {
           )}
 
           {/* Services Grid - key forces re-render on world change */}
-          <div key={worldKey} className={`${isWeb ? 'grid md:grid-cols-2 gap-8' : 'space-y-8'}`}>
+          <div key={worldKey} className={`${isWeb ? 'grid md:grid-cols-2 gap-8 items-start' : 'space-y-8'}`}>
             {filteredServices.map((service, index) => (
               <div 
                 key={`${worldKey}-${service.id}`}
                 ref={(el) => servicesStagger.setItemRef(service.id, el)}
                 data-item-id={service.id}
-                className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all hover:shadow-2xl animate-fade-up delay-${(index + 1) * 100} ${servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''}`}
+                className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all hover:shadow-2xl animate-fade-up delay-${(index + 1) * 100} self-start ${servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''}`}
               >
                 {/* Service Header */}
                 <div className="p-6 lg:p-8">

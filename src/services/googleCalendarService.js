@@ -1,9 +1,11 @@
+import googleScriptService from './googleScriptService';
+
 // Google Calendar Service for Quantum Handyman
 // Using fetch instead of axios to avoid CORS issues with Google Apps Script
 class GoogleCalendarService {
   constructor() {
-    this.scriptUrl = import.meta.env.VITE_GOOGLE_SCRIPT_URL;
-    this.isConfigured = !!this.scriptUrl;
+    this.scriptService = googleScriptService;
+    this.isConfigured = this.scriptService.isConfigured();
     this.debug = import.meta.env.DEV; // Enable debug in development
   }
 
@@ -17,7 +19,7 @@ class GoogleCalendarService {
   // Check if service is properly configured
   validateConfiguration() {
     if (!this.isConfigured) {
-      console.error('Google Script URL not configured. Add VITE_GOOGLE_SCRIPT_URL to .env');
+      console.error('Google Script service not configured');
       return false;
     }
     return true;
@@ -31,14 +33,7 @@ class GoogleCalendarService {
 
     try {
       this.log('Testing connection to Apps Script...');
-      const response = await fetch(this.scriptUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'testConnection'
-        })
-      });
-      
-      const data = await response.json();
+      const data = await this.scriptService.testConnection();
       this.log('Connection test response:', data);
       return data;
     } catch (error) {
@@ -57,17 +52,10 @@ class GoogleCalendarService {
     try {
       this.log('Checking availability for:', date, 'Duration:', duration);
       
-      // Use fetch instead of axios to avoid CORS preflight
-      const response = await fetch(this.scriptUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'checkAvailability',
-          date: date,
-          duration: duration
-        })
+      const data = await this.scriptService.checkCalendarAvailability({
+        date: date,
+        duration: duration
       });
-      
-      const data = await response.json();
 
       if (data.success) {
         this.log('Availability response:', data);
@@ -91,32 +79,26 @@ class GoogleCalendarService {
     try {
       this.log('Creating booking:', bookingData);
       
-      // Use fetch instead of axios to avoid CORS preflight
-      const response = await fetch(this.scriptUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'createBooking',
-          booking: {
-            name: bookingData.customerInfo.name,
-            email: bookingData.customerInfo.email,
-            phone: bookingData.customerInfo.phone,
-            address: bookingData.customerInfo.address,
-            service: bookingData.service.name,
-            price: bookingData.service.price,
-            duration: bookingData.service.duration,
-            date: bookingData.date,
-            time: bookingData.timeSlot.value,
-            description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
-            images: bookingData.imageDataBase64 || '', // Use compressed base64 images
-            bookingRef: bookingData.bookingRef,
-            estimateRef: bookingData.customerInfo?.estimateRef || bookingData.estimateRef || '', // Pass estimate reference if this booking originated from an estimate
-            hasImages: bookingData.customerInfo.images && bookingData.customerInfo.images.length > 0,
-            isUrgent: bookingData.isUrgent || false // Pass urgent flag
-          }
-        })
+      const data = await this.scriptService.createCalendarBooking({
+        booking: {
+          name: bookingData.customerInfo.name,
+          email: bookingData.customerInfo.email,
+          phone: bookingData.customerInfo.phone,
+          address: bookingData.customerInfo.address,
+          service: bookingData.service.name,
+          price: bookingData.service.price,
+          duration: bookingData.service.duration,
+          date: bookingData.date,
+          time: bookingData.timeSlot.value,
+          description: bookingData.customerInfo.projectDescription || bookingData.customerInfo.jobDescription || '',
+          images: bookingData.imageDataBase64 || '', // Use compressed base64 images
+          bookingRef: bookingData.bookingRef,
+          estimateRef: bookingData.customerInfo?.estimateRef || bookingData.estimateRef || '', // Pass estimate reference if this booking originated from an estimate
+          hasImages: bookingData.customerInfo.images && bookingData.customerInfo.images.length > 0,
+          isUrgent: bookingData.isUrgent || false, // Pass urgent flag
+          depositPaid: bookingData.depositPaid || false // Pass deposit paid flag
+        }
       });
-      
-      const data = await response.json();
 
       if (!data.success) {
         throw new Error(data.error || 'Booking failed');
@@ -199,15 +181,10 @@ class GoogleCalendarService {
       };
 
       // Send to Google Apps Script
-      const response = await fetch(this.scriptUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'saveEstimate',
-          estimate: estimatePayload
-        })
+      const data = await this.scriptService.createEstimate({
+        action: 'saveEstimate',
+        estimate: estimatePayload
       });
-      
-      const data = await response.json();
 
       if (!data.success) {
         console.error('Failed to save estimate to sheets:', data.error);

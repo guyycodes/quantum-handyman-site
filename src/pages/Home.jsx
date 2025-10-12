@@ -28,7 +28,7 @@ import {
 // Content Management - All text content in one place
 const CONTENT = {
   hero: {
-    badge: '10+ Years Experience • Computer Science Degree • Master Craftsman',
+    badge: 'Est. 2015',
     title: {
       line1: 'Quantum',
       line2: 'Handyman'
@@ -253,12 +253,12 @@ const SERVICES_DATA = [
     category: 'digital'
   },
   {
-    id: 'ai-data-funnels',
-    title: 'AI & Data Funnels',
+    id: 'maintenance-plan',
+    title: 'Website Care Plan',
     icon: Sparkles,
     color: 'bg-orange-500',
-    description: 'Advanced AI integrations, Data Capture & Analytics, Product Telemetry & Data Funnels',
-    features: ['ChatGPT & Claude Integration', 'Lead Scoring & CRM Automation', 'Email Marketing Funnels', 'Data Analytics Dashboards'],
+    description: 'Ongoing website maintenance with monthly support hours, security monitoring, and performance optimization',
+    features: ['3 Hours Monthly Updates & Content', 'Security Monitoring & Backups', 'Performance Optimization & Fixes', 'Priority Email/Text Support'],
     category: 'digital'
   },
 
@@ -392,9 +392,9 @@ const Home = () => {
               
               <p className="text-xl text-white/90">
                 {isHandyman 
-                  ? 'Professional home repairs & property maintenance with a tech-savvy edge.'
+                  ? 'Property • Repairs • Pro Service • Tech-Savvy Edge'
                   : isWeb 
-                  ? 'Full-stack web development from a CS+Busniess-grad & Certfied Full Stack Developer.'
+                  ? 'Web development • Creator Packages • Custom Solutions'
                   : CONTENT.hero.subtitle}
               </p>
 
@@ -663,7 +663,7 @@ const Home = () => {
                 key={service.id}
                 ref={(el) => servicesStagger.setItemRef(service.id, el)}
                 data-item-id={service.id}
-                className={`service-card group cursor-pointer animate-fade-up delay-${(index % 3 + 1) * 100} ${tabJustChanged || servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''}`}
+                className={`service-card group cursor-pointer animate-fade-up delay-${(index % 3 + 1) * 100} ${tabJustChanged || servicesStagger.visibleItems[service.id] !== false ? 'visible' : ''} flex flex-col h-full`}
               >
                 <div className={`${service.color} w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <service.icon className="w-8 h-8 text-white" />
@@ -677,7 +677,7 @@ const Home = () => {
                   {service.description}
                 </p>
                 
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-6 flex-grow">
                   {service.features.slice(0, 3).map((feature, index) => (
                     <li key={index} className="flex items-center gap-2 text-sm text-muted">
                       <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
@@ -691,7 +691,7 @@ const Home = () => {
                   buttonText={CONTENT.services.cta}
                   buttonStyle="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full mt-auto"
                 />
               </div>
             ))}

@@ -1,11 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { 
   Phone, Mail, MapPin, Clock, 
   Facebook, Instagram,
   Wrench, Code, Home as HomeIcon, TreePine, Wifi
 } from 'lucide-react'
 import TikTokIcon from './TikTokIcon'
+import { useWorld } from '../contexts/WorldContext'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -82,6 +83,22 @@ const CONTENT = {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const { currentWorld } = useWorld()
+  const location = useLocation()
+  
+  // Get world-aware path for quick links
+  const getWorldPath = (path) => {
+    // Check if we're in a world-specific route
+    if (location.pathname.includes('/handyman')) {
+      return `/handyman${path}`
+    } else if (location.pathname.includes('/web')) {
+      return `/web${path}`
+    } else if (currentWorld && currentWorld !== 'default') {
+      return `/${currentWorld}${path}`
+    }
+    // Default - no world prefix
+    return path
+  }
   
   // Scroll to top function for navigation
   const scrollToTop = () => {
@@ -128,7 +145,7 @@ const Footer = () => {
               {CONTENT.services.map((service) => (
                 <li key={service.name}>
                   <Link 
-                    to="/services" 
+                    to={service.name === 'Web & Digital' ? '/web/services' : '/services'} 
                     onClick={scrollToTop}
                     className="flex items-center gap-2 text-gray-400 hover:text-primary transition-colors text-sm"
                   >
@@ -147,7 +164,7 @@ const Footer = () => {
               {CONTENT.navigation.map((link) => (
                 <li key={link.name}>
                   <Link 
-                    to={link.href}
+                    to={getWorldPath(link.href)}
                     onClick={scrollToTop}
                     className="text-gray-400 hover:text-primary transition-colors text-sm"
                   >
@@ -158,7 +175,7 @@ const Footer = () => {
               {CONTENT.legal.map((link) => (
                 <li key={link.name}>
                   <Link 
-                    to={link.href}
+                    to={getWorldPath(link.href)}
                     onClick={scrollToTop}
                     className="text-gray-400 hover:text-primary transition-colors text-sm"
                   >
@@ -206,7 +223,7 @@ const Footer = () => {
             {/* Pay Now Button - Prominent Placement */}
             <div className="mt-6">
               <Link 
-                to="/portal"
+                to={getWorldPath('/portal')}
                 onClick={scrollToTop}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] text-base"
               >

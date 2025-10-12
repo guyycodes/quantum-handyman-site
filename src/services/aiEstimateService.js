@@ -164,7 +164,7 @@ Please analyze the provided information and any images to generate a comprehensi
       success: false,
       error: error.response?.data?.error?.message || error.message || 'Failed to generate AI estimate',
       price: 'Unable to estimate',
-      jobDescription: 'AI estimation failed. Please request a manual estimate.',
+      jobDescription: 'AI estimation Pending. Please request a manual estimate or retry with promo code AIESTIMATE_RETRY.',
       materials: [],
       laborHours: 'Unknown',
       complexity: 'Unknown',
