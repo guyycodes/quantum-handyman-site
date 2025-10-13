@@ -117,7 +117,7 @@ const CONTENT = {
     buttons: {
       bookService: 'Book a Service',
       getQuote: 'Get Free Quote',
-      helperText: '⚡ Instant AI estimates available'
+      helperText: '⚡ Instant AI estimates'
     }
   }
 }

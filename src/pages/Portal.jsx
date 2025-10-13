@@ -14,11 +14,12 @@ import { useWorld } from '../contexts/WorldContext';
 const CONTENT = {
   meta: {
     title: 'Portal | Quantum Technician',
-    description: 'Track your estimates, jobs, and payments with Quantum Technician'
+    description: 'Track your estimates, jobs, costs, and payments with Quantum Technician'
   },
   hero: {
     title: 'Portal',
-    subtitle: 'Track your estimates, jobs, and payments in one place, no sign up required'
+    subtitle: 'Track your estimates, jobs, costs, & payments here',
+    signup: 'no sign-up required'
   },
   search: {
     title: 'Find Your Items',
@@ -134,7 +135,7 @@ const Portal = () => {
   
   // Use custom hooks
   const { createJobPayment, openStripeCheckout } = useStripe();
-  const { loading, error, setError, lookupByReference, lookupByEmail } = useGoogleScript();
+  const { loading, error, setError, lookupByReference, lookupByEmail, addAdditionalTime, getAdditionalTimeCost, addMaterials, getMaterialsCost } = useGoogleScript();
   
   // Use world context to determine the correct home path
   const { currentWorld } = useWorld();
@@ -249,6 +250,54 @@ const Portal = () => {
     await handleSearch();
     setRefreshing(false);
   };
+
+  // Handle adding additional time to a job
+  const handleAddTime = async (job, timeOption) => {
+    try {
+      const result = await addAdditionalTime({
+        bookingReference: job['Booking Reference'],
+        duration: timeOption.duration,
+        cost: timeOption.cost
+      });
+
+      if (result.success) {
+        console.log('Additional time added successfully:', result);
+        // Optionally show a success message to the user
+      } else {
+        console.error('Failed to add additional time:', result.error);
+        // Optionally show an error message to the user
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error adding additional time:', error);
+      throw error;
+    }
+  };
+
+  // Handle adding materials to a job
+  const handleAddMaterials = async (job, materialsOption) => {
+    try {
+      const result = await addMaterials({
+        bookingReference: job['Booking Reference'],
+        description: materialsOption.description,
+        cost: materialsOption.cost
+      });
+
+      if (result.success) {
+        console.log('Materials added successfully:', result);
+        // Optionally show a success message to the user
+      } else {
+        console.error('Failed to add materials:', result.error);
+        // Optionally show an error message to the user
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error adding materials:', error);
+      throw error;
+    }
+  };
   
   // Handle payment navigation - shows intermediate modal
   const handlePayment = async (job) => {
@@ -281,6 +330,9 @@ const Portal = () => {
         // Show payment details briefly (optional)
         if (result.jobDetails) {
           console.log('Payment details:', {
+            baseAmount: `$${result.jobDetails.baseAmount}`,
+            additionalTime: `$${result.jobDetails.additionalTimeCost}`,
+            materials: `$${result.jobDetails.materialsCost}`,
             total: `$${result.jobDetails.totalAmount}`,
             depositPaid: `$${result.jobDetails.depositPaid}`,
             amountDue: `$${result.jobDetails.amountDue}`,
@@ -298,6 +350,7 @@ const Portal = () => {
               setSelectedJob(null);
               setPaymentPopupBlocked(false);
               setCheckoutUrl(null);
+                            
               await handleRefresh();
               alert('Payment successful! Thank you for your payment.');
             } else if (paymentResult.cancelled) {
@@ -336,6 +389,8 @@ const Portal = () => {
             setSelectedJob(null);
             setPaymentPopupBlocked(false);
             setCheckoutUrl(null);
+
+                        
             await handleRefresh();
             alert('Payment successful! Thank you for your payment.');
           } else if (result.cancelled) {
@@ -357,7 +412,12 @@ const Portal = () => {
   
   // Handle Venmo payment from modal
   const handleVenmoPayment = (paymentDetails) => {
-    console.log('💜 Venmo payment selected with details:', paymentDetails);
+    console.log('💜 Venmo payment selected with details:', {
+      baseAmount: `$${paymentDetails.baseAmount?.toFixed(2) || '0.00'}`,
+      tipAmount: `$${paymentDetails.tipAmount?.toFixed(2) || '0.00'}`,
+      totalAmount: `$${paymentDetails.totalAmount?.toFixed(2) || '0.00'}`,
+      tipPercent: `${paymentDetails.tipPercent || 0}%`
+    });
     
     const venmoUsername = "QuantumTechnician";
     const note = `Payment for Job ${selectedJob['Booking Reference']} - ${selectedJob['Service']}`;
@@ -437,7 +497,7 @@ const Portal = () => {
       case 'needsAction':
         filtered = items.filter(item => 
           (item.itemType === 'estimate' && item.displayStatus === 'pending') ||
-          (item.itemType === 'booking' && item['Payment Status'] === 'completed_unpaid') ||
+          (item.itemType === 'booking' && item['Progress'].includes('100%') && item['Payment Status'] !== 'Paid') ||
           (item.itemType === 'booking' && item['Progress'].toLowerCase().includes('on hold'))
         );
         break;
@@ -492,7 +552,15 @@ const Portal = () => {
     const activeJobs = jobs.filter(job => 
       job.displayStatus === 'upcoming' || job.displayStatus === 'in_progress'
     );
-    const needsPayment = jobs.filter(job => job.displayStatus === 'completed_unpaid');
+    
+    // Jobs that need payment: match the exact logic from JobCard's getActualStatus()
+    const needsPayment = jobs.filter(job => {
+      const paymentStatus = job['Payment Status'] || 'Pending';
+      const progressStr = job['Progress'] || '';
+      
+      // Use the same logic as JobCard: 100% complete but payment is not 'Paid'
+      return progressStr.includes('100%') && paymentStatus !== 'Paid';
+    });
     
     return {
       total: items.length,
@@ -525,7 +593,7 @@ const Portal = () => {
               <TrendingUp className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">{CONTENT.hero.title}</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{CONTENT.hero.subtitle}</p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{CONTENT.hero.subtitle} <strong>{CONTENT.hero.signup}</strong></p>
           </div>
           
           {/* Search Section */}
@@ -838,7 +906,7 @@ const Portal = () => {
                       {item.itemType === 'estimate' ? (
                         <EstimateCard estimate={item} onRefresh={handleRefresh} />
                       ) : (
-                        <JobCard job={item} onPayment={handlePayment} onRefresh={handleRefresh} />
+                        <JobCard job={item} onPayment={handlePayment} onRefresh={handleRefresh} onAddTime={handleAddTime} getAdditionalTimeCost={getAdditionalTimeCost} onAddMaterials={handleAddMaterials} getMaterialsCost={getMaterialsCost} />
                       )}
                     </div>
                   ))}
@@ -899,6 +967,8 @@ const Portal = () => {
         popupBlocked={paymentPopupBlocked}
         onRetryPayment={handleRetryPayment}
         isMobile={isMobile}
+        getAdditionalTimeCost={getAdditionalTimeCost}
+        getMaterialsCost={getMaterialsCost}
       />
     </>
   );

@@ -12,7 +12,7 @@ const useStripe = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  const { callGoogleScript, isConfigured: isGoogleScriptConfigured } = useGoogleScript();
+  const { callGoogleScript, getAdditionalTimeCost, getMaterialsCost, isConfigured: isGoogleScriptConfigured } = useGoogleScript();
   const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
   
   // Check if Stripe is configured
@@ -146,12 +146,37 @@ const useStripe = () => {
       const job = lookupResult.items[0];
       
       // Step 2: Calculate payment amount
-      // Extract total from job (e.g., "$150" → 15000 cents)
+      // Extract base total from job (e.g., "$150" → 15000 cents)
       const priceValue = job['Price'] || '$0';
       const estimateText = String(priceValue); // Convert to string first
-      const totalAmount = parseInt(estimateText.replace(/[^0-9]/g, '')) * 100;
+      const baseAmount = parseInt(estimateText.replace(/[^0-9]/g, '')) * 100;
       
-      // Check if deposit was paid
+      // Step 3: Get additional time cost separately
+      let additionalTimeCost = 0;
+      try {
+        const additionalTimeResult = await getAdditionalTimeCost(bookingReference);
+        if (additionalTimeResult.success) {
+          additionalTimeCost = Math.round((additionalTimeResult.totalCost || 0) * 100); // Convert to cents
+        }
+      } catch (error) {
+        console.warn('Could not fetch additional time cost:', error);
+        // Continue with base amount only
+      }
+
+      // Step 4: Get materials cost separately
+      let materialsCost = 0;
+      try {
+        const materialsResult = await getMaterialsCost(bookingReference);
+        if (materialsResult.success) {
+          materialsCost = Math.round((materialsResult.totalCost || 0) * 100); // Convert to cents
+        }
+      } catch (error) {
+        console.warn('Could not fetch materials cost:', error);
+        // Continue without materials cost
+      }
+      
+      // Step 5: Calculate final payment amount
+      const totalAmount = baseAmount + additionalTimeCost + materialsCost;
       const depositPaid = job['Deposit Paid'] === 'Yes' ? 2500 : 0; // $25 in cents
       const tipInCents = Math.round(tipAmount * 100); // Convert tip to cents
       const amountDue = totalAmount - depositPaid + tipInCents;
@@ -160,7 +185,7 @@ const useStripe = () => {
         throw new Error('Payment link is not available');
       }
       
-      // Step 3: Create Stripe checkout session
+      // Step 6: Create Stripe checkout session
       const paymentResult = await callGoogleScript({
         action: 'createStripeCheckoutSession',
         paymentType: 'job_payment',
@@ -170,6 +195,9 @@ const useStripe = () => {
         metadata: {
           service: 'job_payment',
           bookingReference: bookingReference,
+          baseAmount: baseAmount,
+          additionalTimeCost: additionalTimeCost,
+          materialsCost: materialsCost,
           totalAmount: totalAmount,
           depositPaid: depositPaid,
           tipAmount: tipInCents,
@@ -185,6 +213,9 @@ const useStripe = () => {
         sessionStorage.setItem('pendingJobPayment', JSON.stringify({
           bookingReference,
           jobDetails: job,
+          baseAmount: baseAmount / 100,
+          additionalTimeCost: additionalTimeCost / 100,
+          materialsCost: materialsCost / 100,
           totalAmount: totalAmount / 100,
           depositPaid: depositPaid / 100,
           amountDue: amountDue / 100,
@@ -196,9 +227,12 @@ const useStripe = () => {
           success: true, 
           url: paymentResult.url,
           jobDetails: {
-            totalAmount: totalAmount / 100, // Convert back to dollars
-            depositPaid: depositPaid / 100,
-            amountDue: amountDue / 100
+            baseAmount: baseAmount / 100,         // Base job cost in dollars
+            additionalTimeCost: additionalTimeCost / 100, // Additional time cost in dollars
+            materialsCost: materialsCost / 100,   // Materials cost in dollars
+            totalAmount: totalAmount / 100,       // Total (base + additional + materials) in dollars
+            depositPaid: depositPaid / 100,       // Deposit paid in dollars
+            amountDue: amountDue / 100            // Final amount due in dollars
           }
         };
       } else {

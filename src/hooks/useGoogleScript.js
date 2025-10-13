@@ -118,6 +118,46 @@ const useGoogleScript = () => {
   };
 
   /**
+   * Add additional time to a job
+   */
+  const addAdditionalTime = async (jobData) => {
+    return callGoogleScript({
+      action: 'addAdditionalTime',
+      ...jobData
+    }, true);
+  };
+
+  /**
+   * Get additional time cost for a job
+   */
+  const getAdditionalTimeCost = async (bookingReference) => {
+    return callGoogleScript({
+      action: 'getAdditionalTimeCost',
+      bookingReference: bookingReference
+    }, true);
+  };
+
+  /**
+   * Add materials to a job
+   */
+  const addMaterials = async (materialsData) => {
+    return callGoogleScript({
+      action: 'addMaterials',
+      ...materialsData
+    }, true);
+  };
+
+  /**
+   * Get materials cost for a job
+   */
+  const getMaterialsCost = async (bookingReference) => {
+    return callGoogleScript({
+      action: 'getMaterialsCost',
+      bookingReference: bookingReference
+    }, true);
+  };
+
+  /**
    * Test connection to Google Apps Script
    */
   const testConnection = async () => {
@@ -151,6 +191,12 @@ const useGoogleScript = () => {
     createEstimateBooking,
     sendEstimateEmail,
     createServiceBooking,
+    
+    // Job operations
+    addAdditionalTime,
+    getAdditionalTimeCost,
+    addMaterials,
+    getMaterialsCost,
     
     // Utilities
     testConnection,

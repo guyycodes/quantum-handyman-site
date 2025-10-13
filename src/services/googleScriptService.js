@@ -106,6 +106,46 @@ class GoogleScriptService {
   }
 
   /**
+   * Add additional time to a job
+   */
+  async addAdditionalTime(jobData) {
+    return this.callGoogleScript({
+      action: 'addAdditionalTime',
+      ...jobData
+    });
+  }
+
+  /**
+   * Get additional time cost for a job
+   */
+  async getAdditionalTimeCost(bookingReference) {
+    return this.callGoogleScript({
+      action: 'getAdditionalTimeCost',
+      bookingReference: bookingReference
+    });
+  }
+
+  /**
+   * Add materials to a job
+   */
+  async addMaterials(materialsData) {
+    return this.callGoogleScript({
+      action: 'addMaterials',
+      ...materialsData
+    });
+  }
+
+  /**
+   * Get materials cost for a job
+   */
+  async getMaterialsCost(bookingReference) {
+    return this.callGoogleScript({
+      action: 'getMaterialsCost',
+      bookingReference: bookingReference
+    });
+  }
+
+  /**
    * Test connection
    */
   async testConnection() {

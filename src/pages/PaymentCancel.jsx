@@ -217,14 +217,7 @@ const PaymentCancel = () => {
                     className="flex items-center gap-3 text-blue-600 hover:text-blue-700 font-medium"
                   >
                     <Mail className="w-5 h-5" />
-                    support@quantumtechnician.com
-                  </a>
-                  <a 
-                    href="tel:555-123-4567" 
-                    className="flex items-center gap-3 text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    <Phone className="w-5 h-5" />
-                    (555) 123-4567
+                    hello@quantumtechnician.com
                   </a>
                 </div>
                 <p className="text-sm text-gray-500 mt-4">

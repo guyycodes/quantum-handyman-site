@@ -27,11 +27,15 @@ const CONTENT = {
   }
 };
 
-const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment, popupBlocked, onRetryPayment, isMobile }) => {
+const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment, popupBlocked, onRetryPayment, isMobile, getAdditionalTimeCost, getMaterialsCost }) => {
   const [selectedTip, setSelectedTip] = useState(0);
   const [showVenmoInfo, setShowVenmoInfo] = useState(false);
   const [isProcessingStripe, setIsProcessingStripe] = useState(false);
   const [isProcessingVenmo, setIsProcessingVenmo] = useState(false);
+  const [additionalTimeCost, setAdditionalTimeCost] = useState(0);
+  const [loadingAdditionalCost, setLoadingAdditionalCost] = useState(false);
+  const [materialsCost, setMaterialsCost] = useState(0);
+  const [loadingMaterialsCost, setLoadingMaterialsCost] = useState(false);
   
   // Reset state when modal closes
   useEffect(() => {
@@ -41,8 +45,54 @@ const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment
       setShowVenmoInfo(false);
       setIsProcessingStripe(false);
       setIsProcessingVenmo(false);
+      setAdditionalTimeCost(0);
+      setLoadingAdditionalCost(false);
+      setMaterialsCost(0);
+      setLoadingMaterialsCost(false);
     }
   }, [isOpen]);
+
+  // Fetch additional time cost when modal opens
+  useEffect(() => {
+    const fetchAdditionalTimeCost = async () => {
+      if (isOpen && getAdditionalTimeCost && job && job['Booking Reference']) {
+        setLoadingAdditionalCost(true);
+        try {
+          const result = await getAdditionalTimeCost(job['Booking Reference']);
+          if (result.success) {
+            setAdditionalTimeCost(result.totalCost || 0);
+          }
+        } catch (error) {
+          console.error('Error fetching additional time cost:', error);
+        } finally {
+          setLoadingAdditionalCost(false);
+        }
+      }
+    };
+
+    fetchAdditionalTimeCost();
+  }, [isOpen, job, getAdditionalTimeCost]);
+
+  // Fetch materials cost when modal opens
+  useEffect(() => {
+    const fetchMaterialsCost = async () => {
+      if (isOpen && getMaterialsCost && job && job['Booking Reference']) {
+        setLoadingMaterialsCost(true);
+        try {
+          const result = await getMaterialsCost(job['Booking Reference']);
+          if (result.success) {
+            setMaterialsCost(result.totalCost || 0);
+          }
+        } catch (error) {
+          console.error('Error fetching materials cost:', error);
+        } finally {
+          setLoadingMaterialsCost(false);
+        }
+      }
+    };
+
+    fetchMaterialsCost();
+  }, [isOpen, job, getMaterialsCost]);
   
   if (!isOpen || !job) return null;
   
@@ -74,8 +124,11 @@ const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment
   const baseAmountString = String(baseAmountFloat);
   const originalAmount = parseFloat(baseAmountString.replace(/[^0-9.]/g, '') || 0);
   
+  // Calculate total with additional time cost and materials cost
+  const totalJobAmount = originalAmount + additionalTimeCost + materialsCost;
+  
   // Subtract deposit from the amount owed (ensure it doesn't go negative)
-  const baseAmount = Math.max(0, originalAmount - deposit);
+  const baseAmount = Math.max(0, totalJobAmount - deposit);
   const tipAmount = (baseAmount * selectedTip) / 100;
   const totalAmount = baseAmount + tipAmount;
   
@@ -140,20 +193,20 @@ const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment
           
           {/* Content */}
           <div className="p-6">
-            {/* Job Details */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <div className="space-y-2">
+            {/* Job Details - Compact */}
+            <div className="bg-gray-50 rounded-lg p-3 mb-4">
+              <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Job Reference:</span>
-                  <span className="font-semibold">{job['Booking Reference']}</span>
+                  <span className="text-sm text-gray-600">Job:</span>
+                  <span className="font-semibold text-sm">{job['Booking Reference']}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Service:</span>
-                  <span className="font-semibold">{job['Service']}</span>
+                  <span className="text-sm text-gray-600">Service:</span>
+                  <span className="font-semibold text-sm">{job['Service']}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Date:</span>
-                  <span className="font-semibold">{formatDate(job['Date'])}</span>
+                  <span className="text-sm text-gray-600">Date:</span>
+                  <span className="font-semibold text-sm">{formatDate(job['Date'])}</span>
                 </div>
               </div>
             </div>
@@ -185,30 +238,58 @@ const JobPaymentModal = ({ isOpen, onClose, job, onStripePayment, onVenmoPayment
                 </div>
               </div>
             
-              {/* Price Breakdown */}
-              <div className="border-t border-gray-200 pt-4 mb-6">
-                <div className="space-y-2">
+              {/* Price Breakdown - Compact */}
+              <div className="border-t border-gray-200 pt-3 mb-4">
+                <div className="space-y-1.5">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Original Service Amount:</span>
-                    <span className="font-semibold">${originalAmount.toFixed(2)}</span>
+                    <span className="text-sm text-gray-600">Service:</span>
+                    <span className="font-semibold text-sm">${originalAmount.toFixed(2)}</span>
                   </div>
-                  {CONTENT.depositAmount > 0 && (
+                  {loadingAdditionalCost ? (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Additional Time:</span>
+                      <span className="text-gray-500 text-xs">Loading...</span>
+                    </div>
+                  ) : additionalTimeCost > 0 ? (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Additional Time:</span>
+                      <span className="font-semibold text-sm text-green-600">+ ${additionalTimeCost.toFixed(2)}</span>
+                    </div>
+                  ) : null}
+                  {loadingMaterialsCost ? (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Materials:</span>
+                      <span className="text-gray-500 text-xs">Loading...</span>
+                    </div>
+                  ) : materialsCost > 0 ? (
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Materials:</span>
+                      <span className="font-semibold text-sm text-blue-600">+ ${materialsCost.toFixed(2)}</span>
+                    </div>
+                  ) : null}
+                  {(additionalTimeCost > 0 || loadingAdditionalCost || materialsCost > 0 || loadingMaterialsCost) && (
+                    <div className="flex justify-between pt-1.5 border-t border-gray-100">
+                      <span className="text-sm text-gray-700 font-medium">Subtotal:</span>
+                      <span className="font-semibold text-sm">${totalJobAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {deposit > 0 && (
                     <>
-                      <div className="flex justify-between text-green-600">
-                        <span className="text-gray-600">Deposit Paid:</span>
-                        <span className="font-semibold">- ${CONTENT.depositAmount.toFixed(2)}</span>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Deposit Paid:</span>
+                        <span className="font-semibold text-sm text-green-600">- ${deposit.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between pt-2 border-t">
-                        <span className="text-gray-700 font-medium">Amount Due:</span>
-                        <span className={`font-semibold ${baseAmount === 0 ? 'text-green-600' : ''}`}>
+                      <div className="flex justify-between pt-1.5 border-t border-gray-100">
+                        <span className="text-sm text-gray-700 font-medium">Amount Due:</span>
+                        <span className={`font-semibold text-sm ${baseAmount === 0 ? 'text-green-600' : ''}`}>
                           ${baseAmount.toFixed(2)}
                         </span>
                       </div>
                     </>
                   )}
                   {baseAmount === 0 && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
-                      <p className="text-sm text-green-700">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-2 mt-2">
+                      <p className="text-xs text-green-700">
                         ✅ Your deposit fully covers this service! You can still add a tip if you'd like.
                       </p>
                     </div>

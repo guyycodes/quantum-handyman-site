@@ -14,7 +14,7 @@ const CONTENT = {
     text: 'Quantum',
     highlight: 'Technician'
   },
-  tagline: 'Fixing problems on every level - from leaky pipes to custom websites. Your one-stop solution for modern living.',
+  tagline: 'Fixing problems on every level - Your one-stop solution for modern living.',
   
   sections: {
     services: 'Services',
@@ -83,9 +83,13 @@ const CONTENT = {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
-  const { currentWorld } = useWorld()
+  const { currentWorld, isTechnician } = useWorld()
   const location = useLocation()
-  
+
+  const visibleServices = isTechnician
+  ? CONTENT.services.filter(s => s.name !== 'Web & Digital')
+  : CONTENT.services.filter(s => s.name === 'Web & Digital');
+
   // Get world-aware path for quick links
   const getWorldPath = (path) => {
     // Check if we're in a world-specific route
@@ -142,7 +146,7 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-4">{CONTENT.sections.services}</h3>
             <ul className="space-y-3">
-              {CONTENT.services.map((service) => (
+              {visibleServices.map((service) => (
                 <li key={service.name}>
                   <Link 
                     to={service.name === 'Web & Digital' ? '/web/services' : '/services'} 

@@ -1,5 +1,5 @@
-# Quantum Handyman Security Policy
-Contact: mailto:hello@quantumhandyman.com
+# Quantum technician Security Policy
+Contact: mailto:hello@quantumtechnician.com
 Expires: 2025-12-31T23:59:59.000Z
 Preferred-Languages: en
-Canonical: https://quantumhandyman.com/.well-known/security.txt
+Canonical: https://quantumtechnician.com/.well-known/security.txt

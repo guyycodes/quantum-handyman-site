@@ -33,16 +33,17 @@ const CONTENT = {
       line1: 'Quantum',
       line2: 'Technician'
     },
-    subtitle: 'A new kind of technician for your property & technology needs. No collars. Just capability.',
+    subtitle: 'A new kind of technician for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.',
     cta: {
       bookService: 'Book a Service',
       seeWork: 'View Portfolio',
-      helperText: '⚡ Instant AI estimates available'
+      helperText: '⚡ Instant AI estimates',
+        portalText: '⚡ Track Your Jobs'
     },
     badges: {
       fix: 'Property Maintenance & Repairs',
       tech: 'Tech & Digital',
-      online: 'Show Up Online',
+      online: 'Own Your Traffic',
       offering: 'No plumbing/electrical/permit work.'
     }
   },
@@ -96,7 +97,7 @@ const CONTENT = {
     description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'A new kind of technician for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.'
+      text: 'A new kind of technician bridging the gap between the physical & digital worlds | Craftsman + CS-degree, and deep multi-disciplinary expertise.'
     },
     whyChoose: {
       title: 'Why Choose Us?',
@@ -139,11 +140,11 @@ const CONTENT = {
       },
       {
         title: 'Certified Full-Stack Developer',
-        description: 'React, Node.js, Python, SQL, No-SQL, Java, Hibernate, Spring, Swift, Xcode, AWS, Vercel, iOS, Android etc.'
+        description: 'AWS, GCP, React, Node.js, Python, SQL, No-SQL, Java, Hibernate, Spring, Swift, Xcode, Vercel, iOS, Android etc.'
       },
       {
         title: 'Property Finance Background',
-        description: 'Former mortgage officer (NMLS #2318525) + Real Estate School. Deep property knowledge.'
+        description: 'Former mortgage officer (NMLS #2318525) + Real Estate School. Deep property & finance knowledge.'
       },
       {
         title: 'Certified ITIL 4',
@@ -168,7 +169,7 @@ const CONTENT = {
     subtitle: 'Check out our reviews and ratings from satisfied customers',
     googleTitle: 'Google Reviews',
     rating: '5.0 Rating • 100% Satisfaction',
-    description: 'Read verified customer reviews and see why homeowners trust Quantum Technician for both their tech and traditional service needs.',
+    description: 'Reviews for Quantum Technician.',
     googleButton: 'View Reviews on Google',
     googleUrl: 'https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review', // Replace with your actual Google Business URL
     helperText: 'See verified customer reviews on Google Business'
@@ -180,7 +181,7 @@ const CONTENT = {
     buttons: {
       bookNow: 'Book Now',
       // call: 'Call (555) 123-4567',
-      helperText: '⚡ Instant AI estimates available'
+      helperText: '⚡ Instant AI estimates'
     },
     badges: {
       freeQuotes: 'AI-Powered Instant Quotes',
@@ -190,7 +191,6 @@ const CONTENT = {
     footer: 'We use a secure booking platform to manage appointments and ensure the best service experience.'
   },
   
-  phone: '303-495-8899'
 }
 
 // Data objects with their text content
@@ -377,22 +377,25 @@ const Home = () => {
                   <Sparkles className="w-4 h-4" />
                   <span>{CONTENT.hero.badge}</span>
                 </div>
-                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 backdrop-blur-sm rounded-full px-4 py-2 text-sm animate-pulse">
-                  <span>⚡</span>
-                  <span>Instant AI Estimates</span>
-                </div>
+                <Link 
+                  to="/portal"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400/30 to-blue-400/30 backdrop-blur-sm rounded-full px-4 py-2 text-sm animate-pulse hover:from-green-400/40 hover:to-blue-400/40 transition-all cursor-pointer"
+                >
+                  <span>{CONTENT.hero.cta.portalText}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 {CONTENT.hero.title.line1} <br />
                 <span className="gradient-text bg-gradient-to-r from-yellow-300 to-orange-400">
-                  {isTechnician ? 'Technician' : isWeb ? 'Web Solutions' : CONTENT.hero.title.line2}
+                  {isTechnician ? 'Technician' : isWeb ? 'Technician' : CONTENT.hero.title.line2}
                 </span>
               </h1>
               
               <p className="text-xl text-white/90">
                 {isTechnician 
-                  ? 'Property • Repairs • Pro Service • Tech-Savvy Edge'
+                  ? 'Property Repairs • Installations • Tech-Savvy Edge'
                   : isWeb 
                   ? 'Web development • Creator Packages • Custom Solutions'
                   : CONTENT.hero.subtitle}

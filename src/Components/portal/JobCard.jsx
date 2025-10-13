@@ -1,12 +1,64 @@
-import React, { useState } from 'react';
-import { Briefcase, Calendar, Clock, MapPin, DollarSign, User, ChevronDown, ChevronUp, CheckCircle, AlertCircle, Loader, CreditCard, TrendingUp, Image, AlertTriangle, Pause } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Briefcase, Calendar, Clock, MapPin, DollarSign, User, ChevronDown, ChevronUp, CheckCircle, AlertCircle, Loader, CreditCard, TrendingUp, Image, AlertTriangle, Pause, Plus, Package } from 'lucide-react';
 
-const JobCard = ({ job, onPayment, onRefresh }) => {
+const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, onAddMaterials, getMaterialsCost }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [showProgressImage, setShowProgressImage] = useState(false);
   const [showImageGallery, setShowImageGallery] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showAddTimeDropdown, setShowAddTimeDropdown] = useState(false);
+  const [isProcessingAddTime, setIsProcessingAddTime] = useState(false);
+  const [additionalTimeCost, setAdditionalTimeCost] = useState(0);
+  const [loadingAdditionalCost, setLoadingAdditionalCost] = useState(false);
+  const [showAddMaterialsDropdown, setShowAddMaterialsDropdown] = useState(false);
+  const [isProcessingAddMaterials, setIsProcessingAddMaterials] = useState(false);
+  const [materialsCost, setMaterialsCost] = useState(0);
+  const [loadingMaterialsCost, setLoadingMaterialsCost] = useState(false);
+  const [materialDescription, setMaterialDescription] = useState('');
+  const [materialCost, setMaterialCost] = useState('');
+  
+  // Fetch additional time cost when component mounts
+  useEffect(() => {
+    const fetchAdditionalTimeCost = async () => {
+      if (getAdditionalTimeCost && job['Booking Reference']) {
+        setLoadingAdditionalCost(true);
+        try {
+          const result = await getAdditionalTimeCost(job['Booking Reference']);
+          if (result.success) {
+            setAdditionalTimeCost(result.totalCost || 0);
+          }
+        } catch (error) {
+          console.error('Error fetching additional time cost:', error);
+        } finally {
+          setLoadingAdditionalCost(false);
+        }
+      }
+    };
+
+    fetchAdditionalTimeCost();
+  }, [job['Booking Reference'], getAdditionalTimeCost]);
+
+  // Fetch materials cost when component mounts
+  useEffect(() => {
+    const fetchMaterialsCost = async () => {
+      if (getMaterialsCost && job['Booking Reference']) {
+        setLoadingMaterialsCost(true);
+        try {
+          const result = await getMaterialsCost(job['Booking Reference']);
+          if (result.success) {
+            setMaterialsCost(result.totalCost || 0);
+          }
+        } catch (error) {
+          console.error('Error fetching materials cost:', error);
+        } finally {
+          setLoadingMaterialsCost(false);
+        }
+      }
+    };
+
+    fetchMaterialsCost();
+  }, [job['Booking Reference'], getMaterialsCost]);
   
   // Parse progress info (if not already parsed by backend)
   const getProgressInfo = () => {
@@ -60,80 +112,29 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
   
   const progressInfo = getProgressInfo();
   
-  // Determine the actual status based on date/time and completion status
+  // Simple status determination - just use what's in the spreadsheet
   const getActualStatus = () => {
-    // If marked as complete in the spreadsheet, show completed status
+    const paymentStatus = job['Payment Status'] || 'Pending';
     const progressStr = job['Progress'] || '';
     const jobStatus = job['Status'] || '';
-    const paymentStatus = job['Payment Status'] || 'Pending';
     
-    // Check if job is in progress
-    if (!progressStr.includes('100%') && jobStatus.toLowerCase().includes('confirmed')) {
+    // 1. If payment is completed and paid
+    if (paymentStatus === 'Paid') {
+      return 'completed_paid';
+    }
+    
+    // 2. If job is 100% complete but payment is unpaid
+    if (progressStr.includes('100%') && paymentStatus !== 'Paid') {
+      return 'completed_unpaid';
+    }
+    
+    // 3. If job is confirmed but not 100% complete & not on hold (in progress)
+    if ((!progressStr.includes('100%') && jobStatus.toLowerCase().includes('confirmed')) && !progressStr.includes('On Hold')) {
       return 'in_progress';
     }
     
-    // Check if job is completed
-    if (progressStr.includes('100%') && paymentStatus.toLowerCase().includes('completed_unpaid')) {
-      return 'completed_unpaid';
-    }
-
-    if (progressStr.includes('100%') 
-        && paymentStatus.toLowerCase().includes('completed_paid') 
-        && jobStatus.toLowerCase().includes('confirmed')) {
-      return 'completed_paid';
-    }
-    // check if job is paid
-    
-    // Check if job time has passed
-    const jobDate = job['Date'];
-    const jobTime = job['Time'];
-    
-    if (jobDate) {
-      const now = new Date();
-      const [year, month, day] = jobDate.split('-').map(Number);
-      const jobDateTime = new Date(year, month - 1, day);
-      
-      // Add time if available
-      if (jobTime) {
-        let hours = 0, minutes = 0;
-        
-        // Handle different time formats
-        const timeStr = jobTime.toString();
-        if (timeStr.includes('T') && timeStr.includes('Z')) {
-          // ISO datetime format (e.g., "1899-12-30T16:00:00.000Z")
-          const timeDate = new Date(timeStr);
-          hours = timeDate.getHours(); // This converts from UTC to local
-          minutes = timeDate.getMinutes();
-        } else if (timeStr.includes(':')) {
-          // Simple time format "9:00"
-          const timeParts = timeStr.split(':');
-          hours = parseInt(timeParts[0]) || 0;
-          minutes = parseInt(timeParts[1]) || 0;
-        }
-        
-        jobDateTime.setHours(hours, minutes, 0, 0);
-      } else {
-        // If no time specified, set to end of day
-        jobDateTime.setHours(23, 59, 59, 999);
-      }
-      
-      // Add 2 hours buffer after job time before considering it "past"
-      const bufferTime = new Date(jobDateTime.getTime() + (2 * 60 * 60 * 1000));
-      
-      if (now > bufferTime) {
-        // Job time has passed, should be marked completed or needs attention
-        return paymentStatus === 'Paid' && progressStr.includes('100%') ? 'completed_paid' : 'completed_unpaid';
-      } else if (now >= jobDateTime && now <= bufferTime) {
-        // Job is happening now or just happened
-        return 'in_progress';
-      } else {
-        // Job is in the future
-        return 'upcoming';
-      }
-    }
-    
-    // Fallback to the provided status
-    return job.displayStatus || 'upcoming';
+    // 4. Default fallback for scheduled/upcoming jobs
+    return 'default';
   };
   
   const actualStatus = getActualStatus();
@@ -196,13 +197,6 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
   // Determine status display
   const getStatusBadge = () => {
     switch (actualStatus) {
-      case 'upcoming':
-        return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">
-            <Clock className="w-3 h-3" />
-            Upcoming
-          </span>
-        );
       case 'in_progress':
         return (
           <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-orange-700 bg-orange-100 rounded-full animate-pulse">
@@ -355,6 +349,94 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
     
     setIsProcessingPayment(false);
   };
+
+  const handleAddTime = async (timeOption) => {
+    setIsProcessingAddTime(true);
+    
+    try {
+      // Call the add time handler passed from parent
+      if (onAddTime) {
+        await onAddTime(job, timeOption);
+        setShowAddTimeDropdown(false);
+        
+        // Refresh additional time cost
+        if (getAdditionalTimeCost && job['Booking Reference']) {
+          try {
+            const result = await getAdditionalTimeCost(job['Booking Reference']);
+            if (result.success) {
+              setAdditionalTimeCost(result.totalCost || 0);
+            }
+          } catch (error) {
+            console.error('Error refreshing additional time cost:', error);
+          }
+        }
+        
+        // Refresh the job data if onRefresh is available
+        if (onRefresh) {
+          await onRefresh();
+        }
+      } else {
+        console.log('❌ No onAddTime handler provided!');
+      }
+    } catch (error) {
+      console.error('Error adding time:', error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsProcessingAddTime(false);
+    }
+  };
+
+  const handleAddMaterials = async () => {
+    if (!materialDescription.trim() || !materialCost.trim()) {
+      alert('Please enter both description and cost');
+      return;
+    }
+
+    const cost = parseFloat(materialCost);
+    if (isNaN(cost) || cost <= 0) {
+      alert('Please enter a valid cost');
+      return;
+    }
+
+    setIsProcessingAddMaterials(true);
+    
+    try {
+      // Call the add materials handler passed from parent
+      if (onAddMaterials) {
+        await onAddMaterials(job, {
+          description: materialDescription.trim(),
+          cost: cost
+        });
+        setShowAddMaterialsDropdown(false);
+        setMaterialDescription('');
+        setMaterialCost('');
+        
+        // Refresh materials cost
+        if (getMaterialsCost && job['Booking Reference']) {
+          try {
+            const result = await getMaterialsCost(job['Booking Reference']);
+            if (result.success) {
+              setMaterialsCost(result.totalCost || 0);
+            }
+          } catch (error) {
+            console.error('Error refreshing materials cost:', error);
+          }
+        }
+        
+        // Refresh the job data if onRefresh is available
+        if (onRefresh) {
+          await onRefresh();
+        }
+      } else {
+        console.log('❌ No onAddMaterials handler provided!');
+      }
+    } catch (error) {
+      console.error('Error adding materials:', error);
+      alert('Error adding materials. Please try again.');
+    } finally {
+      setIsProcessingAddMaterials(false);
+    }
+  };
   
   const needsPayment = actualStatus === 'completed_unpaid';
   const isUrgent = job['Urgent Flag'] === 'URGENT';
@@ -374,9 +456,9 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
   };
   
   return (
-    <div className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-2 ${getBorderColor()}`}>
+    <div className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${getBorderColor()} relative`}>
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6">
+      <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 overflow-hidden rounded-t-xl">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white rounded-lg shadow-sm">
@@ -413,7 +495,29 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
           </div>
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="w-4 h-4 text-gray-500" />
-            <span className="font-semibold text-gray-900">{job['Price']}</span>
+            <div className="flex flex-col">
+              <span className="font-semibold text-gray-900">{job['Price']}</span>
+              {loadingAdditionalCost ? (
+                <span className="text-xs text-gray-500">
+                  <Loader className="w-3 h-3 inline animate-spin mr-1" />
+                  Loading additional costs...
+                </span>
+              ) : additionalTimeCost > 0 ? (
+                <span className="text-xs text-green-600 font-medium">
+                  +${additionalTimeCost.toFixed(2)} (additional time)
+                </span>
+              ) : null}
+              {loadingMaterialsCost ? (
+                <span className="text-xs text-gray-500">
+                  <Loader className="w-3 h-3 inline animate-spin mr-1" />
+                  Loading materials costs...
+                </span>
+              ) : materialsCost > 0 ? (
+                <span className="text-xs text-blue-600 font-medium">
+                  +${materialsCost.toFixed(2)} (materials)
+                </span>
+              ) : null}
+            </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <DollarSign className="w-4 h-4 text-gray-500" />
@@ -427,7 +531,7 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
       </div>
       
       {/* Main Content */}
-      <div className="p-6">
+      <div className="p-6 overflow-visible">
         {/* Progress Section - Show prominently if there's active progress */}
         {progressInfo.message && progressInfo.message !== 'Scheduled' && (
           <div className="mb-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200">
@@ -596,50 +700,189 @@ const JobCard = ({ job, onPayment, onRefresh }) => {
         )}
         
         {/* Actions */}
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            {isExpanded ? (
-              <>
-                <ChevronUp className="w-4 h-4" />
-                Show Less
-              </>
-            ) : (
-              <>
-                <ChevronDown className="w-4 h-4" />
-                View Details
-              </>
+        <div className="mt-4">
+          {/* Action buttons row */}
+          <div className="flex justify-end items-center gap-2 mb-2">
+            {/* Add Time dropdown - show for in progress or completed jobs */}
+            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid' || actualStatus === 'completed_paid') && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowAddTimeDropdown(!showAddTimeDropdown)}
+                  disabled={isProcessingAddTime}
+                  className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessingAddTime ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4" />
+                      Add Time
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showAddTimeDropdown ? 'rotate-180' : ''}`} />
+                    </>
+                  )}
+                </button>
+                
+                {/* Dropdown menu */}
+                {showAddTimeDropdown && (
+                  <div className="absolute top-full mt-1 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[200px]">
+                    <button
+                      onClick={() => handleAddTime({ duration: 30, cost: 35 })}
+                      disabled={isProcessingAddTime}
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-b border-gray-100"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-medium text-gray-900">30 Minutes</div>
+                          <div className="text-sm text-gray-600">Additional half hour</div>
+                        </div>
+                        <div className="font-bold text-green-600">+$35</div>
+                      </div>
+                    </button>
+                    
+                    <button
+                      onClick={() => handleAddTime({ duration: 60, cost: 70 })}
+                      disabled={isProcessingAddTime}
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-b-lg"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-medium text-gray-900">1 Hour</div>
+                          <div className="text-sm text-gray-600">Additional full hour</div>
+                        </div>
+                        <div className="font-bold text-green-600">+$70</div>
+                      </div>
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
-          </button>
+
+            {/* Add Materials dropdown - show for in progress or completed jobs */}
+            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid' || actualStatus === 'completed_paid') && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowAddMaterialsDropdown(!showAddMaterialsDropdown)}
+                  disabled={isProcessingAddMaterials}
+                  className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessingAddMaterials ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Package className="w-4 h-4" />
+                      Add Mat'ls
+                      <ChevronDown className={`w-4 h-4 transition-transform ${showAddMaterialsDropdown ? 'rotate-180' : ''}`} />
+                    </>
+                  )}
+                </button>
+                
+                {/* Dropdown menu */}
+                {showAddMaterialsDropdown && (
+                  <div className="absolute top-full mt-1 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[250px] p-4">
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Description:</label>
+                        <input
+                          type="text"
+                          value={materialDescription}
+                          onChange={(e) => setMaterialDescription(e.target.value)}
+                          placeholder="e.g., Paint, screws, lumber"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          disabled={isProcessingAddMaterials}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Cost:</label>
+                        <input
+                          type="number"
+                          value={materialCost}
+                          onChange={(e) => setMaterialCost(e.target.value)}
+                          placeholder="0.00"
+                          step="0.01"
+                          min="0"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          disabled={isProcessingAddMaterials}
+                        />
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        <button
+                          onClick={handleAddMaterials}
+                          disabled={isProcessingAddMaterials || !materialDescription.trim() || !materialCost.trim()}
+                          className="flex-1 px-3 py-2 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Add Material
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowAddMaterialsDropdown(false);
+                            setMaterialDescription('');
+                            setMaterialCost('');
+                          }}
+                          disabled={isProcessingAddMaterials}
+                          className="px-3 py-2 text-gray-600 text-sm hover:text-gray-900 transition-colors disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {needsPayment && (
+              <button
+                onClick={handlePayment}
+                disabled={isProcessingPayment}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transform transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-pulse-subtle"
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <Loader className="w-4 h-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4" />
+                    Pay Now
+                  </>
+                )}
+              </button>
+            )}
+            
+            {actualStatus === 'completed_paid' && (
+              <div className="flex items-center gap-2 text-green-600">
+                <CheckCircle className="w-5 h-5" />
+                <span className="font-medium">Paid</span>
+              </div>
+            )}
+          </div>
           
-          {needsPayment && (
+          {/* View Details button - separate row on small screens */}
+          <div className="flex justify-start">
             <button
-              onClick={handlePayment}
-              disabled={isProcessingPayment}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transform transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed animate-pulse-subtle"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-              {isProcessingPayment ? (
+              {isExpanded ? (
                 <>
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Processing...
+                  <ChevronUp className="w-4 h-4" />
+                  Show Less
                 </>
               ) : (
                 <>
-                  <CreditCard className="w-4 h-4" />
-                  Pay Now
+                  <ChevronDown className="w-4 h-4" />
+                  View Details
                 </>
               )}
             </button>
-          )}
-          
-          {actualStatus === 'completed_paid' && (
-            <div className="flex items-center gap-2 text-green-600">
-              <CheckCircle className="w-5 h-5" />
-              <span className="font-medium">Paid</span>
-            </div>
-          )}
+          </div>
         </div>
       </div>
       

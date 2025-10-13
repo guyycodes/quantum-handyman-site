@@ -22,7 +22,7 @@ const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
-    { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
+    { sender: 'bot', text: 'Hello! I\'m the Quantum Technician assistant. How can I help you today?', type: 'text' }
   ]);
   const [currentStage, setCurrentStage] = useState('initial');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -210,6 +210,35 @@ const ChatBot = () => {
     setConversation(prev => [...prev, ...newMessages]);
   };
 
+  const handleWorldSelectionClick = (option) => {
+    setConversation(prev => [...prev, { 
+      sender: 'user', 
+      text: option.label, 
+      type: 'selection',
+      description: option.description 
+    }]);
+
+    setIsThinking(true);
+
+    setTimeout(() => {
+      setIsThinking(false);
+      
+      const newMessages = [
+        { sender: 'bot', text: `Great choice! I'll take you to our ${option.label.toLowerCase()} page.`, type: 'text' },
+        { 
+          sender: 'bot', 
+          text: '', 
+          type: 'world_redirect_action',
+          redirectPath: option.redirectPath,
+          buttonText: `View ${option.label}`
+        }
+      ];
+      
+      setConversation(prev => [...prev, ...newMessages]);
+      setCurrentStage('completed');
+    }, getThinkingDelay());
+  };
+
   const handleClarificationClick = (option) => {
     setConversation(prev => [...prev, { 
       sender: 'user', 
@@ -230,6 +259,20 @@ const ChatBot = () => {
         const newMessages = [
           { sender: 'bot', text: chatbotResponses.supportTicket.introduction, type: 'text' },
           { sender: 'bot', text: 'Please fill out the following information:', type: 'support_form' }
+        ];
+        
+        setConversation(prev => [...prev, ...newMessages]);
+      } else if (option.leadToService === 'services_world_selection') {
+        setCurrentStage('world_selection');
+        
+        const newMessages = [
+          { sender: 'bot', text: 'What type of services are you interested in?', type: 'text' },
+          { 
+            sender: 'bot', 
+            text: 'Please select the service category that best fits your needs:', 
+            type: 'world_selection_options',
+            options: chatbotResponses.worldSelectionOptions
+          }
         ];
         
         setConversation(prev => [...prev, ...newMessages]);
@@ -335,7 +378,7 @@ const ChatBot = () => {
       console.error('Support Ticket Error:', error);
       setConversation(prev => [...prev, {
         sender: 'bot',
-        text: 'Sorry, there was an error creating your service request. Please try again or contact us directly at (555) 123-4567.',
+        text: 'Sorry, there was an error creating your service request. Please try again or contact us directly at hello@quantumtechnician.com.',
         type: 'error'
       }]);
     }
@@ -345,7 +388,7 @@ const ChatBot = () => {
 
   const resetConversation = () => {
     setConversation([
-      { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your home repair or improvement needs today?', type: 'text' }
+      { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your repair or improvement needs today?', type: 'text' }
     ]);
     setCurrentStage('initial');
     setIsComplaintTicket(false);
@@ -494,6 +537,52 @@ const ChatBot = () => {
                 </div>
               </button>
             ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (msg.type === 'world_selection_options') {
+      return (
+        <div key={index} className="flex justify-start mb-2 chatbot-animate-fade-in">
+          <div className="w-full space-y-2">
+            {msg.options.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => handleWorldSelectionClick(option)}
+                className="w-full text-left p-3 bg-gray-800/50 backdrop-blur-sm rounded-lg border border-blue-500/30 hover:border-blue-400 hover:bg-gray-700/50 transition-all duration-300 group"
+              >
+                <div className="font-semibold text-white group-hover:text-blue-400 transition-colors">
+                  {option.label}
+                </div>
+                <div className="text-sm text-gray-400 mt-1">
+                  {option.description}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (msg.type === 'world_redirect_action') {
+      return (
+        <div key={index} className="flex justify-start mb-2 chatbot-animate-fade-in">
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => handleRedirect(msg.redirectPath)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
+            >
+              <FaWrench className="text-sm" />
+              {msg.buttonText}
+            </button>
+            <button
+              onClick={resetConversation}
+              className="border border-gray-500 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-800/50 transition-colors duration-300 flex items-center gap-2"
+            >
+              <FaRedo className="text-sm" />
+              Start Over
+            </button>
           </div>
         </div>
       );
@@ -736,7 +825,7 @@ const ChatBot = () => {
                   type="text"
                   value={message}
                   onChange={handleMessageChange}
-                  placeholder={currentStage === 'initial' ? "Ask about repairs, quotes, or services..." : "Any additional questions?"}
+                  placeholder={currentStage === 'initial' ? "Ask about services, quotes, or repairs..." : "Any additional questions?"}
                   className="flex-1 bg-gray-800/50 border border-blue-500/30 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
                 />
                 <button

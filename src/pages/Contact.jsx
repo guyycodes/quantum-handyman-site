@@ -99,7 +99,7 @@ const CONTENT = {
     title: 'Need Immediate Help?',
     subtitle: 'Get an instant AI estimate or book a service directly for the fastest response.',
     buttonText: 'Book Now',
-    helperText: '⚡ Instant AI estimates available'
+    helperText: '⚡ Instant AI estimates'
   },
   
   responseTime: {

@@ -14,7 +14,7 @@
     <image:image>
       <image:loc>https://quantumtechnician.com/og-image.png</image:loc>
       <image:title>Quantum Technician - Professional Home and Tech Services</image:title>
-      <image:caption>A new kind of technician for your property &amp; technology needs | Craftsman + CS-degree. No collars. Just capability.</image:caption>
+      <image:caption>A new kind of technician for your tech &amp; property needs | Craftsman + CS-degree.</image:caption>
     </image:image>
   </url>
   
@@ -78,7 +78,7 @@
   
   <!-- Home Repairs Service -->
   <url>
-    <loc>https://quantumtechnician.com/services/home-repairs</loc>
+    <loc>https://quantumtechnician.com/technician/services</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -86,7 +86,7 @@
   
   <!-- Smart Home Service -->
   <url>
-    <loc>https://quantumtechnician.com/services/smart-home</loc>
+    <loc>https://quantumtechnician.com/technician/portfolio</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -94,15 +94,15 @@
   
   <!-- Web Development Service -->
   <url>
-    <loc>https://quantumtechnician.com/services/web-development</loc>
+    <loc>https://quantumtechnician.com/web/services</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
-  <!-- Landscaping Service -->
+  <!-- Web Portfolio -->
   <url>
-    <loc>https://quantumtechnician.com/services/landscaping</loc>
+    <loc>https://quantumtechnician.com/web/portfolio</loc>
     <lastmod>2024-12-01T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

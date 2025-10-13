@@ -8,17 +8,17 @@ const chatbotResponses = {
       "Hey! Great to have you here today!",
       "Hello! Thanks for reaching out to Quantum Technician!"
     ],
-    followUp: "How can I help with your home repair or improvement needs today?"
+    followUp: "How can I help today?"
   },
 
   // Casual conversation starters
   casualResponses: {
     'how are you': "I'm doing great, thank you for asking! I'm here to help you with all your technician needs.",
-    'what can you do': "I can help you book a service, learn about our repair and installation services, get a quote, or answer any questions about home improvements.",
-    'who are you': "I'm your Quantum Technician assistant! We're a new kind of technician for your property & technology needs. Craftsman + CS-degree. No collars. Just capability.",
+    'what can you do': "I can help you book a service, learn about services, get a quote, or answer any questions about home improvements.",
+    'who are you': "I'm your Quantum Technician assistant!",
     'thanks': "You're very welcome! Is there anything else I can help you with?",
     'thank you': "My pleasure! Let me know if you need anything else!",
-    'what services': "We offer home repairs, smart home automation, web development, landscaping, and more. From traditional technician work to tech solutions - we handle it all. What do you need help with?",
+    'what services': "We offer full service web development, maintenence & repairs for home & business owners, smart home automation and more. From traditional to modern problems we bring a unified appproach to solutions. What do you need help with?",
     'emergency': "For emergencies, I can help you get immediate assistance. Let me know what's happening!",
     'urgent': "I understand this is urgent. Let me help you get the fastest service possible."
   },
@@ -28,7 +28,7 @@ const chatbotResponses = {
     {
       id: 'booking',
       label: 'Book a Service',
-      description: 'Schedule a visit for property repairs, tech solutions, or installations',
+      description: 'Schedule a visit for repairs, tech solutions, or installations',
       definitiveKeywords: ['book', 'schedule', 'appointment', 'visit', 'come', 'available', 'when can', 'book service', 'how do i book', 'how to book', 'make booking', 'reserve'],
       supportiveKeywords: ['today', 'tomorrow', 'week', 'asap', 'soon', 'urgent', 'emergency', 'broken', 'install', 'fix', 'repair'],
       minKeywordMatches: 1,
@@ -41,7 +41,7 @@ const chatbotResponses = {
     {
       id: 'services',
       label: 'View Services',
-      description: 'Explore all our technician and repair services',
+      description: 'Explore all our services and capabilities',
       definitiveKeywords: ['services', 'what do you do', 'repairs', 'electrical', 'plumbing', 'carpentry', 'painting', 'installation', 'maintenance'],
       supportiveKeywords: ['fix', 'install', 'repair', 'replace', 'build', 'mount', 'assemble', 'renovate'],
       minKeywordMatches: 1,
@@ -76,15 +76,31 @@ const chatbotResponses = {
     }
   ],
 
+  // World selection options for services
+  worldSelectionOptions: [
+    {
+      id: 'technician_services',
+      label: '🔧 Traditional Technician Services',
+      description: 'Property repairs, smart home, and more',
+      redirectPath: '/technician/services'
+    },
+    {
+      id: 'web_services', 
+      label: '💻 Web Development Services',
+      description: 'Website design, development, and digital solutions',
+      redirectPath: '/web/services'
+    }
+  ],
+
   // Clarifying questions to ask when intent is unclear
   clarifyingQuestions: {
     initial: "I'd love to help! What specifically do you need assistance with today?",
-    whenUnclear: "I want to make sure I point you in the right direction. Could you tell me a bit more about your home improvement needs?",
+    whenUnclear: "I want to make sure I point you in the right direction. Could you tell me a bit more about what you need help with?",
     options: [
       {
         id: 'booking_clarify',
         label: '📅 Schedule a Service',
-        description: 'Book a technician visit',
+        description: 'Book',
         leadToService: 'booking'
       },
       {
@@ -97,7 +113,7 @@ const chatbotResponses = {
         id: 'services_clarify', 
         label: '🔧 View Services',
         description: 'See what we offer',
-        leadToService: 'services'
+        leadToService: 'services_world_selection'
       },
       {
         id: 'emergency_clarify',
@@ -118,8 +134,8 @@ const chatbotResponses = {
   supportTicket: {
     introduction: "I'll help you create a service request so our team can assist you directly.",
     confirmationMessage: "Thank you! Your service request has been created. Our team will contact you within 2-4 hours.",
-    complaintConfirmationMessage: "Your complaint has been escalated to our management team. We take service quality seriously and will contact you within 1 hour to address your concerns.",
-    emergencyConfirmationMessage: "Your emergency request has been submitted. We'll call you within 30 minutes to arrange immediate assistance.",
+    complaintConfirmationMessage: "Your complaint has been escalated to our management team. We take service quality seriously and will contact you within 1 business day to address your concerns.",
+    emergencyConfirmationMessage: "Your emergency request has been submitted. We'll call you to arrange immediate assistance.",
     fields: [
       {
         id: 'name',
@@ -132,7 +148,7 @@ const chatbotResponses = {
         id: 'phone',
         label: 'Phone Number',
         type: 'tel',
-        placeholder: '(555) 123-4567',
+        placeholder: '(303) 578-7551',
         required: true
       },
       {
@@ -144,9 +160,9 @@ const chatbotResponses = {
       },
       {
         id: 'address',
-        label: 'Service Address',
+        label: 'Service Location',
         type: 'text',
-        placeholder: 'Where do you need service?',
+        placeholder: 'Where do you need service? (address, business, etc.)',
         required: true
       },
       {

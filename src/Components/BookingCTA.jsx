@@ -9,7 +9,7 @@ const CONTENT = {
   defaultButtonText: 'Book Service',
   ariaLabel: 'Book {service} with Quantum Technician',
   defaultService: 'a service',
-  defaultHelperText: '⚡ Instant AI estimates available'
+  defaultHelperText: '⚡ Instant AI estimates'
 }
 
 const BookingCTA = ({
