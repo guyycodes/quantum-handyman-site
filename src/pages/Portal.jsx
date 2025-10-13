@@ -352,7 +352,7 @@ const Portal = () => {
               setCheckoutUrl(null);
                             
               await handleRefresh();
-              alert('Payment successful! Thank you for your payment.');
+              alert('Payment successful! Your Reciept has been sent to your email. Thank you for your payment.');
             } else if (paymentResult.cancelled) {
               // Payment cancelled
               alert('Payment was cancelled. You can try again when ready.');
@@ -392,7 +392,7 @@ const Portal = () => {
 
                         
             await handleRefresh();
-            alert('Payment successful! Thank you for your payment.');
+            alert('Payment successful! Your Reciept has been sent to your email. Thank you for your payment.');
           } else if (result.cancelled) {
             console.log('❌ Payment cancelled');
             // Keep modal open so user can try again

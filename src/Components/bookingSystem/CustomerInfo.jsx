@@ -27,11 +27,13 @@ const CONTENT = {
     },
     phone: {
       label: 'Phone Number *',
+      labelOptional: '(Optional) Phone Number',
       placeholder: '(555) 123-4567',
       error: 'Please enter a valid phone number'
     },
     address: {
       label: 'Address *',
+      labelOptional: '(Optional) Address ',
       placeholder: '123 Main Street\nCity, State ZIP',
       error: 'Please enter your complete address'
     },
@@ -63,6 +65,9 @@ const CONTENT = {
 };
 
 const CustomerInfo = ({ onSubmit, initialData, service }) => {
+  // Check if this is an estimate flow
+  const isEstimateFlow = service?.id === 'estimate';
+  
   const [formData, setFormData] = useState(initialData || {
     name: '',
     email: '',
@@ -119,20 +124,24 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
       newErrors.email = emailResult.error || CONTENT.fields.email.error;
     }
     
-    // Phone validation with sanitization
-    const phoneResult = sanitizePhone(formData.phone);
-    if (!phoneResult.isValid) {
-      newErrors.phone = phoneResult.error || CONTENT.fields.phone.error;
+    // Phone validation with sanitization - optional for estimates
+    if (!isEstimateFlow || formData.phone.trim()) {
+      const phoneResult = sanitizePhone(formData.phone);
+      if (!phoneResult.isValid) {
+        newErrors.phone = phoneResult.error || CONTENT.fields.phone.error;
+      }
     }
     
-    // Address validation with sanitization
-    const addressResult = sanitizeAddress(formData.address);
-    if (!addressResult.isValid) {
-      newErrors.address = addressResult.error || CONTENT.fields.address.error;
-    }
-    if (addressResult.isPOBox && service?.id !== 'estimate') {
-      // Optionally warn about PO Box for service appointments
-      newErrors.address = 'Service address cannot be a PO Box';
+    // Address validation with sanitization - optional for estimates
+    if (!isEstimateFlow || formData.address.trim()) {
+      const addressResult = sanitizeAddress(formData.address);
+      if (!addressResult.isValid) {
+        newErrors.address = addressResult.error || CONTENT.fields.address.error;
+      }
+      if (addressResult.isPOBox && service?.id !== 'estimate') {
+        // Optionally warn about PO Box for service appointments
+        newErrors.address = 'Service address cannot be a PO Box';
+      }
     }
     
     // Description validation with sanitization
@@ -475,7 +484,7 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
         {/* Phone Field */}
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-            {CONTENT.fields.phone.label}
+            {isEstimateFlow ? CONTENT.fields.phone.labelOptional : CONTENT.fields.phone.label}
           </label>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -506,7 +515,7 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
         {/* Address Field */}
         <div>
           <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-            {CONTENT.fields.address.label}
+            {isEstimateFlow ? CONTENT.fields.address.labelOptional : CONTENT.fields.address.label}
           </label>
           <div className="relative">
             <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />

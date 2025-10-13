@@ -18,9 +18,9 @@ console.log = (...args) => {
     return;
   }
   // In production, suppress all logs. In development, show non-PostHog logs
-  // if (import.meta.env.DEV) {
+  if (import.meta.env.DEV) {
     originalLog(...args);
-  // }
+  }
 };
 
 // console.warn = (...args) => {
@@ -37,13 +37,13 @@ console.log = (...args) => {
 // };
 
 // // Suppress info and debug in production
-// if (import.meta.env.PROD) {
-//   console.info = () => {};
-//   console.debug = () => {};
-//   console.log = () => {};
-//   console.warn = () => {};
-//   console.error = () => {};
-// }
+if (import.meta.env.PROD) {
+  console.info = () => {};
+  console.debug = () => {};
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
