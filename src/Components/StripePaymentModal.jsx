@@ -70,6 +70,11 @@ const StripePaymentModal = ({ isOpen, onClose, onPaymentSuccess, customerInfo })
           description: customerInfo.description
         });
         
+        // Debug: Log what we got back from createAIEstimatePayment
+        console.log('🔍 AI Estimate Payment Result:', result);
+        console.log('🔗 URL returned:', result.url);
+        console.log('✅ Success:', result.success);
+        
         if (result.success) {
           // Save the checkout URL in case we need to retry
           setCheckoutUrl(result.url);

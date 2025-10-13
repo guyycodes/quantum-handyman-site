@@ -46,6 +46,9 @@ const useStripe = () => {
         }
       }, true); // Skip loading state
       
+      // Debug: Log what Google Apps Script returned
+      console.log('🔍 Google Apps Script Response for AI Estimate:', result);
+      
           if (result.success && result.url) {
             // Store minimal payment context in session storage for fallback/redirect scenarios
             sessionStorage.setItem('pendingAIEstimate', JSON.stringify({
