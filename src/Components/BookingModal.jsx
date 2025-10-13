@@ -406,6 +406,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             setShowAIResult(true);
           } else {
             setIsProcessingAI(false);
+            setIsSubmitting(false); // Clear loading state for non-AI estimates
             setAIProcessingMessage('');
             setCurrentStep(6); // Success step
             // Scroll modal to top after success
@@ -647,7 +648,7 @@ const BookingModal = ({ isOpen, onClose, initialService = null }) => {
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center rounded-2xl">
               <div className="text-center">
                 <Loader className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-3" />
-                <p className="text-gray-700 font-medium text-lg">Processing your booking...</p>
+                <p className="text-gray-700 font-medium text-lg">Processing...</p>
               </div>
             </div>
           )}

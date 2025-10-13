@@ -12,16 +12,16 @@ const originalWarn = console.warn;
 const originalError = console.error;
 
 // // Filter out PostHog logs in all environments
-// console.log = (...args) => {
-//   // Filter out PostHog logs
-//   if (typeof args[0] === 'string' && (args[0].includes('[PostHog') || args[0].includes('PostHog.js'))) {
-//     return;
-//   }
-//   // In production, suppress all logs. In development, show non-PostHog logs
-//   if (import.meta.env.DEV) {
-//     originalLog(...args);
-//   }
-// };
+console.log = (...args) => {
+  // Filter out PostHog logs
+  if (typeof args[0] === 'string' && (args[0].includes('[PostHog') || args[0].includes('PostHog.js'))) {
+    return;
+  }
+  // In production, suppress all logs. In development, show non-PostHog logs
+  if (import.meta.env.DEV) {
+    originalLog(...args);
+  }
+};
 
 // console.warn = (...args) => {
 //   // Filter out PostHog warnings
