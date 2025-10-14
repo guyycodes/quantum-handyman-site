@@ -8,9 +8,10 @@ import { useSmsNotification } from '../hooks/useSmsNotification'
 import { 
   Phone, Mail, MapPin, Clock, 
   Send, CheckCircle, AlertCircle,
-  Facebook, Instagram
+  Youtube, Linkedin
 } from 'lucide-react'
 import TikTokIcon from '../Components/TikTokIcon'
+import NextDoorIcon from '../Components/NextDoorIcon'
 import { 
   sanitizeName,
   sanitizeEmail,
@@ -89,9 +90,10 @@ const CONTENT = {
   social: {
     title: 'Follow Us',
     links: [
-      { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumtechnician' },
-      { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumtechnician' },
-      { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician' }
+      { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@quantumtechnician' },
+      { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/profile/quantumtechnician' },
+      { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician' },
+      { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/morgbeals' }
     ]
   },
   

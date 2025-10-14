@@ -1,8 +1,0 @@
-# Handyman world routes - serve handyman HTML shell
-/technician/*   /technician/index.html   200
-
-# Web dev world routes - serve web HTML shell  
-/web/*        /web/index.html        200
-
-# Default fallback for root and other routes
-/*            /index.html            200

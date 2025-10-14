@@ -11,7 +11,6 @@ const getAxios = async () => {
 
 // AI Service configuration
 const AI_CONFIG = {
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   model: 'gpt-4o-mini', // Most cost-effective model with vision capabilities
   maxTokens: 1500,
   temperature: 0.3, // Lower temperature for more consistent pricing
@@ -24,44 +23,11 @@ const AI_CONFIG = {
  */
 export const generateAIEstimate = async (estimateData) => {
   try {
-    // Check if API key is configured
-    if (!AI_CONFIG.apiKey) {
-      console.error('OpenAI API key not configured. Please add VITE_OPENAI_API_KEY to your .env file');
-      throw new Error('OpenAI API key not configured');
-    }
+    // API key is now handled server-side
     
     const { customerInfo, service } = estimateData;
     
-    // Prepare the system message for the AI
-    const systemMessage = {
-      role: 'system',
-      content: `You are an expert service estimator for Quantum Technician, a service company for Digital web dev & Physical property services: (Craftsman + CS-degree).
-
-      Your task is to provide accurate project estimates based on descriptions and images provided. Try not to underestimate the project. 
-
-PRICING CONTEXT:
-Physical Services: Home services $125 first hour +$70/hr after + materials, Smart home setup ~$199, Landscaping & Smart Home Setup varies by scope
-Digital Services: Websites SPA $499+, +$250 per additional page, Maintenance $149/mo+, Custom development add-ons $500-2999+
-NOTE: Licensed HVAC/Electrical/Plumbing is not offered, can provide referrals.
-
-IMPORTANT GUIDELINES:
-0. Be selective with this promo code FREEQUOTE. If the user provides estimate data that fails to identify the work enough for a reasonable estimate, reply stating their request doesnt provide enough information & give them the promo code to try again.
-1. Provide realistic price ranges based on typical US market rates
-2. Consider materials, labor, and complexity 
-3. Break down the work into clear phases if needed
-4. Account for potential complications or unknowns
-5. Be conservative in estimates to avoid underquoting
-
-Format your response as JSON with exactly these fields:
-{
-  "price": "$X,XXX - $X,XXX",
-  "jobDescription": "Detailed and impactful description of work to be done, with concise high level roadmap of critical phases.",
-  "materials": ["list", "of", "materials"],
-  "laborHours": "X-Y hour estimates attributed to each phase of the project, with 1-2 key tasks listed in each phase.",
-  "complexity": "Low/Medium/High",
-  "notes": "Any important considerations or warnings"
-}`
-    };
+    // System prompt is now handled in the backend edge function
 
     // Prepare the user message with project details
     let userContent = [
@@ -103,7 +69,6 @@ Please analyze the provided information and any images to generate a comprehensi
     const requestBody = {
       model: AI_CONFIG.model,
       messages: [
-        systemMessage,
         {
           role: 'user',
           content: userContent
@@ -114,18 +79,10 @@ Please analyze the provided information and any images to generate a comprehensi
       response_format: { type: "json_object" } // Ensure JSON response
     };
 
-    const config = {
-      headers: {
-        'Authorization': `Bearer ${AI_CONFIG.apiKey}`,
-        'Content-Type': 'application/json',
-      }
-    };
-
     const axios = await getAxios();
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      requestBody,
-      config
+      '/api/ai-estimate',
+      requestBody
     );
 
     const aiResponse = response.data.choices[0].message.content;
@@ -220,8 +177,8 @@ const formatJobDescription = (aiResponse) => {
  */
 export const validateAIConfig = () => {
   return {
-    isValid: !!AI_CONFIG.apiKey,
-    hasKey: !!AI_CONFIG.apiKey,
+    isValid: true, // Always valid since API key is server-side
+    hasKey: true,
     model: AI_CONFIG.model
   };
 };

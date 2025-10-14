@@ -321,21 +321,26 @@ const CustomerInfo = ({ onSubmit, initialData, service }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Sanitize all form data before validation and submission
-    const sanitizationResult = sanitizeCustomerFormData(formData);
+    // Use the existing validateForm function which handles estimate flow correctly
+    const validationErrors = validateForm();
     
-    if (!sanitizationResult.isValid) {
-      setErrors(sanitizationResult.errors);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       // Scroll to first error
-      const firstErrorField = Object.keys(sanitizationResult.errors)[0];
+      const firstErrorField = Object.keys(validationErrors)[0];
       document.getElementById(firstErrorField)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     
-    // Update form data with sanitized values
+    // Sanitize individual fields for submission
     const sanitizedData = {
-      ...sanitizationResult.sanitized,
-      images: formData.images // Keep images as-is
+      name: sanitizeName(formData.name).sanitized,
+      email: sanitizeEmail(formData.email).sanitized,
+      phone: formData.phone ? (sanitizePhone(formData.phone).formatted || sanitizePhone(formData.phone).sanitized) : '',
+      address: formData.address ? sanitizeAddress(formData.address).sanitized : '',
+      description: sanitizeProjectDescription(formData.description).sanitized,
+      estimateRef: formData.estimateRef ? sanitizeEstimateRef(formData.estimateRef).sanitized : '',
+      images: formData.images
     };
     
     // Submit the sanitized data

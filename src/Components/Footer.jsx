@@ -2,10 +2,11 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { 
   Phone, Mail, MapPin, Clock, 
-  Facebook, Instagram,
+  Facebook, Youtube, Linkedin,
   Wrench, Code, Home as HomeIcon, TreePine, Wifi
 } from 'lucide-react'
 import TikTokIcon from './TikTokIcon'
+import NextDoorIcon from './NextDoorIcon'
 import { useWorld } from '../contexts/WorldContext'
 
 // Content Management - All text content in one place
@@ -42,9 +43,10 @@ const CONTENT = {
   ],
   
   social: [
-    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/quantumtechnician', color: 'hover:text-blue-600' },
-    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/quantumtechnician', color: 'hover:text-pink-600' },
+    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@quantumtechnician', color: 'hover:text-red-600' },
+    { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/profile/quantumtechnician', color: 'hover:text-green-600' },
     { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician', color: 'hover:text-pink-600' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/morgbeals', color: 'hover:text-blue-500' },
   ],
   
   contact: {

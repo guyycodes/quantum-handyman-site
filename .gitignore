@@ -31,3 +31,6 @@ CURRENT_GOOGLE_SCRIPT.js
 # Documentation and templates
 markdowns/
 emailjs_templats/
+
+# Local Netlify folder
+.netlify

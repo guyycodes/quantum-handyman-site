@@ -2,13 +2,28 @@
   command = "npm run build"
   publish = "dist"
 
+[[edge_functions]]
+  function = "ai-estimate"
+  path = "/api/ai-estimate"
+
 [build.environment]
   NODE_VERSION = "22"
+
+[[redirects]]
+  from = "/technician/*"
+  to = "/technician/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/web/*"
+  to = "/web/index.html"
+  status = 200
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {path = "!/api/*"}
 
 # Environment variables can be set here (but it's better to use Netlify dashboard)
 # [build.environment]
@@ -17,8 +32,7 @@
 #   VITE_EMAILJS_PUBLIC_KEY = "your_public_key"
 
 [dev]
-  command = "npm run dev"
-  port = 5173
+  port = 8888
   targetPort = 5173
 
 # Security Headers
