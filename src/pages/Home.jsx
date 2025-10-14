@@ -105,6 +105,7 @@ const CONTENT = {
   
   about: {
     title: 'Mission: Quantum Technician',
+    tagline: 'Solutions from a unified ethos — Physical & Digital',
     description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
     imageCaption: 'Morgan B. - Quantum Technician',
     imagePath: '/images/profile/Me-and-Pops.jpg',
@@ -814,10 +815,15 @@ const Home = () => {
             <div 
               ref={aboutSection.ref}
               className={`space-y-6 animate-fade-right ${aboutSection.isVisible ? 'visible' : ''}`}>
-              <h2 className="text-3xl md:text-4xl font-bold">
-                {CONTENT.about.title.split('Quantum Technician')[0]}
-                <span className="gradient-text">Quantum Technician</span>
-              </h2>
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  {CONTENT.about.title.split('Quantum Technician')[0]}
+                  <span className="gradient-text">Quantum Technician</span>
+                </h2>
+                <p className="text-lg text-primary/80 italic mt-2">
+                  {CONTENT.about.tagline}
+                </p>
+              </div>
               
               <p className="text-lg text-muted">
                 {CONTENT.about.description}
