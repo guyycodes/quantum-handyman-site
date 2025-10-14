@@ -284,7 +284,7 @@ const PORTFOLIO_DATA = [
     category: 'Web Development',
     title: 'Multiplayer Physics Sandbox v1',
     description: 'Single Player & Multiplayer Real-time 3D collaborative environment w/server-authoritative physics server, WebGL graphics, and sub-50ms latency multiplayer synchronization (sandbox-v1).',
-    image: 'https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=800&q=80', // Gaming/physics placeholder
+    image: '/images/web-dev/game.png', // Gaming/physics placeholder
     link: 'https://tug-o-war.vercel.app' 
   },
   {
@@ -805,7 +805,7 @@ const Home = () => {
             ref={portfolioTitle.ref}
             className={`text-center mb-12 animate-fade-up ${portfolioTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {isTechnician ? 'Technician' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Portfolio</span>
+              {isTechnician ? 'Technician' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Samples</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto">
               {isTechnician 
