@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react'
+import React, { useState, lazy, Suspense, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
@@ -10,6 +10,8 @@ import { useWorld } from '../contexts/WorldContext'
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
 const FloatingVideo = lazy(() => import('../Components/FloatingVideo'))
 const BeforeAfterSlider = lazy(() => import('../Components/BeforeAfterSlider'))
+const SocialProof = lazy(() => import('../components/SocialProof'))
+const BookingInfo = lazy(() => import('../Components/BookingInfo'))
 
 // Lazy load BookingModal since it's only needed when user clicks to book
 const BookingModal = lazy(() => import('../Components/BookingModal'))
@@ -17,12 +19,12 @@ import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useI
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
   Shield, Clock, Award, Users, ChevronRight,
-  Star, Phone, Mail, MapPin, CheckCircle,
+  Phone, Mail, MapPin, CheckCircle,
   Hammer, Paintbrush, Zap, Droplets, Lightbulb,
   Monitor, Smartphone, Globe, Database, Server,
   Leaf, Flower, Scissors, Sun, CloudRain,
-  Sparkles, Settings, Gauge, ArrowRight, Calendar,
-  ExternalLink, MessageSquare
+  Sparkles, Settings, Gauge, ArrowRight,
+  ExternalLink
 } from 'lucide-react'
 
 // Content Management - All text content in one place
@@ -33,12 +35,21 @@ const CONTENT = {
       line1: 'Quantum',
       line2: 'Technician'
     },
-    subtitle: 'A new kind of technician for your property & technology needs | Craftsman + CS-degree, with deep multi-disciplinary expertise.',
+    subtitle: 'I build solutions — physical and digital. Handyman • Smart Home Install • Custom Builds • Web Dev / AI',
+    mainCta: 'Need help with a project?',
+    selectPrompt: 'Select an option to get started:',
     cta: {
+      // Technician world buttons
+      technicianQuote: 'Get a Quote',
+      furnitureBuild: 'Book Furniture Build',
+      // Web world buttons  
+      aiEstimate: 'Get AI Estimate',
+      consultation: 'Book Consultation',
+      // Main/combined world buttons
+      getEstimate: 'Get an Estimate',
       bookService: 'Book a Service',
-      seeWork: 'View Portfolio',
       helperText: '⚡ Instant AI estimates',
-        portalText: '⚡ Track Your Jobs'
+      portalText: '⚡ Track Your Jobs'
     },
     badges: {
       fix: 'Property Maintenance & Repairs',
@@ -95,6 +106,8 @@ const CONTENT = {
   about: {
     title: 'Mission: Quantum Technician',
     description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
+    imageCaption: 'Morgan B. - Quantum Technician',
+    imagePath: '/images/profile/Me-and-Pops.jpg',
     valueProposition: {
       title: 'Value Proposition',
       text: 'A new kind of technician bridging the gap between the physical & digital worlds | Craftsman + CS-degree, and deep multi-disciplinary expertise.'
@@ -161,11 +174,45 @@ const CONTENT = {
   portfolio: {
     title: ' Portfolio',
     subtitle: 'Cross discipline quality work.',
-    viewFull: 'View Portfolio'
+    // World-specific titles and subtitles
+    technician: {
+      title: 'Technician',
+      subtitle: 'Quality craftsmanship and property improvements.'
+    },
+    web: {
+      title: 'Web Development',
+      subtitle: 'Custom websites and digital solutions we\'ve built.'
+    },
+    samplesSuffix: 'Samples',  // The "Samples" word that comes after the title
+    viewFull: 'View Portfolio',
+    // CTA after portfolio
+    ctaSection: {
+      title: 'Like what you see?',
+      subtitle: 'Let\'s discuss your project',
+      bookButton: 'Book a Project',
+      quoteButton: 'Get a Quote'
+    }
+  },
+  
+  // Service CTA in middle of services section  
+  servicesCta: {
+    title: 'Ready to get started?',
+    subtitle: 'Pick a service above or book a consultation',
+    button: 'Book Now'
+  },
+  
+  guarantee: {
+    title: 'Our Guarantee',
+    tagline: 'Reliable. On time. Done right.',
+    badges: [
+      { icon: 'checkCircle', text: '100% Satisfaction' },
+      { icon: 'clock', text: 'On-Time Promise' },
+      { icon: 'award', text: 'Quality Work' }
+    ]
   },
   
   reviews: {
-    title: 'What Our Clients Say',
+    title: 'What Clients Say',
     subtitle: 'Check out our reviews and ratings from satisfied customers',
     googleTitle: 'Google Reviews',
     rating: '5.0 Rating • 100% Satisfaction',
@@ -178,6 +225,15 @@ const CONTENT = {
   cta: {
     title: 'Experience Quantum Advantage.',
     subtitle: 'Hire a technician who can solve problems at every level.',
+    // World-specific CTAs
+    technician: {
+      title: 'Ready to Fix Your Home?',
+      subtitle: 'Professional technician services with transparent pricing and quality guarantee.'
+    },
+    web: {
+      title: 'Ready to Build Your Digital Presence?',
+      subtitle: 'Transform your ideas into powerful web applications with expert development.'
+    },
     buttons: {
       bookNow: 'Book Now',
       // call: 'Call (555) 123-4567',
@@ -189,6 +245,12 @@ const CONTENT = {
       satisfaction: 'Satisfaction Guaranteed'
     },
     footer: 'We use a secure booking platform to manage appointments and ensure the best service experience.'
+  },
+  
+  // Floating button
+  floatingButton: {
+    text: '📅 Book Now',
+    helperText: '⚡ Quick booking'
   },
   
 }
@@ -359,9 +421,23 @@ const Home = () => {
   const statsStagger = useStaggeredIntersection(4, { threshold: 0.2 })
   const servicesStagger = useStaggeredIntersection(filteredServices.length, { threshold: 0.1 })
   const portfolioStagger = useStaggeredIntersection(filteredPortfolio.length, { threshold: 0.1 })
+  
+  // Floating CTA button state
+  const [showFloatingCTA, setShowFloatingCTA] = useState(false)
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show floating CTA after scrolling past hero section
+      const scrolled = window.scrollY > 600
+      setShowFloatingCTA(scrolled)
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-off-white">
+    <div className="min-h-screen bg-off-white overflow-x-hidden">
       <Header />
 
       {/* Hero Section */}
@@ -401,22 +477,62 @@ const Home = () => {
                   : CONTENT.hero.subtitle}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <BookingCTA 
-                  buttonText={CONTENT.hero.cta.bookService}
-                  buttonStyle="primary"
-                  size="lg"
-                  className="bg-none text-primary hover:bg-primary/10"
-                  showHelperText={true}
-                  helperText={CONTENT.hero.cta.helperText}
-                />
-                <a 
-                  href="#portfolio" 
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold text-white border-2 border-white rounded-lg hover:bg-white/10 transition-all"
-                >
-                  {CONTENT.hero.cta.seeWork}
-                  <ArrowRight className="w-5 h-5" />
-                </a>
+              {/* Main CTA Question */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4">✅ {CONTENT.hero.mainCta}</h3>
+                <p className="text-lg mb-4">{CONTENT.hero.selectPrompt}</p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {isTechnician ? (
+                    <>
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.technicianQuote}
+                        buttonStyle="secondary"
+                        size="lg"
+                        showHelperText={true}
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                      />
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.furnitureBuild}
+                        buttonStyle="secondary"
+                        size="lg"
+                        className="bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                      />
+                    </>
+                  ) : isWeb ? (
+                    <>
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.aiEstimate}
+                        buttonStyle="secondary"
+                        size="lg"
+                        className="bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                        showHelperText={true}
+                        helperText="⚡ Instant AI"
+                      />
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.consultation}
+                        buttonStyle="secondary"
+                        size="lg"
+                        className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-600 hover:to-indigo-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.getEstimate}
+                        buttonStyle="secondary"
+                        size="lg"
+                        className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white hover:from-blue-600 hover:to-cyan-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                      />
+                      <BookingCTA 
+                        buttonText={CONTENT.hero.cta.bookService}
+                        buttonStyle="secondary"
+                        size="lg"
+                        className="bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg w-full"
+                      />
+                    </>
+                  )}
+                </div>
               </div>
 
               {/* Show badges on desktop only - filtered by world */}
@@ -498,81 +614,54 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Booking Info Section */}
-      <section className="py-8 bg-gradient-to-r from-primary/5 to-secondary/5">
-        <div className="container-max mx-auto px-6">
-          <div 
-            ref={bookingSection.ref}
-            className={`bg-white rounded-2xl shadow-lg p-6 max-w-3xl mx-auto animate-scale ${bookingSection.isVisible ? 'visible' : ''}`}>
-            {/* Header */}
-            <div className="text-center mb-4">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full mb-3">
-                <Calendar className="w-6 h-6 text-white" />
+      {/* Social Proof Section */}
+      <Suspense fallback={
+        <section className="py-12 bg-white">
+          <div className="container-max mx-auto px-6">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto mb-8"></div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-gray-100 rounded-lg h-48"></div>
+                ))}
               </div>
-              <h3 className="text-2xl font-bold mb-2">{CONTENT.booking.title}</h3>
-              <p className="text-gray-600 text-lg">{CONTENT.booking.description}</p>
-            </div>
-            
-            {/* Features Bar */}
-            <div className="flex justify-center gap-6 mb-6 py-3 bg-gray-50 rounded-lg">
-              {CONTENT.booking.features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-1">
-                  <span className="text-sm">{feature.icon}</span>
-                  <span className="text-xs font-medium text-gray-600">{feature.text}</span>
-                </div>
-              ))}
-            </div>
-            {/* Streamlined Two-column layout */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-6">
-              {/* Booking Steps */}
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg p-4 border border-blue-200">
-                <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-                  <span className="text-lg">🎯</span> {CONTENT.booking.bookingSteps.title}
-                </h4>
-                <div className="space-y-2">
-                  {CONTENT.booking.bookingSteps.steps.map((step, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <span className="text-lg">{step.icon}</span>
-                      <span className="text-gray-700">{step.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Estimate Steps */}
-              <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-lg p-4 border border-green-200">
-                <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-                  <span className="text-lg">💰</span> {CONTENT.booking.estimateSteps.title}
-                </h4>
-                <div className="space-y-2">
-                  {CONTENT.booking.estimateSteps.steps.map((step, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <span className="text-lg">{step.icon}</span>
-                      <span className="text-gray-700">{step.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            
-            {/* CTA Button */}
-            <div className="text-center">
-              <button 
-                onClick={() => setIsBookingModalOpen(true)}
-                className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-              >
-                <Calendar className="w-5 h-5" />
-                {CONTENT.booking.cta.primary}
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <p className="text-xs text-gray-500 mt-3">
-                💡 Not sure? Start with a <span className="font-medium">Free Estimate</span>
-              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      }>
+        <SocialProof 
+          content={CONTENT.reviews}
+          reviewsRef={reviewsTitle.ref}
+          isVisible={reviewsTitle.isVisible}
+        />
+      </Suspense>
+
+      {/* Booking Info Section */}
+      {/* <Suspense fallback={
+        <section className="py-8 bg-gradient-to-r from-primary/5 to-secondary/5">
+          <div className="container-max mx-auto px-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 max-w-3xl mx-auto">
+              <div className="animate-pulse">
+                <div className="h-12 w-12 bg-gray-200 rounded-full mx-auto mb-3"></div>
+                <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="bg-gray-100 h-32 rounded-lg"></div>
+                  <div className="bg-gray-100 h-32 rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      }>
+        <BookingInfo 
+          bookingRef={bookingSection.ref}
+          isVisible={bookingSection.isVisible}
+          onBookingClick={() => setIsBookingModalOpen(true)}
+          content={CONTENT.booking}
+        />
+      </Suspense> */}
 
       {/* Services Section */}
       <section id="services" className="section-padding bg-white">
@@ -699,6 +788,19 @@ const Home = () => {
               </div>
             ))}
           </div>
+          
+          {/* CTA after services */}
+          <div className="text-center mt-12">
+            <div className="bg-primary/5 rounded-2xl p-8 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold mb-4">{CONTENT.servicesCta.title}</h3>
+              <p className="text-muted mb-6">{CONTENT.servicesCta.subtitle}</p>
+              <BookingCTA 
+                buttonText={CONTENT.servicesCta.button}
+                buttonStyle="primary"
+                size="lg"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -744,6 +846,7 @@ const Home = () => {
                 buttonText={CONTENT.about.cta}
                 buttonStyle="primary"
                 size="lg"
+                showHelperText={true}
               />
             </div>
 
@@ -776,8 +879,8 @@ const Home = () => {
               {/* Personal Photo */}
               <div className="relative">
                 <FramedImage
-                  src="/images/profile/Me-and-Pops.jpg"
-                  alt="Morgan B. - Quantum Technician"
+                  src={CONTENT.about.imagePath}
+                  alt={CONTENT.about.imageCaption}
                   frameStyle="modern"
                   aspectRatio="portrait"
                   objectFit="cover"
@@ -787,7 +890,7 @@ const Home = () => {
                   maxWidth="max-w-sm"
                   maxHeight="max-h-md"
                   width="w-full"
-                  caption="Morgan B. - Quantum Technician"
+                  caption={CONTENT.about.imageCaption}
                   captionPosition="bottom"
                   className="mx-auto"
                   preferThumb={true}
@@ -805,13 +908,13 @@ const Home = () => {
             ref={portfolioTitle.ref}
             className={`text-center mb-12 animate-fade-up ${portfolioTitle.isVisible ? 'visible' : ''}`}>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {isTechnician ? 'Technician' : isWeb ? 'Web Development' : ''} <span className="gradient-text">Samples</span>
+              {isTechnician ? CONTENT.portfolio.technician.title : isWeb ? CONTENT.portfolio.web.title : ''} <span className="gradient-text">{CONTENT.portfolio.samplesSuffix}</span>
             </h2>
             <p className="text-lg text-muted max-w-2xl mx-auto">
               {isTechnician 
-                ? 'Quality craftsmanship and property improvements.'
+                ? CONTENT.portfolio.technician.subtitle
                 : isWeb 
-                ? 'Custom websites and digital solutions we\'ve built.'
+                ? CONTENT.portfolio.web.subtitle
                 : CONTENT.portfolio.subtitle}
             </p>
           </div>
@@ -924,69 +1027,44 @@ const Home = () => {
               <ChevronRight className="w-5 h-5" />
             </Link>
           </div>
+          
+          {/* CTA after portfolio */}
+          <div className="text-center mt-12">
+            <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-2xl p-8 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold mb-4">{CONTENT.portfolio.ctaSection.title}</h3>
+              <p className="text-white/90 mb-6">{CONTENT.portfolio.ctaSection.subtitle}</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <BookingCTA 
+                  buttonText={CONTENT.portfolio.ctaSection.bookButton}
+                  size="lg"
+                  className="bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg"
+                />
+                <BookingCTA 
+                  buttonText={CONTENT.portfolio.ctaSection.quoteButton}
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:from-purple-600 hover:to-indigo-700 transform hover:scale-105 transition-all shadow-lg"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max mx-auto text-center">
-          <div 
-            ref={reviewsTitle.ref}
-            className={`mb-12 animate-fade-up ${reviewsTitle.isVisible ? 'visible' : ''}`}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {CONTENT.reviews.title.split('Clients Say')[0]}
-              <span className="gradient-text">Clients Say</span>
-            </h2>
-            <p className="text-lg text-muted max-w-2xl mx-auto mb-8">
-              {CONTENT.reviews.subtitle}
-            </p>
-          </div>
-
-          <div className="max-w-lg mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow">
-              <div className="flex justify-center mb-6">
-                {/* Google Logo/Icon */}
-                <div className="flex items-center gap-2">
-                  <svg className="w-10 h-10" viewBox="0 0 48 48">
-                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-                  </svg>
-                  <span className="text-2xl font-bold text-gray-700">{CONTENT.reviews.googleTitle}</span>
-                </div>
+      {/* Guarantee Section - NEW */}
+      <section className="py-16 bg-gradient-to-r from-green-500 to-green-600">
+        <div className="container-max mx-auto px-6 text-center text-white">
+          <Shield className="w-16 h-16 mx-auto mb-4" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">{CONTENT.guarantee.title}</h2>
+          <p className="text-2xl mb-2">{CONTENT.guarantee.tagline}</p>
+          <div className="flex justify-center gap-8 mt-8">
+            {CONTENT.guarantee.badges.map((badge, index) => (
+              <div key={index} className="flex items-center gap-2">
+                {badge.icon === 'checkCircle' && <CheckCircle className="w-6 h-6" />}
+                {badge.icon === 'clock' && <Clock className="w-6 h-6" />}
+                {badge.icon === 'award' && <Award className="w-6 h-6" />}
+                <span className="text-lg">{badge.text}</span>
               </div>
-              
-              {/* Star Rating Display */}
-              <div className="flex justify-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-8 h-8 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              
-              <p className="text-gray-600 mb-6">
-                {/* {CONTENT.reviews.rating} */}
-              </p>
-              
-              <p className="text-muted mb-8">
-                {/* {CONTENT.reviews.description} */}
-              </p>
-              
-              <a
-                href={CONTENT.reviews.googleUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
-              >
-                <MessageSquare className="w-6 h-6" />
-                {CONTENT.reviews.googleButton}
-                <ExternalLink className="w-5 h-5" />
-              </a>
-              
-              <p className="text-xs text-gray-500 mt-4">
-                {CONTENT.reviews.helperText}
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -998,16 +1076,16 @@ const Home = () => {
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             {isTechnician 
-              ? 'Ready to Fix Your Home?'
+              ? CONTENT.cta.technician.title
               : isWeb 
-              ? 'Ready to Build Your Digital Presence?'
+              ? CONTENT.cta.web.title
               : CONTENT.cta.title}
           </h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
             {isTechnician 
-              ? 'Professional technician services with transparent pricing and quality guarantee.'
+              ? CONTENT.cta.technician.subtitle
               : isWeb 
-              ? 'Transform your ideas into powerful web applications with expert development.'
+              ? CONTENT.cta.web.subtitle
               : CONTENT.cta.subtitle}
           </p>
           
@@ -1058,6 +1136,22 @@ const Home = () => {
           onClose={() => setIsBookingModalOpen(false)}
         />
       </Suspense>
+      
+      {/* Floating Booking Button - positioned to not overlap with chatbot */}
+      <div 
+        className={`fixed bottom-20 right-2 sm:bottom-24 sm:right-8 z-40 transition-all duration-300 transform ${
+          showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
+        }`}
+      >
+        <BookingCTA 
+          buttonText={CONTENT.floatingButton.text}
+          buttonStyle="primary"
+          size="lg"
+          className="shadow-2xl hover:scale-105 transition-transform text-sm sm:text-base"
+          showHelperText={true}
+          helperText={CONTENT.floatingButton.helperText}
+        />
+      </div>
     </div>
   )
 }
