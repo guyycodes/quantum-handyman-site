@@ -10,7 +10,7 @@ import { useWorld } from '../contexts/WorldContext'
 const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
 const FloatingVideo = lazy(() => import('../Components/FloatingVideo'))
 const BeforeAfterSlider = lazy(() => import('../Components/BeforeAfterSlider'))
-const SocialProof = lazy(() => import('../components/SocialProof'))
+const SocialProof = lazy(() => import('../Components/SocialProof'))
 const BookingInfo = lazy(() => import('../Components/BookingInfo'))
 
 // Lazy load BookingModal since it's only needed when user clicks to book
