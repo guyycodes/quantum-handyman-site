@@ -43,8 +43,8 @@ const CONTENT = {
   ],
   
   social: [
-    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@quantumtechnician', color: 'hover:text-red-600' },
-    { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/profile/quantumtechnician', color: 'hover:text-green-600' },
+    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UC5G4Vn8sfs0ywOJPm_573RA', color: 'hover:text-red-600' },
+    { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/page/quantumtechnician/', color: 'hover:text-green-600' },
     { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician', color: 'hover:text-pink-600' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/morgbeals', color: 'hover:text-blue-500' },
   ],
@@ -65,6 +65,24 @@ const CONTENT = {
     area: {
       label: 'Service Area',
       value: 'Greater Metro Area'
+    }
+  },
+  
+  map: {
+    title: 'Find Us',
+    embedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3067.4847851087514!2d-105.00691508462174!3d39.83178047943751!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876c7f2b0c2c0e6b%3A0xa36d92e4e0e87eb2!2s3512%20Vallejo%20St%2C%20Denver%2C%20CO%2080211!5e0!3m2!1sen!2sus!4v1702830000000!5m2!1sen!2sus',
+    directionsUrl: 'https://www.google.com/maps/@39.8317804,-105.004315,18.15z?entry=ttu',
+    address: '3512 Vallejo St, Denver',
+    serviceCoverage: {
+      title: 'Service Coverage',
+      cities: [
+        'Denver',
+        'Aurora',
+        'Lakewood',
+        'Westminster',
+        'Arvada',
+        'Centennial'
+      ]
     }
   },
   
@@ -118,29 +136,77 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Wrench className="w-8 h-8 text-primary" />
-                <Code className="w-4 h-4 text-secondary absolute -bottom-1 -right-1" />
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <Wrench className="w-8 h-8 text-primary" />
+                  <Code className="w-4 h-4 text-secondary absolute -bottom-1 -right-1" />
+                </div>
+                <span className="text-xl font-bold">
+                  {CONTENT.logo.text}<span className="text-primary">{CONTENT.logo.highlight}</span>
+                </span>
               </div>
-              <span className="text-xl font-bold">
-                {CONTENT.logo.text}<span className="text-primary">{CONTENT.logo.highlight}</span>
-              </span>
+              <p className="text-gray-400 text-sm mt-2">
+                {CONTENT.tagline}
+              </p>
+              <div className="flex gap-3 mt-3">
+                {CONTENT.social.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    aria-label={social.name}
+                    className={`p-2 rounded-lg bg-gray-800 text-gray-400 transition-colors hover:bg-gray-700 ${social.color}`}
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
             </div>
-            <p className="text-gray-400 text-sm">
-              {CONTENT.tagline}
-            </p>
-            <div className="flex gap-3">
-              {CONTENT.social.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  aria-label={social.name}
-                  className={`p-2 rounded-lg bg-gray-800 text-gray-400 transition-colors hover:bg-gray-700 ${social.color}`}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+            
+            {/* Map and Service Area */}
+            <div className="mt-6">
+              <h3 className="font-semibold text-sm mb-2">{CONTENT.map.title}</h3>
+              <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_.75fr] gap-3">
+                {/* Map */}
+                <div>
+                  <div className="rounded-lg overflow-hidden shadow-lg bg-gray-800 border border-gray-700">
+                    <iframe 
+                      src={CONTENT.map.embedUrl}
+                      width="100%"
+                      height="120"
+                      style={{ border: 0 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Quantum Technician Service Area"
+                      className="w-full"
+                    ></iframe>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">
+                    <a 
+                      href={CONTENT.map.directionsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary transition-colors"
+                    >
+                      {CONTENT.map.address}
+                    </a>
+                  </p>
+                </div>
+                
+                {/* Service Coverage */}
+                <div className="text-xs">
+                  <p className="font-semibold text-gray-300 mb-1">{CONTENT.map.serviceCoverage.title}</p>
+                  <div className="space-y-0.5">
+                    {CONTENT.map.serviceCoverage.cities.map((city) => (
+                      <div key={city} className="flex items-center gap-1">
+                        <span className="text-green-500">✓</span>
+                        <span className="text-gray-400">{city}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
