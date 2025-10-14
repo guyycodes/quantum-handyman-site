@@ -66,7 +66,7 @@ export default async (request, context) => {
 
 PRICING CONTEXT:
 Physical Services: Home services $125 first hour +$70/hr after + materials, Smart home setup ~$199, Landscaping & Smart Home Setup varies by scope
-Digital Services: Websites SPA $499+, +$250 per additional page, Maintenance $149/mo+, Custom development add-ons $500-2999+
+Digital Services: Websites SPA $499+, +$250 per additional page, Monthle Website Maintenance $149/mo+, Custom development add-ons $500-2999+
 NOTE: Licensed HVAC/Electrical/Plumbing is not offered, can provide referrals.
 
 IMPORTANT GUIDELINES:

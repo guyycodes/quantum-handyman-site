@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import posthog from 'posthog-js';
 
 // Initialize PostHog
+// Note: This uses the Project API Key which is safe to expose in client code
+// It can only send events, not read or modify data
 if (typeof window !== 'undefined' && import.meta.env.VITE_POSTHOG_API_KEY) {
   posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
     api_host: import.meta.env.VITE_POSTHOG_HOST || 'https://us.i.posthog.com',

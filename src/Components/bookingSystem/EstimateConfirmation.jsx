@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calculator, User, Mail, Phone, MapPin, FileText, Camera, Check, Sparkles, DollarSign } from 'lucide-react';
+import promoCodeService from '../../services/promoCodeService';
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -30,7 +31,7 @@ const CONTENT = {
     promoCode: {
       label: 'Have a Promo Code? Enter it here for FREE AI Estimate:',
       placeholder: 'Enter promo code for FREE estimate',
-      applied: '✅ Promo code applied - FREE AI Estimate!',
+      applied: '✅ Promo code applied!',
       hint: '💡 Enter your promo code below to get this AI estimate for FREE!'
     }
   },
@@ -51,26 +52,67 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
   const [useAIEstimate, setUseAIEstimate] = useState(false);
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
+  const [isValidatingPromo, setIsValidatingPromo] = useState(false);
+  const debounceTimer = useRef(null);
   
   // Check if photos are uploaded
   const hasPhotos = customerInfo.images && customerInfo.images.length > 0;
 
-  // Check promo code validity
-  const checkPromoCode = (code) => {
-    const validPromoCodes = [
-      import.meta.env.VITE_PROMO_1,
-      import.meta.env.VITE_PROMO_2,
-      import.meta.env.VITE_PROMO_3
-    ].filter(Boolean);
+  // Check promo code validity using edge function
+  const validatePromoCode = async (code) => {
+    // Only validate if code is at least 5 characters
+    if (!code || code.trim().length < 5) {
+      setIsPromoValid(false);
+      setIsValidatingPromo(false);
+      return;
+    }
     
-    return validPromoCodes.includes(code.trim());
+    setIsValidatingPromo(true);
+    try {
+      const isValid = await promoCodeService.validateCode(code);
+      setIsPromoValid(isValid);
+    } catch (error) {
+      console.error('Error validating promo code:', error);
+      setIsPromoValid(false);
+    } finally {
+      setIsValidatingPromo(false);
+    }
   };
+
+  // Debounced validation - waits 500ms after user stops typing
+  useEffect(() => {
+    // Clear any existing timer
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Reset validation state if code is too short
+    if (promoCode.trim().length < 3) {
+      setIsPromoValid(false);
+      setIsValidatingPromo(false);
+      return;
+    }
+
+    // Set new timer to validate after 500ms of no typing
+    debounceTimer.current = setTimeout(() => {
+      validatePromoCode(promoCode);
+    }, 500);
+
+    // Cleanup timer on unmount
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [promoCode]);
 
   const handlePromoCodeChange = (e) => {
     const code = e.target.value;
     setPromoCode(code);
-    const isValid = checkPromoCode(code);
-    setIsPromoValid(isValid);
+    // Show "validating" state immediately when typing (if code is long enough)
+    if (code.trim().length >= 3) {
+      setIsValidatingPromo(true);
+    }
   };
 
   const handleAIToggle = (checked) => {
@@ -172,7 +214,7 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
         {!useAIEstimate && hasPhotos && (
           <div className="bg-green-100 border border-green-300 rounded-lg px-3 py-2 mb-3 text-center">
             <span className="text-sm font-medium text-green-700">
-              🎁 Have a promo code? Check the box below to enter it and get your AI estimate FREE!
+              🎁 Have a promo code? Check the box & enter it and get your AI estimate FREE!
             </span>
           </div>
         )}
@@ -227,22 +269,40 @@ const EstimateConfirmation = ({ estimateData, onConfirm, isSubmitting, onAIToggl
                 {/* Promo Code Field */}
                 <div className="mt-4 bg-green-50 border-2 border-green-200 rounded-lg p-3">
                   <div className="text-sm font-medium text-green-700 mb-2 flex items-center gap-2">
-                    <span className="text-lg">🎉</span>
+                    
                     {CONTENT.aiOption.promoCode.hint}
                   </div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {CONTENT.aiOption.promoCode.label}
                   </label>
-                  <input
-                    type="text"
-                    value={promoCode}
-                    onChange={handlePromoCodeChange}
-                    placeholder={CONTENT.aiOption.promoCode.placeholder}
-                    className="w-full px-3 py-2 border-2 border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
-                  />
-                  {isPromoValid && (
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={handlePromoCodeChange}
+                      placeholder={CONTENT.aiOption.promoCode.placeholder}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
+                    />
+                    {isValidatingPromo && promoCode.trim().length >= 3 && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <div className="animate-spin h-5 w-5 border-2 border-green-500 border-t-transparent rounded-full"></div>
+                      </div>
+                    )}
+                  </div>
+                  {/* Show validation status */}
+                  {isPromoValid && !isValidatingPromo && (
                     <p className="mt-2 text-sm font-medium text-green-600">
-                      {CONTENT.aiOption.promoCode.applied}
+                      ✓ {CONTENT.aiOption.promoCode.applied}
+                    </p>
+                  )}
+                  {!isPromoValid && promoCode.trim().length >= 3 && !isValidatingPromo && (
+                    <p className="mt-2 text-sm text-red-600">
+                      Invalid promo code
+                    </p>
+                  )}
+                  {promoCode && promoCode.trim().length < 3 && (
+                    <p className="mt-2 text-sm text-gray-500">
+                      Keep typing... (minimum 3 characters)
                     </p>
                   )}
                 </div>

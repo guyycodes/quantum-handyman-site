@@ -6,6 +6,10 @@
   function = "ai-estimate"
   path = "/api/ai-estimate"
 
+[[edge_functions]]
+  function = "validate-promo"
+  path = "/.netlify/edge-functions/validate-promo"
+
 [build.environment]
   NODE_VERSION = "22"
 
