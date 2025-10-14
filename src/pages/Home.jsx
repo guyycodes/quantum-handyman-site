@@ -219,7 +219,7 @@ const CONTENT = {
     rating: '5.0 Rating • 100% Satisfaction',
     description: 'Reviews for Quantum Technician.',
     googleButton: 'View Reviews on Google',
-    googleUrl: 'https://g.page/r/YOUR_GOOGLE_BUSINESS_ID/review', // Replace with your actual Google Business URL
+    googleUrl: 'https://www.google.com/maps/place/Quantum+Technician/@39.765936,-105.0150189,17z/data=!3m1!4b1!4m6!3m5!1s0x876c79b3a17c2fd9:0x60368a5a61194815!8m2!3d39.765936!4d-105.012444!16s%2Fg%2F11y0zw5pvp?hl=en&authuser=0&entry=ttu&g_ep=EgoyMDI1MTAwOC4wIKXMDSoASAFQAw%3D%3D', // Replace with your actual Google Business URL
     helperText: 'See verified customer reviews on Google Business'
   },
   
