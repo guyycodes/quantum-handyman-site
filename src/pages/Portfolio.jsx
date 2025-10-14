@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BookingCTA from '../Components/BookingCTA'
@@ -829,17 +828,13 @@ const Portfolio = () => {
               className="bg-none text-primary hover:bg-primary/10"
               showHelperText={true}
             />
-            <div className="inline-flex flex-col items-center gap-1">
-              <Link 
-                to="/contact"
-                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
-              >
-                {CONTENT.cta.buttons.getQuote}
-              </Link>
-              <span className="text-xs text-white/70 animate-pulse">
-                {CONTENT.cta.buttons.helperText}
-              </span>
-            </div>
+            <BookingCTA 
+              buttonText={CONTENT.cta.buttons.getQuote}
+              size="lg"
+              className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30"
+              showHelperText={true}
+              helperText={CONTENT.cta.buttons.helperText}
+            />
           </div>
         </div>
       </section>
