@@ -35,7 +35,7 @@ const CONTENT = {
       line1: 'Quantum',
       line2: 'Technician'
     },
-    subtitle: 'I build solutions — physical and digital. Handyman • Smart Home Install • Custom Builds • Web Dev / AI',
+    subtitle: 'Solutions from a unified ethos - Physical & Digital',
     mainCta: 'Need help with a project?',
     selectPrompt: 'Select an option to get started:',
     cta: {
@@ -53,7 +53,7 @@ const CONTENT = {
     },
     badges: {
       fix: 'Property Maintenance & Repairs',
-      tech: 'Tech & Digital',
+      tech: 'Web Tech',
       online: 'Own Your Traffic',
       offering: 'No plumbing/electrical/permit work.'
     }
@@ -460,6 +460,7 @@ const Home = () => {
                   <span>{CONTENT.hero.cta.portalText}</span>
                   <ExternalLink className="w-3 h-3" />
                 </Link>
+                
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">

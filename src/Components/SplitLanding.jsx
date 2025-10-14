@@ -201,7 +201,7 @@ const SplitLanding = () => {
   const navigate = useNavigate();
   
   // Mission statement text
-  const missionText = "Solutions driven from a unified ethos - not just another technician.";
+  const missionText = "Solutions from a unified ethos - Physical • Digital • Handyman • Smart Home • Web Dev / AI'.";
 
   useEffect(() => {
     // Handle resize for all screen size detections
