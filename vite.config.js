@@ -5,6 +5,10 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Remove console logs in production builds
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   build: {
     modulePreload: {
       // Reduce preloading to improve initial load
@@ -65,20 +69,14 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
-    // Minify for production builds with terser for better compression
-    build: {
-      minify: 'esbuild' // Default in Vite, faster than terser
-    },
-    // Generate source maps for debugging (disable in production if needed)
+    // Minify for production builds
+    minify: 'esbuild', // Default in Vite, faster than terser
+    // Disable source maps in production to avoid 404 errors
     sourcemap: false,
     // Reduce chunk size warnings
     chunkSizeWarningLimit: 600,
     // Better tree-shaking
     treeShaking: true,
-    // Remove console logs in production
-    esbuild: {
-      drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    },
     // Target modern browsers for smaller bundles
     target: 'es2020',
     // CSS optimization

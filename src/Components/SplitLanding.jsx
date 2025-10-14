@@ -226,23 +226,11 @@ const SplitLanding = () => {
     document.addEventListener('keydown', handleKeyDown);
     
     // Preload the main app chunks for faster transition
-    let idleId;
-    if ('requestIdleCallback' in window) {
-      idleId = requestIdleCallback(() => {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.as = 'script';
-        link.href = '/src/main.jsx';
-        document.head.appendChild(link);
-      });
-    }
+    // Removed unnecessary prefetch of source file that causes 404 in production
     
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('resize', handleResize);
-      if (idleId && 'cancelIdleCallback' in window) {
-        cancelIdleCallback(idleId);
-      }
     };
   }, []);
 
