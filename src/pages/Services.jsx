@@ -436,7 +436,7 @@ const Services = () => {
                     {/* CTA Button */}
                     <div className="flex flex-col gap-3">
                       <BookingCTA 
-                        service={service.title}
+                        // service={service.title} // passing this make the intent section get skipped
                         buttonText={CONTENT.serviceDetails.bookButton}
                         buttonStyle="primary"
                         showHelperText={true}

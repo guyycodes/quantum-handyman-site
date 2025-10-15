@@ -781,7 +781,7 @@ const Home = () => {
                 </ul>
                 
                 <BookingCTA 
-                  service={service.title}
+                  // service={service.title} // passing this make the intent section get skipped
                   buttonText={CONTENT.services.cta}
                   buttonStyle="outline"
                   size="sm"
