@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import useGoogleScript from './useGoogleScript';
+import { useWorld } from '../contexts/WorldContext';
 
 /**
  * Custom hook for handling Stripe payments
@@ -11,6 +12,7 @@ import useGoogleScript from './useGoogleScript';
 const useStripe = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { currentWorld } = useWorld();
   
   const { callGoogleScript, getAdditionalTimeCost, getMaterialsCost, isConfigured: isGoogleScriptConfigured } = useGoogleScript();
   const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -38,6 +40,8 @@ const useStripe = () => {
         // Amount not needed - uses Stripe product price ID
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
+        successUrl: `${window.location.origin}/${currentWorld}/payment-success`,
+        cancelUrl: `${window.location.origin}/${currentWorld}/payment-cancel`,
         metadata: {
           service: 'ai_estimate',
           phone: customerInfo.phone,
@@ -91,6 +95,8 @@ const useStripe = () => {
         amount: 2500, // $25.00 in cents (fallback if no price ID configured)
         customerEmail: bookingInfo.email,
         customerName: bookingInfo.customerName,
+        successUrl: `${window.location.origin}/${currentWorld}/payment-success`,
+        cancelUrl: `${window.location.origin}/${currentWorld}/payment-cancel`,
         metadata: {
           service: 'booking_deposit',
           bookingReference: bookingInfo.bookingRef,
@@ -195,6 +201,8 @@ const useStripe = () => {
         amount: amountDue,
         customerEmail: job['Email'] || '',
         customerName: job['Name'] || '',
+        successUrl: `${window.location.origin}/${currentWorld}/payment-success`,
+        cancelUrl: `${window.location.origin}/${currentWorld}/payment-cancel`,
         metadata: {
           service: 'job_payment',
           bookingReference: bookingReference,

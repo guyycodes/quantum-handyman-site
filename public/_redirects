@@ -1,0 +1,43 @@
+# Netlify redirects configuration
+
+# Domain redirects - Force non-www version (primary domain)
+# Note: quantumhandyman.com is set as primary in Netlify
+http://www.quantumhandyman.com/*     https://quantumhandyman.com/:splat    301!
+https://www.quantumhandyman.com/*    https://quantumhandyman.com/:splat    301!
+http://quantumhandyman.com/*         https://quantumhandyman.com/:splat    301!
+
+# Redirect common typos and variations
+/service              /services              301
+/service/*            /services/:splat       301
+/portfolio/*          /portfolio             301
+/book-now             /                      301
+/booking              /                      301
+/schedule             /                      301
+/appointment          /                      301
+/estimate             /                      301
+/quote                /                      301
+
+# SEO redirects for service pages (if created in future)
+/handyman             /services              301
+/web-development      /services              301
+/smart-home           /services              301
+/landscaping          /services              301
+
+# Payment success/cancel redirects from Stripe
+# Default redirects (for backward compatibility - redirect to technician)
+/payment-success      /technician/payment-success      301
+/payment-cancel       /technician/payment-cancel       301
+/payment-cancelled    /technician/payment-cancel       301
+
+# Web world specific payment redirects
+/web/payment-success      /web/payment-success      200
+/web/payment-cancel       /web/payment-cancel       200
+/web/payment-cancelled    /web/payment-cancel       301
+
+# Technician world specific payment redirects
+/technician/payment-success      /technician/payment-success      200
+/technician/payment-cancel       /technician/payment-cancel       200
+/technician/payment-cancelled    /technician/payment-cancel       301
+
+# Handle client-side routing for React Router
+/*                    /index.html            200

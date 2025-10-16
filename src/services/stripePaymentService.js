@@ -5,13 +5,29 @@ let stripeModule = null;
 let stripeLoadPromise = null;
 let stripeInstance = null;
 
+// Helper function to get current world from URL
+const getCurrentWorld = () => {
+  const pathname = window.location.pathname;
+  if (pathname.startsWith('/web')) return 'web';
+  if (pathname.startsWith('/technician')) return 'technician';
+  // Default to technician for backward compatibility
+  return 'technician';
+};
+
 // Stripe configuration
 const STRIPE_CONFIG = {
   publishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
   aiEstimatePrice: 195, // $1.95 in cents
   currency: 'usd',
-  successUrl: window.location.origin + '/payment-success',
-  cancelUrl: window.location.origin + '/payment-cancelled'
+  // Dynamic URLs based on current world
+  get successUrl() {
+    const world = getCurrentWorld();
+    return `${window.location.origin}/${world}/payment-success`;
+  },
+  get cancelUrl() {
+    const world = getCurrentWorld();
+    return `${window.location.origin}/${world}/payment-cancel`;
+  }
 };
 
 // Load Stripe on demand
@@ -48,6 +64,8 @@ export const createAIEstimateCheckoutSession = async (customerInfo) => {
       currency: STRIPE_CONFIG.currency,
       customerEmail: customerInfo.email,
       customerName: customerInfo.name,
+      successUrl: STRIPE_CONFIG.successUrl,
+      cancelUrl: STRIPE_CONFIG.cancelUrl,
       metadata: {
         service: 'ai_estimate',
         customerPhone: customerInfo.phone,

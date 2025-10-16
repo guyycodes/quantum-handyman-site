@@ -47,6 +47,7 @@ const WorldApp = () => {
           <Route path="/terms" element={<Terms />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />
+          <Route path="/payment-cancelled" element={<PaymentCancel />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
@@ -81,6 +82,7 @@ function App() {
         <Route path="/terms" element={<Navigate to="/technician/terms" replace />} />
         <Route path="/payment-success" element={<Navigate to="/technician/payment-success" replace />} />
         <Route path="/payment-cancel" element={<Navigate to="/technician/payment-cancel" replace />} />
+        <Route path="/payment-cancelled" element={<Navigate to="/technician/payment-cancel" replace />} />
         
         {/* 404 for everything else */}
         <Route path="*" element={<NotFound />} />
