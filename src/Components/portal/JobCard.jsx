@@ -129,7 +129,7 @@ const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, 
     }
     
     // 3. If job is confirmed but not 100% complete & not on hold (in progress)
-    if ((!progressStr.includes('100%') && jobStatus.toLowerCase().includes('confirmed')) && !progressStr.includes('On Hold')) {
+    if ((!progressStr.includes('100%') && !jobStatus.toLowerCase().includes('unconfirmed')) && !progressStr.includes('On Hold')) {
       return 'in_progress';
     }
     

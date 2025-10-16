@@ -35,7 +35,7 @@ const CONTENT = {
   emergency: {
     title: '🚨 Need Emergency Service?',
     message: 'Call us directly at',
-    phone: '(303) 495-8899',
+    phone: '(303) 578-7551',
     suffix: 'for immediate assistance.'
   }
 };
