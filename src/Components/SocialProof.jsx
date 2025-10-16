@@ -37,14 +37,14 @@ import { useWorld } from '../contexts/WorldContext';
 const REVIEWS = [
   {
     id: 1,
-    text: "Outstanding service! Professional, punctual, and the quality of work exceeded my expectations. Will definitely hire again.",
-    author: "Coming Soon",
-    location: "Denver Area",
+    text: "Morgan is reliable and efficient, he’s helped me with countless projects and has helped me put my place together to become my home. Highly recommend!",
+    author: "Rachel P.",
+    location: "Denver, CO",
     rating: 5,
-    service: "Service Type",
-    date: "2024",
-    verified: false,
-    highlight: "Professional Service"
+    service: "Furniture Assembly, Smart Home Setup",
+    date: "2025",
+    verified: true,
+    highlight: "Professional Service, Great Price"
   },
   {
     id: 2,
