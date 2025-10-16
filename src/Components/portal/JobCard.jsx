@@ -704,7 +704,7 @@ const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, 
           {/* Action buttons row */}
           <div className="flex justify-end items-center gap-2 mb-2">
             {/* Add Time dropdown - show for in progress or completed jobs */}
-            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid' || actualStatus === 'completed_paid') && (
+            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid') && (
               <div className="relative">
                 <button
                   onClick={() => setShowAddTimeDropdown(!showAddTimeDropdown)}
@@ -761,7 +761,7 @@ const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, 
             )}
 
             {/* Add Materials dropdown - show for in progress or completed jobs */}
-            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid' || actualStatus === 'completed_paid') && (
+            {(actualStatus === 'in_progress' || actualStatus === 'completed_unpaid') && (
               <div className="relative">
                 <button
                   onClick={() => setShowAddMaterialsDropdown(!showAddMaterialsDropdown)}
@@ -776,7 +776,7 @@ const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, 
                   ) : (
                     <>
                       <Package className="w-4 h-4" />
-                      Add Mat'ls
+                      Add Scope/Mat'ls 
                       <ChevronDown className={`w-4 h-4 transition-transform ${showAddMaterialsDropdown ? 'rotate-180' : ''}`} />
                     </>
                   )}
@@ -792,7 +792,7 @@ const JobCard = ({ job, onPayment, onRefresh, onAddTime, getAdditionalTimeCost, 
                           type="text"
                           value={materialDescription}
                           onChange={(e) => setMaterialDescription(e.target.value)}
-                          placeholder="e.g., Paint, screws, lumber"
+                          placeholder="e.g., Materials, Add-ons etc."
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                           disabled={isProcessingAddMaterials}
                         />
