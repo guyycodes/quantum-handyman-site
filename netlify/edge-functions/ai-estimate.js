@@ -21,7 +21,7 @@ export default async (request, context) => {
 
   try {
     // Get the OpenAI API key from environment
-    const apiKey = Deno.env.get('VITE_OPENAI_API_KEY') || Deno.env.get('OPENAI_API_KEY') || context.env?.VITE_OPENAI_API_KEY || context.env?.OPENAI_API_KEY;
+    const apiKey = Deno.env.get('VITE_OPENAI_API_KEY')
     
     if (!apiKey) {
       console.error('OpenAI API key not found in environment variables');
