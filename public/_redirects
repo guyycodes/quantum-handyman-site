@@ -25,19 +25,12 @@ http://quantumhandyman.com/*         https://quantumhandyman.com/:splat    301!
 
 # Payment success/cancel redirects from Stripe
 # Default redirects (for backward compatibility - redirect to technician)
-/payment-success      /technician/payment-success      301
-/payment-cancel       /technician/payment-cancel       301
-/payment-cancelled    /technician/payment-cancel       301
-
-# Web world specific payment redirects
-/web/payment-success      /web/payment-success      200
-/web/payment-cancel       /web/payment-cancel       200
-/web/payment-cancelled    /web/payment-cancel       301
-
-# Technician world specific payment redirects
-/technician/payment-success      /technician/payment-success      200
-/technician/payment-cancel       /technician/payment-cancel       200
-/technician/payment-cancelled    /technician/payment-cancel       301
+/payment-success      /technician/payment-success      301!
+/payment-cancel       /technician/payment-cancel       301!
+/payment-cancelled    /technician/payment-cancel       301!
 
 # Handle client-side routing for React Router
-/*                    /index.html            200
+# IMPORTANT: These must come AFTER the specific redirects above
+/technician/*         /technician/index.html           200
+/web/*                /web/index.html                  200
+/*                    /index.html                      200
