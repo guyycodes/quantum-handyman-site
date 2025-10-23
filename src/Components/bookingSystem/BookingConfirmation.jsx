@@ -87,6 +87,7 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting, onPaymentSu
   const [paymentError, setPaymentError] = useState(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
   const [checkoutUrl, setCheckoutUrl] = useState(null);
+  const [requireDeposit, setRequireDeposit] = useState(false); // Start with deposit unchecked
   const popupRef = useRef(null);
   
   // Cleanup popup on unmount
@@ -335,29 +336,51 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting, onPaymentSu
         )}
       </div>
 
-      {/* Deposit Information */}
-      <div className="bg-green-50 rounded-xl border border-green-200 p-6 mb-6">
-        <h4 className="text-lg font-semibold text-green-900 mb-3 flex items-center gap-2">
-          <CreditCard className="w-5 h-5" />
-          {CONTENT.deposit.title}
-        </h4>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-700">{CONTENT.deposit.description}</span>
-            <span className="text-3xl font-bold text-green-600">{CONTENT.deposit.amount}</span>
+      {/* Deposit Option Checkbox */}
+      <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 mb-6">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={requireDeposit}
+            onChange={(e) => setRequireDeposit(e.target.checked)}
+            className="mt-1 w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+          />
+          <div className="flex-1">
+            <span className="text-lg font-semibold text-gray-900">
+              Lock in your booking with $25 deposit
+            </span>
+            <p className="text-sm text-gray-600 mt-1">
+              Secure your time slot with a small deposit that will be applied to your final bill
+            </p>
           </div>
-          <div className="border-t border-green-200 pt-3">
-            <ul className="space-y-2 text-sm text-green-800">
-              {CONTENT.deposit.benefits.map((benefit, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span>{benefit}</span>
-                </li>
-              ))}
-            </ul>
+        </label>
+      </div>
+
+      {/* Deposit Information - Only show when checkbox is checked */}
+      {requireDeposit && (
+        <div className="bg-green-50 rounded-xl border border-green-200 p-6 mb-6">
+          <h4 className="text-lg font-semibold text-green-900 mb-3 flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            {CONTENT.deposit.title}
+          </h4>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700">{CONTENT.deposit.description}</span>
+              <span className="text-3xl font-bold text-green-600">{CONTENT.deposit.amount}</span>
+            </div>
+            <div className="border-t border-green-200 pt-3">
+              <ul className="space-y-2 text-sm text-green-800">
+                {CONTENT.deposit.benefits.map((benefit, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       
       {/* Popup Blocked Alert */}
       {popupBlocked && (
@@ -410,7 +433,7 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting, onPaymentSu
       {/* Confirm Button - Only show if not popup blocked */}
       {!popupBlocked && (
         <button
-          onClick={handlePaymentAndConfirm}
+          onClick={requireDeposit ? handlePaymentAndConfirm : () => onConfirm(false)}
           disabled={isSubmitting || isProcessingPayment}
           className={`
             w-full py-4 px-6 font-semibold rounded-lg shadow-lg transform transition-all
@@ -438,8 +461,17 @@ const BookingConfirmation = ({ bookingData, onConfirm, isSubmitting, onPaymentSu
             </span>
           ) : (
             <span className="flex items-center justify-center gap-2">
-              <CreditCard className="w-5 h-5" />
-              {CONTENT.buttons.confirm}
+              {requireDeposit ? (
+                <>
+                  <CreditCard className="w-5 h-5" />
+                  {CONTENT.buttons.confirm}
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-5 h-5" />
+                  Confirm Booking
+                </>
+              )}
             </span>
           )}
         </button>
