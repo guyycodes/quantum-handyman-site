@@ -331,6 +331,13 @@ const SERVICES_DATA = [
 const PORTFOLIO_DATA = [
   {
     category: 'Web Development',
+    title: 'Widgetfied - Widget Platform',
+    description: 'Full-stack SaaS platform with AI-powered estimates, smart booking, customer portals, and Stripe Connect payments — all in embeddable widgets for service businesses.',
+    image: '/Widgetfied.png',
+    link: 'https://www.widgetfied.com/'
+  },
+  {
+    category: 'Web Development',
     title: 'Realtime SaaS Platform',
     description: 'Realtime jobs dispatch platform with realtime job tracking, Dispatching, messaging, Disputes, AI integrations, and payment processing.',
     image: '/images/web-dev/Dandymen_io-optimized.webp',

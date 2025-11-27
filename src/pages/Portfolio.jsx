@@ -167,10 +167,16 @@ const CONTENT = {
       client: 'Premier Realty'
     },
     swiftTriviaApp: {
-      title: 'Swift Trivia Game App 🎮',
-      description: 'Comprehensive iOS trivia game built with Swift featuring customizable game options, multiple categories, difficulty levels, timer functionality, and beautiful gradient UI. Supports both Multiple Choice and True/False questions with detailed score tracking and answer review.',
-      deliverables: '• Native iOS app built with Swift\n• Customizable quiz settings & categories\n• Timer system with auto-submission\n• Score tracking & answer review system',
-      client: 'iOS App Store Ready'
+      title: 'LLM Trivia Battle - iOS App 🤖🎮',
+      description: 'Native iOS trivia app built with Swift/Xcode where you compete head-to-head against locally-compiled LLMs. Features on-device AI inference, real-time score comparison, and the unique experience of testing your knowledge against machine learning models.',
+      deliverables: '• Native iOS app built with Swift/Xcode\n• On-device LLM compilation w/Llama.cpp & inference\n• Real-time AI vs Human trivia battles\n• Score tracking & performance comparison',
+      client: 'iOS Demo'
+    },
+    widgetfied: {
+      title: 'Widgetfied - Embeddable Widget Platform ⚡',
+      description: 'Full-stack SaaS platform providing AI-powered estimates, smart booking, customer portals, and secure payments — all in embeddable widgets that integrate in minutes. Built for service businesses with multi-tenant architecture.',
+      deliverables: '• AI-powered estimate widget with computer vision\n• Google Calendar booking integration\n• Stripe Connect multi-tenant payments\n• Customer portal with job tracking\n• One-line embed integration',
+      client: 'Widgetfied Inc.'
     }
   }
 }
@@ -240,6 +246,21 @@ const PROJECTS_DATA = [
     testimonial: CONTENT.projects.backyardTransform.testimonial,
     client: CONTENT.projects.backyardTransform.client,
     rating: 5
+  },
+  {
+    id: 17,
+    category: 'web-dev',
+    title: CONTENT.projects.widgetfied.title,
+    description: CONTENT.projects.widgetfied.description,
+    date: '2025',
+    location: 'SaaS Platform',
+    duration: 'Production',
+    images: ['/Widgetfied.png'],
+    projectImg: '/Widgetfied.png',
+    testimonial: CONTENT.projects.widgetfied.deliverables,
+    client: CONTENT.projects.widgetfied.client,
+    rating: 5,
+    link: 'https://www.widgetfied.com/'
   },
   {
     id: 5,
@@ -418,16 +439,16 @@ const PROJECTS_DATA = [
     category: 'web-dev',
     title: CONTENT.projects.swiftTriviaApp.title,
     description: CONTENT.projects.swiftTriviaApp.description,
-    date: '2024',
+    date: '2025',
     location: 'iOS Platform',
-    duration: '12 hours',
+    duration: 'Demo Project',
     images: ['/images/web-dev/trivia-app.png'],
     testimonial: CONTENT.projects.swiftTriviaApp.deliverables,
     client: CONTENT.projects.swiftTriviaApp.client,
     rating: 5,
-    link: 'https://www.loom.com/share/b1ecb931c5804df38d81d1afa64bc255',
-    projectImg: 'https://cdn.loom.com/sessions/thumbnails/b1ecb931c5804df38d81d1afa64bc255-f9b0e1e5c18e4cff-full-play.gif'
-    // NO videoUrl - so the modal will show the image from the images array instead
+    link: 'https://www.youtube.com/watch?v=rKH0egnM4ig',
+    projectImg: '/images/web-dev/trivia-app.png',
+    videoUrl: 'https://www.youtube.com/embed/rKH0egnM4ig?autoplay=1'
   }
 ]
 

@@ -7,6 +7,10 @@
   path = "/api/ai-estimate"
 
 [[edge_functions]]
+  function = "ai-estimate"
+  path = "/api/ai/estimate"
+
+[[edge_functions]]
   function = "validate-promo"
   path = "/.netlify/edge-functions/validate-promo"
 
