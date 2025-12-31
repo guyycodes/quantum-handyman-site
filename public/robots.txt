@@ -4,6 +4,8 @@
 # Default rule - Allow all legitimate crawlers
 User-agent: *
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
@@ -16,24 +18,32 @@ Crawl-delay: 0
 # Google
 User-agent: Googlebot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Crawl-delay: 0
 
 # Bing
 User-agent: Bingbot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Crawl-delay: 1
 
 # DuckDuckGo
 User-agent: DuckDuckBot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Crawl-delay: 1
 
-# AI Search Crawlers - ALLOW
-# We want AI to know about our services
+# AI Search Crawlers - ALLOW (for web dev services)
+# We want AI to know about our web development services
 
 # OpenAI/ChatGPT
 User-agent: GPTBot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
@@ -41,6 +51,8 @@ Crawl-delay: 1
 
 User-agent: ChatGPT-User
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
@@ -48,12 +60,16 @@ Disallow: /portal/
 # Anthropic/Claude
 User-agent: anthropic-ai
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
 
 User-agent: Claude-Web
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
@@ -61,6 +77,8 @@ Disallow: /portal/
 # Common Crawl (used by many AI companies)
 User-agent: CCBot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/
@@ -69,6 +87,8 @@ Crawl-delay: 2
 # Perplexity AI
 User-agent: PerplexityBot
 Allow: /
+Allow: /web/
+Disallow: /technician/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /portal/

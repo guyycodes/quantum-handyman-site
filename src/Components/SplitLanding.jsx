@@ -218,8 +218,9 @@ const SplitLanding = () => {
     setIsLoaded(true);
     
     // Keyboard navigation
+    // DISABLED: Technician side is demo only - ArrowLeft no longer navigates to technician
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') handleSelection('technician');
+      // if (e.key === 'ArrowLeft') handleSelection('technician'); // DISABLED - Demo mode
       if (e.key === 'ArrowRight') handleSelection('web');
     };
     
@@ -283,7 +284,8 @@ const SplitLanding = () => {
       setHoveredSide(null);
     }
     // If nothing is expanded and it's a short tap, navigate directly
-    else if (touchedSide === side) {
+    // DISABLED: Technician side is demo only
+    else if (touchedSide === side && side !== 'technician') {
       handleSelection(side);
     }
     
@@ -426,9 +428,10 @@ const SplitLanding = () => {
             }
           }}
           onKeyDown={(e) => {
+            // DISABLED: Technician side is demo only
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              handleSelection('technician');
+              // handleSelection('technician'); // DISABLED - Demo mode
             }
           }}
           style={{
@@ -512,19 +515,26 @@ const SplitLanding = () => {
                 </div>
               </div>
 
-              {/* CTA Button */}
-              <button
-                className={`group flex items-center gap-2 px-7 py-6 bg-white text-blue-600 rounded-xl 
-                  text-2xl font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl cursor-pointer
-                  ${hoveredSide === 'technician' ? 'scale-105' : 'scale-100'}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSelection('technician');
-                }}
-              >
-                {CONTENT.technician.button}
-                <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
-              </button>
+              {/* CTA Button - DISABLED: Demo mode only */}
+              <div className="flex flex-col items-center gap-3">
+                <button
+                  className={`group flex items-center gap-2 px-7 py-6 bg-gray-300 text-gray-500 rounded-xl 
+                    text-2xl font-semibold transition-all duration-300 shadow-xl cursor-not-allowed opacity-60
+                    ${hoveredSide === 'technician' ? 'scale-105' : 'scale-100'}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // DISABLED - Demo mode only
+                    // handleSelection('technician');
+                  }}
+                  disabled
+                >
+                  {CONTENT.technician.button}
+                  <ArrowRight className="w-6 h-6" />
+                </button>
+                <div className="bg-yellow-500/90 text-yellow-900 px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide shadow-lg animate-pulse">
+                  🚧 FOR DEMO PURPOSES ONLY 🚧
+                </div>
+              </div>
             </div>
           </div>
 
