@@ -1,6 +1,6 @@
 # Quantum Technician
 
-A modern React-based service booking platform for **Quantum Technician** — a unique dual-expertise business combining traditional craftsmanship with computer science expertise. From drywall to databases.
+A modern React-based web development services platform for **Quantum Technician** — full-stack development by a CS-degree developer.
 
 ![Quantum Technician](https://quantumtechnician.com/og-image.png)
 
@@ -10,42 +10,29 @@ A modern React-based service booking platform for **Quantum Technician** — a u
 
 ## 🎯 Overview
 
-Quantum Technician serves the Denver metro area with two distinct service worlds:
+Quantum Technician offers professional web development services in the Denver metro area and nationwide:
 
-- **🔧 Technician Services** — Home repairs, smart home installation, property maintenance, landscaping
-- **💻 Web Development** — Custom websites, web applications, SEO, AI integrations
-
-The platform features a split-landing architecture where users choose their service world, then navigate through a fully integrated booking and estimation system.
+- **💻 Custom Web Applications** — React, Node.js, full-stack development
+- **🛒 E-commerce Solutions** — Online stores with payment integration
+- **🔍 SEO & Performance** — Search optimization and Core Web Vitals
+- **🤖 AI Integration** — ChatGPT, Claude, and custom AI solutions
+- **📱 Creator Packages** — Content creators and influencer solutions
 
 ## ✨ Key Features
 
-### Booking System
-- **Multi-step booking modal** with intent selection (Book Service vs Get Estimate)
-- **Real-time calendar integration** via Google Apps Script
-- **Time slot selection** with availability checking
-- **Service packages** with detailed pricing
+### Service Booking
+- **Multi-step booking modal** for consultations
+- **Service packages** with transparent pricing
+- **Contact form** with instant notifications
 
 ### AI-Powered Estimates
-- **GPT-4o-mini vision** for analyzing project photos
-- Upload up to 3 images for instant AI assessment
-- Intelligent pricing based on service type and complexity
-- Promo code system for free estimate retries
-
-### Payment Processing
-- **Stripe integration** for secure payments
-- Deposit collection for bookings
-- AI estimate fee processing ($1.95)
-
-### Customer Portal
-- Job tracking with status updates
-- Estimate history and management
-- Payment status visibility
-- Real-time job cards with detailed info
+- **GPT-4o-mini vision** for analyzing project requirements
+- Upload images for instant AI assessment
+- Intelligent pricing based on project complexity
 
 ### Analytics & Tracking
 - **PostHog** for product analytics and user behavior
 - **Google Analytics 4** for traffic and conversions
-- Funnel tracking for booking flow optimization
 - Custom event tracking throughout the experience
 
 ## 🛠 Tech Stack
@@ -56,17 +43,15 @@ The platform features a split-landing architecture where users choose their serv
 | **Styling** | Tailwind CSS 3.4 |
 | **Build Tool** | Vite 5 |
 | **Hosting** | Netlify (with Edge Functions) |
-| **Payments** | Stripe.js |
 | **AI** | OpenAI GPT-4o-mini (via Netlify Edge) |
 | **Email** | EmailJS |
-| **Calendar** | Google Apps Script |
 | **Analytics** | PostHog, Google Analytics 4 |
 | **Icons** | Lucide React, React Icons |
 
 ## 📁 Project Structure
 
 ```
-quantum-handyman-site/
+quantum-technician-site/
 ├── index.html              # Main entry with SEO/structured data
 ├── netlify/
 │   └── edge-functions/
@@ -74,69 +59,41 @@ quantum-handyman-site/
 │       └── validate-promo.js
 ├── public/
 │   ├── images/             # Optimized service images
-│   │   ├── home-repair/
-│   │   ├── landscaping/
-│   │   ├── profile/
-│   │   ├── smart-home/
-│   │   └── web-dev/
+│   │   ├── web-dev/
+│   │   └── profile/
 │   ├── manifest.json       # PWA manifest
 │   ├── sitemap.xml
 │   └── robots.txt
 ├── src/
 │   ├── Components/
-│   │   ├── bookingSystem/  # Multi-step booking flow
-│   │   │   ├── IntentSelection.jsx
-│   │   │   ├── CalendarStep.jsx
-│   │   │   ├── ServiceSelection.jsx
-│   │   │   ├── TimeSlotSelection.jsx
-│   │   │   ├── CustomerInfo.jsx
-│   │   │   ├── BookingConfirmation.jsx
-│   │   │   ├── BookingSuccess.jsx
-│   │   │   ├── EstimateConfirmation.jsx
-│   │   │   └── EstimateSuccess.jsx
-│   │   ├── portal/         # Customer portal components
-│   │   │   ├── JobCard.jsx
-│   │   │   ├── EstimateCard.jsx
-│   │   │   └── JobPaymentModal.jsx
 │   │   ├── BookingModal.jsx
-│   │   ├── StripePaymentModal.jsx
 │   │   ├── ChatBot.jsx
 │   │   ├── Header.jsx
 │   │   ├── Footer.jsx
-│   │   ├── SplitLanding.jsx  # World selection
+│   │   ├── SplitLanding.jsx
 │   │   └── ...
 │   ├── contexts/
-│   │   ├── WorldContext.jsx  # Technician vs Web world
+│   │   ├── WorldContext.jsx
 │   │   ├── GoogleAnalyticsProvider.jsx
 │   │   └── PostHogProvider.jsx
 │   ├── hooks/
-│   │   ├── useGoogleScript.js
-│   │   ├── useStripe.js
 │   │   ├── usePostHog.js
 │   │   └── useSmsNotification.js
 │   ├── pages/
 │   │   ├── Home.jsx
 │   │   ├── Services.jsx
 │   │   ├── Portfolio.jsx
-│   │   ├── Portal.jsx      # Customer portal
 │   │   ├── About.jsx
 │   │   ├── Contact.jsx
 │   │   ├── HowItWorks.jsx
 │   │   └── ...
 │   ├── services/
-│   │   ├── aiEstimateService.js
-│   │   ├── googleCalendarService.js
-│   │   ├── googleScriptService.js
-│   │   ├── stripePaymentService.js
 │   │   ├── emailService.js
 │   │   └── promoCodeService.js
 │   └── utils/
-│       ├── imageCompression.js
 │       ├── uniqueIdGenerator.js
 │       ├── dataSanitization.js
 │       └── chatbotResponses.js
-├── technician/
-│   └── index.html          # Technician world entry
 ├── web/
 │   └── index.html          # Web dev world entry
 ├── netlify.toml            # Netlify config & headers
@@ -155,7 +112,7 @@ quantum-handyman-site/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/quantum-handyman-site.git
+git clone https://github.com/guyycodes/quantum-handyman-site.git
 cd quantum-handyman-site
 
 # Install dependencies
@@ -175,14 +132,8 @@ VITE_EMAILJS_SERVICE_ID=your_service_id
 VITE_EMAILJS_TEMPLATE_ID=your_template_id
 VITE_EMAILJS_PUBLIC_KEY=your_public_key
 
-# Stripe Configuration
-VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-
 # OpenAI (used by Netlify Edge Function)
 VITE_OPENAI_API_KEY=your_openai_api_key
-
-# Google Apps Script
-VITE_GOOGLE_SCRIPT_URL=your_apps_script_deployment_url
 
 # Analytics
 VITE_POSTHOG_API_KEY=your_posthog_key
@@ -212,65 +163,38 @@ npm run preview
 
 ## 📱 Routes
 
-The app uses a dual-world routing structure:
-
 | Route | Description |
 |-------|-------------|
-| `/` | Split landing page (world selection) |
-| `/technician/*` | Technician services world |
-| `/web/*` | Web development world |
-| `/*/services` | Service listings |
-| `/*/portfolio` | Portfolio gallery |
-| `/*/portal` | Customer portal |
-| `/*/about` | About page |
-| `/*/contact` | Contact form |
-| `/*/how-it-works` | Process explanation |
-| `/*/payment-success` | Stripe success redirect |
-| `/*/payment-cancel` | Stripe cancel redirect |
+| `/` | Landing page |
+| `/web/` | Web development home |
+| `/web/services` | Service listings |
+| `/web/portfolio` | Portfolio gallery |
+| `/web/about` | About page |
+| `/web/contact` | Contact form |
+| `/web/how-it-works` | Process explanation |
 
-## 🎨 Features Deep Dive
+## 🎨 Services Offered
 
-### Split Landing Architecture
-Users arrive at a visually split landing page choosing between "Physical Services" (Technician) and "Digital Services" (Web). This sets the `WorldContext` which customizes content, services, and CTAs throughout the experience.
+### Custom Web Applications
+Full-stack web application development using React, Node.js, and modern technologies. Starting at $499.
 
-### Booking Flow
-1. **Intent Selection** — Choose "Book Service" or "Get Estimate"
-2. **Service Selection** — Pick from available packages
-3. **Calendar** — Select preferred date
-4. **Time Slots** — Choose available time
-5. **Customer Info** — Enter details + optional photo upload
-6. **Confirmation** — Review and submit
-7. **Payment** (optional) — Process deposit via Stripe
+### E-commerce Solutions
+Complete e-commerce platforms with payment integration, inventory management, and analytics. $1,300 - $5,000.
 
-### AI Estimation
-The AI estimate feature uses OpenAI's GPT-4o-mini with vision capabilities:
-- Accepts project description + up to 3 photos
-- Proxied through Netlify Edge Function (secure API key)
-- Returns structured JSON with price range, materials, labor hours
-- Includes promo code (`FREEQUOTE`) for insufficient info scenarios
+### SEO & Performance
+Search engine optimization, performance tuning, and Core Web Vitals optimization. $500 - $2,000.
 
-### Customer Portal
-Accessible via magic link or reference number:
-- View active jobs with status badges
-- Track estimates and their outcomes
-- Make payments for approved work
-- Contact support directly
+### AI Integration
+ChatGPT, Claude, and custom AI model integration into web applications. Starting at $1,000.
+
+### Creator Packages
+Specialized solutions for content creators and influencers looking to build their online presence.
 
 ## 🔒 Security
 
 - **Content Security Policy** headers configured in `netlify.toml`
 - API keys proxied through edge functions (never exposed to client)
 - Input sanitization via `dataSanitization.js`
-- Secure payment handling through Stripe Elements
-
-## 📊 Analytics Events
-
-Key tracked events:
-- `booking_started` / `booking_complete` / `booking_abandoned`
-- `estimate_requested` / `estimate_generated`
-- `payment_initiated` / `payment_success`
-- `funnel_step_*` with timing data
-- World selection and navigation patterns
 
 ## 🌍 Deployment
 
@@ -283,14 +207,13 @@ The site is deployed on Netlify with:
 
 ## 📄 License
 
-Proprietary — © 2024 Quantum Technician LLC
+Proprietary — © 2025 Quantum Technician LLC
 
 ## 👤 Author
 
-**Morgan B.** — Founder & Technology Craftsman  
+**Morgan B.** — Founder & Full-Stack Developer  
 Florida International University — Computer Science
 
 ---
 
-*"From drywall to databases — solving both physical and digital problems with deep multi-disciplinary expertise."*
-
+*Professional web development with CS expertise — turning your digital vision into reality.*
