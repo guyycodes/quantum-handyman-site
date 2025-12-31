@@ -13,20 +13,20 @@ import {
 const CONTENT = {
   hero: {
     title: 'About Quantum Technician',
-    subtitle: 'Where traditional craftsmanship meets cutting-edge technology'
+    subtitle: 'Professional web development with a CS-degree foundation'
   },
   
   story: {
     title: 'The Story Behind',
     brandName: 'Quantum Technician',
     paragraphs: [
-      'A new kind of technician that bridges the gap between traditional trades and modern technology.',
-      'What started as a side hustle quickly revealed a passion for solving real-world problems. After 10 years in cross discipline trades & running a small business, then graduating with a CS + Business degree, I realized I didn\'t want to choose between coding and craftsmanship - so I didn\'t.',
-      'Quantum Technician represents 10+ years of experience & a unique combination of a deep multi-disciplinary skillset. From fixing leaky faucets & drywall to building apps & home maintenance the same attention to detail and engineering excellence is delivered for every project.'
+      'A CS-degree developer focused on building modern, performant web applications.',
+      'After graduating with a Computer Science + Business degree from Florida International University, I combined my passion for technology with practical business solutions. What started as freelance projects evolved into Quantum Technician.',
+      'With 10+ years of experience in software development, I specialize in React, Node.js, e-commerce solutions, SEO optimization, and AI integrations. Every project receives the same attention to detail and engineering excellence.'
     ],
     mission: {
       title: 'Mission',
-      text: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.'
+      text: 'To deliver high-quality web development solutions with a systematic, engineering-driven approach. Quantum Technician combines computer science fundamentals with modern best practices, delivered with professionalism & efficiency.'
     }
   },
   
@@ -50,13 +50,13 @@ const CONTENT = {
   credentials: {
     title: 'Credentials & Certifications',
     items: [
-      'Experienced Craftsman',
-      'Deep Property & Finance Background',
+      'Experienced Developer',
+      'CS + Business Background',
       'B.A. Computer Science + Business Minor',
       'Certified Full-Stack Devloper',
       'Smart Home Professional',
       'Automotive Paint Correction Specialist',
-      'Landscaping Expert',
+      'Full-Stack Developer',
       'Insured & Bonded',
       'Background Checked',
       'Systematic Problem-Solver'
@@ -94,14 +94,14 @@ const CONTENT = {
     title: 'Our Journey',
     subtitle: 'From side hustle -> service provider',
     milestones: [
-      { year: '2011-2015', event: 'Employed as a Multi-Disciplinary trade worker, Irrigation, Landscape, Property Repair & Automotive.' },
+      { year: '2011-2015', event: 'Started learning web development and building first projects.' },
       { year: '2015', event: 'Started a side hustle.' },
       { year: '2017', event: 'Began offering home service.' },
       { year: '2018', event: 'Started coding journey.' },
       { year: '2019', event: 'Returned to college for Computer Science & Minor in Business.' },
       { year: '2020', event: 'Took on lanscaping & sprinkler projects expanding services' },
       { year: '2021', event: 'Took 16 months off of college during Covid-19, Went to Mortgage/Real Estate School & Worked as a Mortgage Loan Officer.' },
-      { year: '2022', event: 'Built outdoor patio with full landscaping, masonry, stamped concrete, drywalling & decking expanded services.' },
+      { year: '2022', event: 'Expanded into AI integration and advanced web application development.' },
       { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework.' },
       { year: '2023', event: 'Graduated University of Denver Certified in Full Stack Development, added web development services.' },
       { year: '2024', event: 'Began building a custom website for Quantum Technician, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
@@ -113,7 +113,7 @@ const CONTENT = {
   
   cta: {
     title: 'Ready to Work with Quantum Technician?',
-    subtitle: 'Experience the difference of working with a true problem-solver who brings both technical expertise and traditional craftsmanship to every project.',
+    subtitle: 'Experience the difference of working with a CS-degree developer who brings technical expertise and systematic problem-solving to every project.',
     buttons: {
       bookService: 'Book a Service',
       getQuote: 'Get Free Quote',

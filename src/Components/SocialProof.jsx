@@ -41,7 +41,7 @@ const REVIEWS = [
     author: "Rachel P.",
     location: "Denver, CO",
     rating: 5,
-    service: "Furniture Assembly, Smart Home Setup",
+    service: "Smart Home Setup",
     date: "2025",
     verified: true,
     highlight: "Professional Service, Great Price"

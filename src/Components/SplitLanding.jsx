@@ -21,10 +21,10 @@ const CONTENT = {
     title: 'Technician',
     subtitle: 'Professional repairs & home improvements with a tech-savvy edge',
     features: [
-      'Home Repairs & Maintenance',
+      'Property Services',
       'Smart Home Installation', 
-      'Furniture Assembly',
-      'Landscaping & Outdoor'
+      'Home Maintenance',
+      'Outdoor Projects'
     ],
     stats: {
       experience: { value: '10+', label: 'Years' },
@@ -43,7 +43,7 @@ const CONTENT = {
         voltage: '220V Ready',
         measurements: '±0.1mm',
         dimensions: "12'x14'",
-        craftsman: 'Craftsman'
+        craftsman: 'Service Pro'
       },
       smartHub: {
         title: 'Smart Hub'
@@ -201,7 +201,7 @@ const SplitLanding = () => {
   const navigate = useNavigate();
   
   // Mission statement text
-  const missionText = "Solutions from a unified ethos - Physical • Digital • Handyman • Smart Home • Web Dev / AI'.";
+  const missionText = "Full-Stack Web Development • E-commerce • SEO • AI Integration";
 
   useEffect(() => {
     // Handle resize for all screen size detections

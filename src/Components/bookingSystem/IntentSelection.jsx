@@ -10,7 +10,7 @@ const IntentSelection = ({ onIntentSelect }) => {
     {
       id: 'technician',
       title: 'Book Technician Service',
-      subtitle: 'Home repairs, home tech setup, or property maintenance',
+      subtitle: 'Web applications, e-commerce, or custom development',
       icon: Wrench,
       color: 'from-blue-500 to-blue-600',
       iconBg: 'bg-blue-100',

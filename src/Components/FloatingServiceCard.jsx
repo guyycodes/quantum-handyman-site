@@ -3,10 +3,10 @@ import { Wrench, Code, Home as HomeIcon, TreePine } from 'lucide-react'
 
 const FloatingServiceCard = () => {
   const services = [
-    { id: 'home-repairs', title: 'Home Repairs', icon: HomeIcon },
-    { id: 'landscaping', title: 'Landscaping', icon: TreePine },
     { id: 'web-dev', title: 'Web Development', icon: Code },
-    { id: 'smart-home', title: 'Smart Home', icon: Wrench }
+    { id: 'ecommerce', title: 'E-commerce', icon: HomeIcon },
+    { id: 'seo', title: 'SEO & Performance', icon: TreePine },
+    { id: 'ai', title: 'AI Integration', icon: Wrench }
   ]
 
   return (

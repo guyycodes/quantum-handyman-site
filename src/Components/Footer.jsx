@@ -24,10 +24,10 @@ const CONTENT = {
   },
   
   services: [
-    { name: 'Home Repairs', icon: HomeIcon },
-    { name: 'Landscaping', icon: TreePine },
-    { name: 'Web & Digital', icon: Code },
-    { name: 'Smart Home', icon: Wifi },
+    { name: 'Web Development', icon: Code },
+    { name: 'E-commerce', icon: HomeIcon },
+    { name: 'SEO & Performance', icon: TreePine },
+    { name: 'AI Integration', icon: Wifi },
   ],
   
   navigation: [

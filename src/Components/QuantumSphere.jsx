@@ -194,12 +194,12 @@ const QuantumSphere = ({ children, className = '', customElements = null, scale 
   const defaultQuantumElements = [
     { icon: Code, label: 'Web Design', color: '#a855f7' },
     { icon: Plane, label: 'Creator Sites', color: '#eab308' },
-    { icon: Settings, label: 'Property+Tech', color: '#ec4899' },
+    { icon: Settings, label: 'Full-Stack', color: '#ec4899' },
     { icon: Wifi, label: 'SEO/SMB Support', color: '#06b6d4' },
     { icon: Home, label: 'Home Automation', color: '#10b981' },
-    { icon: Wrench, label: 'Property Maintenance', color: '#3b82f6' },
-    { icon: Hammer, label: 'Landscaping', color: '#f97316' },
-    { icon: GlassWater, label: 'Sprinklers', color: '#6366f1' }
+    { icon: Wrench, label: 'Web Development', color: '#3b82f6' },
+    { icon: Hammer, label: 'Projects', color: '#f97316' },
+    { icon: GlassWater, label: 'APIs', color: '#6366f1' }
   ]
   
   // Use custom elements if provided, otherwise use defaults

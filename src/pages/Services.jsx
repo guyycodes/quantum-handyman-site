@@ -552,7 +552,7 @@ const Services = () => {
           className={`container-max mx-auto px-6 text-center text-white animate-zoom ${ctaSection.isVisible ? 'visible' : ''}`}>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             {isTechnician 
-              ? 'Ready to Fix Your Property?' 
+              ? 'Ready to Start Your Project?' 
               : isWeb 
               ? 'Ready to Build Your Digital Presence?'
               : CONTENT.cta.title}

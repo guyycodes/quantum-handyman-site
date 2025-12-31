@@ -81,7 +81,7 @@ const chatbotResponses = {
     {
       id: 'technician_services',
       label: '🔧 Traditional Technician Services',
-      description: 'Property repairs, smart home, and more',
+      description: 'Web development, e-commerce, and more',
       redirectPath: '/technician/services'
     },
     {
@@ -211,7 +211,7 @@ const chatbotResponses = {
 
   // Special booking-related responses
   bookingInfo: {
-    standardResponse: "We're a new kind of technician - combining traditional craftsmanship with tech expertise. Book directly through our platform where you can:",
+    standardResponse: "We're a web development company with CS-degree expertise. Book directly through our platform where you can:",
     features: [
       "✅ Choose your service type",
       "📅 Pick a convenient time slot", 

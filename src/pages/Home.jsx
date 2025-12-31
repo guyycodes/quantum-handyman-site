@@ -35,7 +35,7 @@ const CONTENT = {
       line1: 'Quantum',
       line2: 'Technician'
     },
-    subtitle: 'Solutions from a unified ethos - Physical & Digital',
+    subtitle: 'Full-Stack Web Development & Digital Solutions',
     mainCta: 'Need help with a project?',
     selectPrompt: 'Select an option to get started:',
     cta: {
@@ -52,10 +52,10 @@ const CONTENT = {
       portalText: '⚡ Track Your Jobs'
     },
     badges: {
-      fix: 'Property Maintenance & Repairs',
-      tech: 'Web Tech',
+      fix: 'Custom Web Applications',
+      tech: 'Full-Stack Development',
       online: 'Own Your Traffic',
-      offering: 'No plumbing/electrical/permit work.'
+      offering: 'React • Node.js • AI Integration'
     }
   },
   
@@ -93,10 +93,10 @@ const CONTENT = {
   
   services: {
     title: 'Our Services',
-    subtitle: 'Deliver a traditional technician, equipped with deep modern tech expertise.',
+    subtitle: 'Professional web development with modern tech expertise.',
     categories: {
       all: 'All Services',
-      property: 'Property',
+      property: 'Web Apps',
       tech: 'Tech',
       digital: 'Digital Web Services',
     },
@@ -105,28 +105,28 @@ const CONTENT = {
   
   about: {
     title: 'Mission: Quantum Technician',
-    tagline: 'Solutions from a unified ethos — Physical & Digital',
-    description: 'To provide solutions driven from a unified ethos, deep multidisciplinary skills with a systematic problem-solving approach for modern homeowners & businesses. Quantum Technician achieves this by combining craftsmanship & engineering discipline, delivered with community values professionalism & efficiency.',
+    tagline: 'Professional Web Development by a CS-Degree Developer',
+    description: 'Building modern, performant web applications with a systematic approach. Quantum Technician combines computer science fundamentals with practical business solutions, delivering quality web development with professionalism & efficiency.',
     imageCaption: 'Morgan B. - Quantum Technician',
     imagePath: '/images/profile/Me-and-Pops.jpg',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'A new kind of technician bridging the gap between the physical & digital worlds | Craftsman + CS-degree, and deep multi-disciplinary expertise.'
+      text: 'CS-degree developer with 10+ years experience building web applications, e-commerce solutions, and AI integrations for businesses.'
     },
     whyChoose: {
       title: 'Why Choose Us?',
       items: [
         {
-          title: 'Tech-Savvy Craftsman',
-          description: 'CS degree + business & Full-Stack problem-solving for your needs.'
+          title: 'CS-Degree Developer',
+          description: 'Computer Science + Business degree with full-stack problem-solving expertise.'
         },
         {
-          title: 'Multi-Stack Solutions',
-          description: 'Fix your property OR your tech - powered by our custom AI estimation tool.'
+          title: 'Modern Tech Stack',
+          description: 'React, Node.js, AI integrations - powered by the latest technologies.'
         },
         {
           title: 'Systematic Approach',
-          description: 'Software engineering principles applied to every project. Quality gauranteed.'
+          description: 'Software engineering principles applied to every project. Quality guaranteed.'
         },
         {
           title: 'Modern-local Problem-Solver',
@@ -135,8 +135,8 @@ const CONTENT = {
       ]
     },
     credentials: [
-      {
-        title: '10+ Yrs as Craftsman',
+        {
+          title: '10+ Yrs Experience',
         description: (
           <>
             500+ projects completed average{' '}
@@ -156,10 +156,10 @@ const CONTENT = {
         title: 'Certified Full-Stack Developer',
         description: 'AWS, GCP, React, Node.js, Python, SQL, No-SQL, Java, Hibernate, Spring, Swift, Xcode, Vercel, iOS, Android etc.'
       },
-      {
-        title: 'Property Finance Background',
-        description: 'Former mortgage officer (NMLS #2318525) + Real Estate School. Deep property & finance knowledge.'
-      },
+        {
+          title: 'Business Background',
+          description: 'CS + Business degree. Understanding of both technical and business requirements.'
+        },
       {
         title: 'Certified ITIL 4',
         description: 'Optimized Service Value Chain.'
@@ -178,7 +178,7 @@ const CONTENT = {
     // World-specific titles and subtitles
     technician: {
       title: 'Technician',
-      subtitle: 'Quality craftsmanship and property improvements.'
+      subtitle: 'Quality web development and digital solutions.'
     },
     web: {
       title: 'Web Development',

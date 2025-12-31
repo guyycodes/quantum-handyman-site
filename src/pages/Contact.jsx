@@ -23,7 +23,7 @@ import {
 const CONTENT = {
   hero: {
     title: 'Get In Touch',
-    subtitle: 'Ready to tackle your next project? We\'re here to help with everything from home repairs to web development.'
+    subtitle: 'Ready to tackle your next project? We\'re here to help with all your web development needs.'
   },
   
   form: {
@@ -110,11 +110,11 @@ const CONTENT = {
   },
   
   serviceOptions: [
-    'Home Repairs & Maintenance',
-    'Landscaping & Outdoor',
-    'Web & App Development', 
-    'Smart Home Automation',
-    'Automotive Scratch Repair & Paint Correction',
+    'Custom Web Application',
+    'E-commerce Solution',
+    'Website Redesign',
+    'SEO & Performance',
+    'AI Integration',
     'Other'
   ]
 }

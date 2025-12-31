@@ -18,7 +18,7 @@ const CONTENT = {
     },
     {
       title: '2. Services',
-      content: 'Quantum Technician provides home repair, landscaping, web development, smart home automation, and automotive scratch repair/paint correction services. Specific service details will be agreed upon before work commences.'
+      content: 'Quantum Technician provides web development, e-commerce solutions, SEO optimization, and AI integration services. Specific service details will be agreed upon before work commences.'
     },
     {
       title: '3. Booking and Scheduling',
