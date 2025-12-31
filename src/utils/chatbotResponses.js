@@ -81,7 +81,7 @@ const chatbotResponses = {
     {
       id: 'technician_services',
       label: '🔧 Traditional Technician Services',
-      description: 'Web development, e-commerce, and more',
+      description: 'Property repairs, smart home, and more',
       redirectPath: '/technician/services'
     },
     {
