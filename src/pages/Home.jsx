@@ -111,7 +111,7 @@ const CONTENT = {
     imagePath: '/images/profile/Me-and-Pops.jpg',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'CS-degree developer with 10+ years experience building web applications, e-commerce solutions, and AI integrations for businesses.'
+      text: 'CS-degree developer with 3+ years experience building web applications, e-commerce solutions, and AI integrations for businesses.'
     },
     whyChoose: {
       title: 'Why Choose Us?',
@@ -139,7 +139,7 @@ const CONTENT = {
           title: '10+ Yrs Experience',
         description: (
           <>
-            500+ projects completed average{' '}
+            50+ projects completed average{' '}
             <span className="inline-flex items-center">
               <span>⭐⭐⭐⭐</span>
               <span className="inline-block" style={{ clipPath: 'inset(0 50% 0 0)' }}>⭐</span>
@@ -383,7 +383,7 @@ const PORTFOLIO_DATA = [
 
 const STATS_DATA = [
   { label: 'Years Experience', value: '10+' },
-  { label: 'Projects Completed', value: '500+' },
+  { label: 'Projects Completed', value: '50+' },
   { label: 'Happy Customers', value: '100+' },
   { label: 'Services Offered', value: '10+' }
 ]

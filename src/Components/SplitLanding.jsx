@@ -28,7 +28,7 @@ const CONTENT = {
     ],
     stats: {
       experience: { value: '10+', label: 'Years' },
-      jobs: { value: '500+', label: 'Projects' },
+      jobs: { value: '50+', label: 'Projects' },
       pricing: { value: '$125', label: 'Starting' }
     },
     button: 'Technician Services',
