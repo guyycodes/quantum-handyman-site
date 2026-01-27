@@ -111,7 +111,7 @@ const Header = () => {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-4">
-            {/* World Switcher - COMMENTED OUT: Demo mode - focusing on web dev only
+            {/* World Switcher */}npm run dev
             <button
               onClick={handleWorldSwitch}
               className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group"
@@ -135,7 +135,6 @@ const Header = () => {
                 {isTechnician ? 'Web' : 'Technician'}
               </div>
             </button>
-            */}
             
             <Link
               to={getWorldPath('/portal')}
@@ -206,7 +205,7 @@ const Header = () => {
                 showHelperText={true}
               />
               
-              {/* Mobile World Switcher - COMMENTED OUT: Demo mode - focusing on web dev only
+              {/* Mobile World Switcher - Now Below Book Now */}
               <button
                 onClick={() => {
                   handleWorldSwitch()
@@ -233,7 +232,6 @@ const Header = () => {
                   <ArrowLeftRight className="w-3 h-3" />
                 </div>
               </button>
-              */}
               
               {/* Portal Button - Last */}
               <Link
