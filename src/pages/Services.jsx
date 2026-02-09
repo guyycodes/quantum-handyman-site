@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-import BookingCTA from '../Components/BookingCTA'
+import { BookingWidget } from '../hooks/useWidgetfied'
 import { useWorld } from '../contexts/WorldContext'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
@@ -174,16 +174,16 @@ const SERVICES_DATA = [
     title: 'Website PRO',
     icon: Code,
     color: 'bg-purple-500',
-    description: '1-page professional website with SEO - Custom Code or WordPress, Wix etc. $499',
+    description: '1-page professional website with SEO - Custom Code or WordPress, Wix etc. $100/page',
     shortDesc: 'Professional website development',
-    priceRange: '$499 (1 page)',
+    priceRange: '$100/page',
     timeEstimate: '2 weeks typical',
     subServices: [
       { name: '1 Page Responsive Website', desc: 'Mobile optimized + SEO included' },
       { name: 'Contact Forms', desc: 'Professional contact forms with validation' },
       { name: 'Google Business Profile', desc: 'Complete setup and optimization' },
       { name: '30 Day Support', desc: 'Post-launch support included' },
-      { name: 'Additional Pages', desc: '+$250 each (no custom integrations)' },
+      { name: 'Additional Pages', desc: '+$100/page (no custom integrations)' },
       { name: 'Popular Add-ons', desc: 'Booking (+$400), Payments (+$400), APIs (+$500)' },
       { name: 'Zapier Automation', desc: 'Workflow automation & integrations (+$450)' }
     ],
@@ -200,9 +200,9 @@ const SERVICES_DATA = [
     title: 'WordPress, Wix & Squarespace',
     icon: Globe,
     color: 'bg-indigo-500',
-    description: 'Professional websites on popular platforms - Part of Website PRO package ($499)',
+    description: 'Professional websites on popular platforms - Part of Website PRO package ($100/page)',
     shortDesc: 'CMS and website builder solutions',
-    priceRange: '$499 (1 page)',
+    priceRange: '$100/page',
     timeEstimate: '2 weeks typical',
     subServices: [
       { name: 'WordPress Development', desc: 'Custom themes and plugin configuration' },
@@ -210,7 +210,7 @@ const SERVICES_DATA = [
       { name: 'Squarespace Setup', desc: 'Complete Squarespace configuration' },
       { name: 'Platform Migration', desc: 'Moving sites between platforms' },
       { name: 'SEO & Google Business', desc: 'On-page SEO and GMB setup included' },
-      { name: 'Additional Pages', desc: '+$250 each (no custom integrations)' },
+      { name: 'Additional Pages', desc: '+$100/page (no custom integrations)' },
       { name: 'Zapier Integration', desc: 'Connect to 5000+ apps (+$450)' }
     ],
     benefits: [
@@ -251,9 +251,9 @@ const SERVICES_DATA = [
     title: 'Website Care Plan',
     icon: Sparkles,
     color: 'bg-orange-500',
-    description: 'Ongoing website maintenance + 3 hours monthly support - $149/month',
-    shortDesc: 'Monthly maintenance and support',
-    priceRange: '$149/month',
+    description: 'Ongoing website maintenance and support - $20/hr',
+    shortDesc: 'Hourly maintenance and support',
+    priceRange: '$20/hr',
     timeEstimate: '3 hours/month',
     subServices: [
       { name: '3 Hours Monthly Support', desc: 'Updates, content changes, and fixes' },
@@ -435,12 +435,9 @@ const Services = () => {
 
                     {/* CTA Button */}
                     <div className="flex flex-col gap-3">
-                      <BookingCTA 
-                        // service={service.title} // passing this make the intent section get skipped
-                        buttonText={CONTENT.serviceDetails.bookButton}
-                        buttonStyle="primary"
-                        showHelperText={true}
-                        helperText={CONTENT.serviceDetails.bookHelperText}
+                      <BookingWidget 
+                        id={`service-booking-${service.id}`}
+                        displayMode="button"
                       />
                       <button
                         onClick={() => setExpandedService(
@@ -565,20 +562,14 @@ const Services = () => {
               : CONTENT.cta.subtitle}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <BookingCTA 
-              buttonText={CONTENT.cta.buttons.bookNow}
-              size="lg"
-              className="bg-none text-primary hover:bg-primary/10"
-              showHelperText={true}
-              helperText={CONTENT.cta.buttons.helperText}
-            />
-            <a 
-              href="/contact"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
-            >
-              {CONTENT.cta.buttons.getQuote}
-            </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="scale-[1.55]">
+              <BookingWidget 
+                id="services-page-cta-booking"
+                displayMode="button"
+              />
+            </div>
+
           </div>
         </div>
       </section>

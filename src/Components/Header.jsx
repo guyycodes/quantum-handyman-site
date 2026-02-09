@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, Wrench, Code, Monitor, ArrowLeftRight } from 'lucide-react'
-import BookingCTA from './BookingCTA'
+import { BookingWidget, JobPortalWidget } from '../hooks/useWidgetfied'
 import { useWorld } from '../contexts/WorldContext'
 
 // Content Management - All text content in one place
@@ -111,7 +111,7 @@ const Header = () => {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-4">
-            {/* World Switcher */}npm run dev
+            {/* World Switcher - Hidden
             <button
               onClick={handleWorldSwitch}
               className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-full border border-gray-200 transition-all group"
@@ -135,18 +135,15 @@ const Header = () => {
                 {isTechnician ? 'Web' : 'Technician'}
               </div>
             </button>
+            */}
             
-            <Link
-              to={getWorldPath('/portal')}
-              onClick={scrollToTop}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all"
-            >
-              <Monitor className="w-4 h-4" />
-              Portal
-            </Link>
-            <BookingCTA 
-              buttonStyle="primary" 
-              showHelperText={true}
+            <JobPortalWidget 
+              id="header-portal-widget"
+              displayMode="button"
+            />
+            <BookingWidget 
+              id="header-booking-widget"
+              displayMode="button"
             />
           </div>
 
@@ -198,14 +195,13 @@ const Header = () => {
             ))}
             <div className="pt-4 pb-2 space-y-2">
               {/* Book Now Button - Placed First */}
-              <BookingCTA 
-                buttonStyle="primary" 
-                className="w-full" 
-                onClick={() => setIsMenuOpen(false)}
-                showHelperText={true}
+              <BookingWidget 
+                id="header-mobile-booking-widget"
+                displayMode="button"
+                className="w-full"
               />
               
-              {/* Mobile World Switcher - Now Below Book Now */}
+              {/* Mobile World Switcher - Hidden
               <button
                 onClick={() => {
                   handleWorldSwitch()
@@ -232,19 +228,14 @@ const Header = () => {
                   <ArrowLeftRight className="w-3 h-3" />
                 </div>
               </button>
+              */}
               
               {/* Portal Button - Last */}
-              <Link
-                to={getWorldPath('/portal')}
-                onClick={() => {
-                  setIsMenuOpen(false)
-                  scrollToTop()
-                }}
-                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg font-medium transition-all border border-gray-300 shadow-sm"
-              >
-                <Monitor className="w-4 h-4" />
-                Portal
-              </Link>
+              <JobPortalWidget 
+                id="header-mobile-portal-widget"
+                displayMode="button"
+                className="w-full"
+              />
             </div>
           </div>
         </div>

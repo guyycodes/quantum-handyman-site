@@ -117,7 +117,7 @@ const CONTENT = {
     {
       id: 'website-pro',
       name: 'Website PRO',
-      price: '$499',
+      price: '$100/pg',
       materials: false,
       duration: 1, // Fixed: probably meant 2 weeks, not -2
       icon: Globe,
@@ -125,13 +125,13 @@ const CONTENT = {
       category: 'tech',
       hot: true,
       popular: false,
-      description: '1-page professional website with SEO (Custom/WordPress/Wix)',
+      description: 'Professional website with SEO (Custom/WordPress/Wix) - $100/page',
       features: [
         '1 page responsive website + SEO',
         'Mobile optimized + contact forms', 
         'Google Business Profile setup',
         '30 day support included',
-        '📈 Additional pages: +$250 each (no custom integrations)',
+        '📈 Additional pages: +$100/page (no custom integrations)',
         '🚀 Add-ons: Booking (+$400) • Payments (+$400) • APIs (+$500) • Analytics (+$800) • Zapier Automation (+$450)'
       ]
     },
@@ -159,15 +159,15 @@ const CONTENT = {
     {
       id: 'maintenance-plan',
       name: 'Care Plan',
-      price: '$149/mo',
+      price: '$20/hr',
       materials: false,
-      duration: 1, // Ongoing monthly
+      duration: 1, // Ongoing hourly
       icon: Clock,
       color: 'bg-green-500',
       category: 'tech',
       hot: false,
       popular: true,
-      description: 'Ongoing website maintenance + 3 hours monthly support',
+      description: 'Ongoing website maintenance and support',
       features: [
         '3 hours monthly updates + content',
         'Security monitoring + backups', 

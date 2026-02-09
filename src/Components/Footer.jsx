@@ -8,6 +8,7 @@ import {
 import TikTokIcon from './TikTokIcon'
 import NextDoorIcon from './NextDoorIcon'
 import { useWorld } from '../contexts/WorldContext'
+import { JobPortalWidget } from '../hooks/useWidgetfied'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -292,16 +293,12 @@ const Footer = () => {
               </li>
             </ul>
             
-            {/* Pay Now Button - Prominent Placement */}
+            {/* Portal Widget - Prominent Placement */}
             <div className="mt-6">
-              <Link 
-                to={getWorldPath('/portal')}
-                onClick={scrollToTop}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform transition-all hover:scale-[1.02] text-base"
-              >
-                <span className="text-lg">📊</span>
-                <span>{CONTENT.contact.portal.label}</span>
-              </Link>
+              <JobPortalWidget 
+                id="footer-portal-widget"
+                displayMode="button"
+              />
               <p className="text-xs text-gray-400 mt-2">{CONTENT.contact.portal.value}</p>
             </div>
           </div>

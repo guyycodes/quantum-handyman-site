@@ -2,7 +2,8 @@ import React, { useState, lazy, Suspense, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-import BookingCTA from '../Components/BookingCTA'
+// import BookingCTA from '../Components/BookingCTA' // Replaced by Widgetfied widgets
+import { BookingWidget, EstimateWidget } from '../hooks/useWidgetfied'
 import FramedImage from '../Components/FramedImage'
 import { useWorld } from '../contexts/WorldContext'
 
@@ -11,10 +12,8 @@ const QuantumSphere = lazy(() => import('../Components/QuantumSphere'))
 const FloatingVideo = lazy(() => import('../Components/FloatingVideo'))
 const BeforeAfterSlider = lazy(() => import('../Components/BeforeAfterSlider'))
 const SocialProof = lazy(() => import('../Components/SocialProof'))
-const BookingInfo = lazy(() => import('../Components/BookingInfo'))
-
-// Lazy load BookingModal since it's only needed when user clicks to book
-const BookingModal = lazy(() => import('../Components/BookingModal'))
+// const BookingInfo = lazy(() => import('../Components/BookingInfo')) // Replaced by Widgetfied widgets
+// const BookingModal = lazy(() => import('../Components/BookingModal')) // Replaced by Widgetfied widgets
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Wrench, Code, Home as HomeIcon, TreePine, Car, Wifi,
@@ -391,7 +390,7 @@ const STATS_DATA = [
 const Home = () => {
   const { currentWorld, isTechnician, isWeb } = useWorld()
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('all')
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  // const [isBookingModalOpen, setIsBookingModalOpen] = useState(false) // Replaced by Widgetfied widgets
   const [tabJustChanged, setTabJustChanged] = useState(false)
   
   // Get the world-aware path helper function
@@ -492,55 +491,21 @@ const Home = () => {
                 <p className="text-lg mb-4">{CONTENT.hero.selectPrompt}</p>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {isTechnician ? (
-                    <>
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.technicianQuote}
-                        buttonStyle="secondary"
-                        size="lg"
-                        showHelperText={true}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                      />
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.furnitureBuild}
-                        buttonStyle="secondary"
-                        size="lg"
-                        className="bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                      />
-                    </>
-                  ) : isWeb ? (
-                    <>
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.aiEstimate}
-                        buttonStyle="secondary"
-                        size="lg"
-                        className="bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                        showHelperText={true}
-                        helperText="⚡ Instant AI"
-                      />
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.consultation}
-                        buttonStyle="secondary"
-                        size="lg"
-                        className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-600 hover:to-indigo-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.getEstimate}
-                        buttonStyle="secondary"
-                        size="lg"
-                        className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white hover:from-blue-600 hover:to-cyan-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                      />
-                      <BookingCTA 
-                        buttonText={CONTENT.hero.cta.bookService}
-                        buttonStyle="secondary"
-                        size="lg"
-                        className="bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg w-full"
-                      />
-                    </>
-                  )}
+                  <div className="flex flex-col items-center scale-[1.40]">
+                    <EstimateWidget 
+                      id="hero-estimate-widget"
+                      displayMode="button"
+                    />
+                    <span className="text-xs text-green-300 animate-pulse mt-1">
+                      ⚡ Instant AI
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center scale-[1.50]">
+                    <BookingWidget 
+                      id="hero-booking-widget"
+                      displayMode="button"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -786,14 +751,6 @@ const Home = () => {
                     </li>
                   ))}
                 </ul>
-                
-                <BookingCTA 
-                  // service={service.title} // passing this make the intent section get skipped
-                  buttonText={CONTENT.services.cta}
-                  buttonStyle="outline"
-                  size="sm"
-                  className="w-full mt-auto"
-                />
               </div>
             ))}
           </div>
@@ -803,11 +760,12 @@ const Home = () => {
             <div className="bg-primary/5 rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold mb-4">{CONTENT.servicesCta.title}</h3>
               <p className="text-muted mb-6">{CONTENT.servicesCta.subtitle}</p>
-              <BookingCTA 
-                buttonText={CONTENT.servicesCta.button}
-                buttonStyle="primary"
-                size="lg"
-              />
+              <div className="inline-block scale-[1.35] transition-transform">
+                <BookingWidget 
+                  id="services-cta-booking-widget"
+                  displayMode="button"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -856,12 +814,15 @@ const Home = () => {
                 </p>
               </div>
 
-              <BookingCTA 
-                buttonText={CONTENT.about.cta}
-                buttonStyle="primary"
-                size="lg"
-                showHelperText={true}
-              />
+              <div className="scale-[1]">
+                <BookingWidget 
+                  id="about-cta-booking-widget"
+                  displayMode="button"
+                />
+              </div>
+              <span className="text-xs text-green-600 dark:text-green-400 animate-pulse">
+                {CONTENT.floatingButton.helperText}
+              </span>
             </div>
 
             <div className="space-y-8">
@@ -1047,16 +1008,10 @@ const Home = () => {
             <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-2xl p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold mb-4">{CONTENT.portfolio.ctaSection.title}</h3>
               <p className="text-white/90 mb-6">{CONTENT.portfolio.ctaSection.subtitle}</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <BookingCTA 
-                  buttonText={CONTENT.portfolio.ctaSection.bookButton}
-                  size="lg"
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 transform hover:scale-105 transition-all shadow-lg"
-                />
-                <BookingCTA 
-                  buttonText={CONTENT.portfolio.ctaSection.quoteButton}
-                  size="lg"
-                  className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:from-purple-600 hover:to-indigo-700 transform hover:scale-105 transition-all shadow-lg"
+              <div className="flex justify-center scale-[1.35]">
+                <BookingWidget 
+                  id="portfolio-cta-booking-widget"
+                  displayMode="button"
                 />
               </div>
             </div>
@@ -1104,13 +1059,12 @@ const Home = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <BookingCTA 
-              buttonText={CONTENT.cta.buttons.bookNow}
-              size="lg"
-              className="bg-none text-primary hover:bg-primary/10"
-              showHelperText={true}
-              helperText={CONTENT.cta.buttons.helperText}
-            />
+            <div className="hover:scale-[1.15] transition-transform">
+              <BookingWidget 
+                id="cta-booking-widget"
+                displayMode="button"
+              />
+            </div>
             {/* <a 
               href={`tel:${CONTENT.phone}`}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
@@ -1143,13 +1097,13 @@ const Home = () => {
 
       <Footer />
       
-      {/* Booking Modal */}
+      {/* Booking Modal — Replaced by Widgetfied widgets
       <Suspense fallback={<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div></div>}>
         <BookingModal 
           isOpen={isBookingModalOpen}
           onClose={() => setIsBookingModalOpen(false)}
         />
-      </Suspense>
+      </Suspense> */}
       
       {/* Floating Booking Button - positioned to not overlap with chatbot */}
       <div 
@@ -1157,14 +1111,15 @@ const Home = () => {
           showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
         }`}
       >
-        <BookingCTA 
-          buttonText={CONTENT.floatingButton.text}
-          buttonStyle="primary"
-          size="lg"
+        <BookingWidget 
+          id="floating-booking-widget"
+          aria-label={CONTENT.floatingButton.ariaLabel}
+          displayMode="button"
           className="shadow-2xl hover:scale-105 transition-transform text-sm sm:text-base"
-          showHelperText={true}
-          helperText={CONTENT.floatingButton.helperText}
         />
+        <span className="text-xs text-green-600 dark:text-green-400 animate-pulse">
+            {CONTENT.floatingButton.helperText}
+        </span>
       </div>
     </div>
   )

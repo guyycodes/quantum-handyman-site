@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-import BookingCTA from '../Components/BookingCTA'
+import { BookingWidget } from '../hooks/useWidgetfied'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { 
   Award, Clock, Shield, Users, 
@@ -92,22 +92,18 @@ const CONTENT = {
   
   timeline: {
     title: 'Our Journey',
-    subtitle: 'From side hustle -> service provider',
+    subtitle: 'From first lines of code to full-stack development',
     milestones: [
       { year: '2011-2015', event: 'Started learning web development and building first projects.' },
-      { year: '2015', event: 'Started a side hustle.' },
-      { year: '2017', event: 'Began offering home service.' },
-      { year: '2018', event: 'Started coding journey.' },
+      { year: '2018', event: 'Started coding journey, diving deeper into modern frameworks and tooling.' },
       { year: '2019', event: 'Returned to college for Computer Science & Minor in Business.' },
-      { year: '2020', event: 'Took on lanscaping & sprinkler projects expanding services' },
-      { year: '2021', event: 'Took 16 months off of college during Covid-19, Went to Mortgage/Real Estate School & Worked as a Mortgage Loan Officer.' },
       { year: '2022', event: 'Expanded into AI integration and advanced web application development.' },
-      { year: '2023', event: 'Maintained a 3.95 GPA while taking on full time college coursework.' },
-      { year: '2023', event: 'Graduated University of Denver Certified in Full Stack Development, added web development services.' },
-      { year: '2024', event: 'Began building a custom website for Quantum Technician, built custom Natural Language Processing pipline, patched open source LLMs (2000+ downloads).' },
+      { year: '2023', event: 'Maintained a 3.95 GPA while taking on full-time college coursework.' },
+      { year: '2023', event: 'Graduated University of Denver Certified in Full Stack Development.' },
+      { year: '2024', event: 'Built custom Natural Language Processing pipeline, patched open source LLMs (2,000+ downloads).' },
       { year: '2024', event: 'Built a custom Web SaaS platform, integrated LLM agents to handle booking & estimates.' },
-      { year: '2025', event: 'Graduate CS Degree + Business Minor 3.95 GPA, Deeloper custom open source Ai package and Recieved over 2000+ downloads.' },
-      { year: '2025', event: 'Began building a comprehensive job management platform to enhance the booking, estimation, and job management process for all users.'},
+      { year: '2025', event: 'Graduated with CS Degree + Business Minor, 3.95 GPA. Developed custom open source AI package with 2,000+ downloads.' },
+      { year: '2025', event: 'Began building a comprehensive job management platform to enhance the booking, estimation, and job management process for all users.' },
     ]
   },
   
@@ -301,20 +297,13 @@ const About = () => {
             {CONTENT.cta.subtitle}
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <BookingCTA 
-              buttonText={CONTENT.cta.buttons.bookService}
-              size="lg"
-              className="bg-none text-primary hover:bg-primary/10"
-              showHelperText={true}
-              helperText={CONTENT.cta.buttons.helperText}
-            />
-            <a 
-              href="/contact"
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
-            >
-              {CONTENT.cta.buttons.getQuote}
-            </a>
+          <div className="flex justify-center">
+            <div className="scale-[1.55]">
+              <BookingWidget 
+                id="about-page-cta-booking"
+                displayMode="button"
+              />
+            </div>
           </div>
         </div>
       </section>

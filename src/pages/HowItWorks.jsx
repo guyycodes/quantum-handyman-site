@@ -7,7 +7,7 @@ import {
   Home, Calculator, BookOpen, Loader
 } from 'lucide-react';
 import Header from '../Components/Header'
-import BookingCTA from '../Components/BookingCTA';
+import { BookingWidget, JobPortalWidget } from '../hooks/useWidgetfied';
 import { sendContactEmail } from '../services/emailService';
 
 // Content Management - All text content in one place
@@ -16,7 +16,7 @@ const CONTENT = {
     badge: 'Simple & Transparent Process',
     title: 'How It',
     titleHighlight: 'Works',
-    subtitle: "Book services in minutes, track everything in one place. We've made home improvement as easy as ordering pizza! 🍕"
+    subtitle: "Book services in minutes, track everything in one place. We've made getting started as easy as ordering pizza! 🍕"
   },
   bookingProcess: {
     title: 'Book in 4 Simple Steps..',
@@ -33,7 +33,7 @@ const CONTENT = {
     },
     urgentService: {
       title: 'Urgent Service',
-      description: 'Need help ASAP? Select urgent booking for same-day or next-day service (rush fee applies).',
+      description: 'Need help ASAP? Select urgent booking for same-day or next-day service.',
       cta: 'Available 7 days/week →'
     }
   },
@@ -260,11 +260,12 @@ const HowItWorks = () => {
 
           {/* CTA Section */}
           <div className="text-center">
-            <BookingCTA 
-              buttonStyle="primary"
-              className="inline-flex"
-              showHelperText={false}
-            />
+            <div className="inline-block scale-[1.35]">
+              <BookingWidget 
+                id="how-it-works-booking-steps"
+                displayMode="button"
+              />
+            </div>
             <p className="mt-4 text-gray-600">
               {CONTENT.bookingProcess.readyText}
             </p>
@@ -377,15 +378,11 @@ const HowItWorks = () => {
                 </div>
               </div>
               
-              <div className="text-center mt-8">
-                <Link 
-                  to="/portal" 
-                  className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all hover:scale-105"
-                >
-                  <Monitor className="w-5 h-5" />
-                  {CONTENT.portal.ctaText}
-                  <ArrowRight className="w-5 h-5" />
-                </Link>
+              <div className="flex justify-center mt-8 scale-[1.55]">
+                <JobPortalWidget 
+                  id="how-it-works-portal"
+                  displayMode="button"
+                />
               </div>
             </div>
           </div>
@@ -458,11 +455,12 @@ const HowItWorks = () => {
           <p className="text-lg text-gray-600 mb-8">
             {CONTENT.bottomCTA.subtitle}
           </p>
-          <BookingCTA 
-            buttonStyle="primary"
-            className="inline-flex"
-            showHelperText={true}
-          />
+          <div className="inline-block scale-[1.55]">
+            <BookingWidget 
+              id="how-it-works-bottom-cta"
+              displayMode="button"
+            />
+          </div>
         </div>
       </section>
     </div>

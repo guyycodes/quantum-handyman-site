@@ -176,7 +176,7 @@ npm run preview
 ## 🎨 Services Offered
 
 ### Custom Web Applications
-Full-stack web application development using React, Node.js, and modern technologies. Starting at $499.
+Full-stack web application development using React, Node.js, and modern technologies. $100/page.
 
 ### E-commerce Solutions
 Complete e-commerce platforms with payment integration, inventory management, and analytics. $1,300 - $5,000.

@@ -66,11 +66,11 @@ export default async (request, context) => {
 
 PRICING CONTEXT:
 Web Development Services:
-- Single Page Applications (SPA): $499+
-- Additional pages: +$250 per page
-- Monthly Website Maintenance: $149/mo+
+- Web Development: $100/page
+- Additional pages: +$100 per page
+- Website Maintenance: $20/hr
 - E-commerce Solutions: $1,300 - $5,000
-- Custom Development Add-ons: $500 - $2,999+
+- Custom Development: $50/hr
 - AI Integration: $1,000+
 - SEO & Performance Optimization: $500 - $2,000
 

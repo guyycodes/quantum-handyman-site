@@ -140,7 +140,7 @@
             "priceSpecification": {
               "@type": "PriceSpecification",
               "priceCurrency": "USD",
-              "minPrice": 2500
+              "minPrice": 100
             }
           },
           {
@@ -255,6 +255,11 @@
     
     <!-- Loading styles -->
     <link rel="stylesheet" href="/loader.css" />
+
+    <!-- Prefetch Widgetfied widget script so it's ready before components mount -->
+    <link rel="preload" href="https://cdn.widgetfied.com/portal.js" as="script" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.widgetfied.com" />
+    <link rel="dns-prefetch" href="https://www.widgetfied.com" />
   </head>
   <body>
     <noscript>

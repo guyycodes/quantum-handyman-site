@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { sendContactEmail } from '../services/emailService'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-import BookingCTA from '../Components/BookingCTA'
+import { BookingWidget } from '../hooks/useWidgetfied'
 import { useIntersectionObserver, useStaggeredIntersection } from '../hooks/useIntersectionObserver'
 import { useSmsNotification } from '../hooks/useSmsNotification'
 import { 
@@ -545,7 +545,7 @@ const Contact = () => {
                     )}
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex items-center gap-4">
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -564,12 +564,14 @@ const Contact = () => {
                       )}
                     </button>
 
-                    <BookingCTA 
-                      buttonText={CONTENT.form.buttons.bookDirectly}
-                      buttonStyle="outline"
-                      showHelperText={true}
-                      helperText={CONTENT.form.buttons.helperText}
-                    />
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-xs text-muted font-medium">{CONTENT.form.buttons.bookDirectly}</span>
+                      <BookingWidget 
+                        id="contact-form-booking"
+                        displayMode="button"
+                      />
+                      <span className="text-xs text-green-600 animate-pulse">{CONTENT.form.buttons.helperText}</span>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -637,12 +639,12 @@ const Contact = () => {
                 <p className="mb-6 text-white/90">
                   {CONTENT.quickBook.subtitle}
                 </p>
-                <BookingCTA 
-                  buttonText={CONTENT.quickBook.buttonText}
-                  className="w-full bg-none text-primary hover:bg-gray-100"
-                  showHelperText={true}
-                  helperText={CONTENT.quickBook.helperText}
-                />
+                <div className="flex justify-center scale-[1.35]">
+                  <BookingWidget 
+                    id="contact-quick-booking"
+                    displayMode="button"
+                  />
+                </div>
               </div>
 
               {/* Business Note */}

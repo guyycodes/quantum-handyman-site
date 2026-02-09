@@ -87,7 +87,7 @@ const CONTENT = {
     stats: {
       education: { value: 'CS', label: 'Degree' },
       sites: { value: '10+', label: 'Sites' },
-      pricing: { value: '$499', label: 'Starting' }
+      pricing: { value: '$100', label: '/page' }
     },
     button: 'Web Services',
     sideLabel: 'Web Development',

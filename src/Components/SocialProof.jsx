@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, MessageSquare, ExternalLink } from 'lucide-react';
-import BookingCTA from '../Components/BookingCTA';
+import { BookingWidget } from '../hooks/useWidgetfied';
 import { useWorld } from '../contexts/WorldContext';
 
 /**
@@ -261,17 +261,10 @@ const SocialProof = ({ content, reviewsRef, isVisible }) => {
           )} */}
           
           {/* CTA after proof */}
-          <div className="text-center">
-            <BookingCTA 
-              buttonText={
-                isTechnician ? "Get Your Quote" : 
-                isWeb ? "Start Your Project" : 
-                "Book a Project"
-              }
-              buttonStyle="primary"
-              size="lg"
-              showHelperText={true}
-              helperText="⚡ Get instant AI estimates"
+          <div className="flex justify-center scale-[1.35]">
+            <BookingWidget 
+              id="social-proof-booking-widget"
+              displayMode="button"
             />
           </div>
         </div>

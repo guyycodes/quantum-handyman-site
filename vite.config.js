@@ -88,7 +88,38 @@ export default defineConfig({
   server: {
     // host: true, // Allow access from LAN
     proxy: {
-      // Proxy API requests to Netlify dev server or deployed site
+      // Widgetfied widget API proxies (must be before generic /api)
+      '/api/tenant-config': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/api/calendar': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/api/payments': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/api/portal': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/api/email': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      '/api/tenants': {
+        target: 'https://www.widgetfied.com',
+        changeOrigin: true,
+        secure: true,
+      },
+      // Proxy remaining API requests to Netlify dev server or deployed site
       '/api': {
         target: process.env.VITE_API_URL || 'http://localhost:8888',
         changeOrigin: true,
@@ -97,7 +128,7 @@ export default defineConfig({
     },
     headers: {
       // Development CSP - more permissive
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' ws: wss: http: https:; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.google.com/maps;"
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.widgetfied.com https://*.widgetfied.com https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://us.i.posthog.com https://us-assets.i.posthog.com https://app.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' ws: wss: http: https: https://widgetfied.com https://*.widgetfied.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com https://www.google.com https://maps.google.com https://www.google.com/maps;"
     }
   }
 })
