@@ -44,8 +44,6 @@ const CONTENT = {
   ],
   
   social: [
-    { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UC5G4Vn8sfs0ywOJPm_573RA', color: 'hover:text-red-600' },
-    { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/page/quantumtechnician/', color: 'hover:text-green-600' },
     { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician', color: 'hover:text-pink-600' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/morgbeals', color: 'hover:text-blue-500' },
   ],

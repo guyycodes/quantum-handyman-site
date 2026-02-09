@@ -1,7 +1,7 @@
 /* TEAM */
-Founder & Master Craftsman: Morgan B.
-Site: hello@quantumhandyman.com
-Location: Greater Metro Area, Colorado
+Founder & Full-Stack Developer: Morgan B.
+Site: hello@quantumtechnician.com
+Location: Denver Metro Area, Colorado
 
 /* THANKS */
 React Community

@@ -3,8 +3,8 @@ const chatbotResponses = {
   greetings: {
     keywords: ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening', 'greetings', 'howdy'],
     responses: [
-      "Hello! Welcome to Quantum Technician! 🔧",
-      "Hi there! Ready to fix, build, or improve your space?",
+      "Hello! Welcome to Quantum Technician! 💻",
+      "Hi there! Ready to build something amazing on the web?",
       "Hey! Great to have you here today!",
       "Hello! Thanks for reaching out to Quantum Technician!"
     ],
@@ -13,39 +13,39 @@ const chatbotResponses = {
 
   // Casual conversation starters
   casualResponses: {
-    'how are you': "I'm doing great, thank you for asking! I'm here to help you with all your technician needs.",
-    'what can you do': "I can help you book a service, learn about services, get a quote, or answer any questions about home improvements.",
+    'how are you': "I'm doing great, thank you for asking! I'm here to help you with all your web development needs.",
+    'what can you do': "I can help you book a consultation, learn about our web development services, get a quote, or answer any questions about your project.",
     'who are you': "I'm your Quantum Technician assistant!",
     'thanks': "You're very welcome! Is there anything else I can help you with?",
     'thank you': "My pleasure! Let me know if you need anything else!",
-    'what services': "We offer full service web development, maintenence & repairs for home & business owners, smart home automation and more. From traditional to modern problems we bring a unified appproach to solutions. What do you need help with?",
-    'emergency': "For emergencies, I can help you get immediate assistance. Let me know what's happening!",
-    'urgent': "I understand this is urgent. Let me help you get the fastest service possible."
+    'what services': "We offer full-stack web development, custom web applications, e-commerce solutions, SEO optimization, AI integration, WordPress/Wix/Squarespace sites, and ongoing website care plans. What do you need help with?",
+    'emergency': "For urgent web issues, I can help you get immediate assistance. Let me know what's happening!",
+    'urgent': "I understand this is urgent. Let me help you get the fastest response possible."
   },
 
   // Main service categories that we can directly help with
   primaryServices: [
     {
       id: 'booking',
-      label: 'Book a Service',
-      description: 'Schedule a visit for repairs, tech solutions, or installations',
-      definitiveKeywords: ['book', 'schedule', 'appointment', 'visit', 'come', 'available', 'when can', 'book service', 'how do i book', 'how to book', 'make booking', 'reserve'],
-      supportiveKeywords: ['today', 'tomorrow', 'week', 'asap', 'soon', 'urgent', 'emergency', 'broken', 'install', 'fix', 'repair'],
+      label: 'Book a Consultation',
+      description: 'Schedule a consultation to discuss your web project',
+      definitiveKeywords: ['book', 'schedule', 'appointment', 'consultation', 'meeting', 'available', 'when can', 'book service', 'how do i book', 'how to book', 'make booking', 'reserve'],
+      supportiveKeywords: ['today', 'tomorrow', 'week', 'asap', 'soon', 'project', 'website', 'app', 'development'],
       minKeywordMatches: 1,
-      confirmationMessage: 'Great! I can help you with booking.',
-      actionMessage: 'Book directly through our secure platform for a seamless booking and job management experience. You can customize service & make secure payments & track jobs all in one place.',
+      confirmationMessage: 'Great! I can help you book a consultation.',
+      actionMessage: 'Book directly through our secure platform for a seamless experience. You can choose your service, make secure payments, and track your project all in one place.',
       redirectPath: '/contact',
-      buttonText: 'Book Service',
+      buttonText: 'Book Consultation',
       externalLink: true
     },
     {
       id: 'services',
       label: 'View Services',
-      description: 'Explore all our services and capabilities',
-      definitiveKeywords: ['services', 'what do you do', 'repairs', 'electrical', 'plumbing', 'carpentry', 'painting', 'installation', 'maintenance'],
-      supportiveKeywords: ['fix', 'install', 'repair', 'replace', 'build', 'mount', 'assemble', 'renovate'],
+      description: 'Explore our web development services and packages',
+      definitiveKeywords: ['services', 'what do you do', 'website', 'web app', 'application', 'development', 'wordpress', 'wix', 'squarespace', 'ecommerce', 'e-commerce', 'seo'],
+      supportiveKeywords: ['build', 'create', 'design', 'develop', 'launch', 'redesign', 'update', 'maintain'],
       minKeywordMatches: 1,
-      confirmationMessage: 'I\'d be happy to show you all our services.',
+      confirmationMessage: 'I\'d be happy to show you all our web development services.',
       actionMessage: 'Let me direct you to our services page where you can see everything we offer.',
       redirectPath: '/services',
       buttonText: 'View All Services'
@@ -53,9 +53,9 @@ const chatbotResponses = {
     {
       id: 'quote',
       label: 'Get a Quote',
-      description: 'Get an estimate for your project',
-      definitiveKeywords: ['quote', 'estimate', 'price', 'cost', 'how much', 'pricing', 'rates', 'charge', 'fee'],
-      supportiveKeywords: ['project', 'job', 'work', 'service', 'repair', 'installation', 'budget'],
+      description: 'Get an estimate for your web project',
+      definitiveKeywords: ['quote', 'estimate', 'price', 'cost', 'how much', 'pricing', 'rates', 'charge', 'fee', 'budget'],
+      supportiveKeywords: ['project', 'website', 'web app', 'development', 'redesign', 'custom'],
       minKeywordMatches: 1,
       confirmationMessage: 'I can help you get a quote for your project.',
       actionMessage: 'I\'ll take you to our contact form where you can describe your project and get a custom quote.',
@@ -65,30 +65,14 @@ const chatbotResponses = {
     {
       id: 'portfolio',
       label: 'View Our Work',
-      description: 'See examples of completed projects',
-      definitiveKeywords: ['portfolio', 'work', 'projects', 'examples', 'gallery', 'photos', 'previous', 'completed', 'showcase'],
-      supportiveKeywords: ['see', 'show', 'view', 'look', 'quality', 'before after', 'results'],
+      description: 'See examples of completed web projects',
+      definitiveKeywords: ['portfolio', 'work', 'projects', 'examples', 'gallery', 'previous', 'completed', 'showcase', 'case study'],
+      supportiveKeywords: ['see', 'show', 'view', 'look', 'quality', 'results', 'demo'],
       minKeywordMatches: 1,
       confirmationMessage: 'I\'ll show you our portfolio of completed projects.',
-      actionMessage: 'Check out our gallery of successful home improvements and repairs.',
+      actionMessage: 'Check out our gallery of web development projects and case studies.',
       redirectPath: '/portfolio',
       buttonText: 'View Portfolio'
-    }
-  ],
-
-  // World selection options for services
-  worldSelectionOptions: [
-    {
-      id: 'technician_services',
-      label: '🔧 Traditional Technician Services',
-      description: 'Property repairs, smart home, and more',
-      redirectPath: '/technician/services'
-    },
-    {
-      id: 'web_services', 
-      label: '💻 Web Development Services',
-      description: 'Website design, development, and digital solutions',
-      redirectPath: '/web/services'
     }
   ],
 
@@ -99,8 +83,8 @@ const chatbotResponses = {
     options: [
       {
         id: 'booking_clarify',
-        label: '📅 Schedule a Service',
-        description: 'Book',
+        label: '📅 Book a Consultation',
+        description: 'Schedule a meeting to discuss your project',
         leadToService: 'booking'
       },
       {
@@ -111,14 +95,14 @@ const chatbotResponses = {
       },
       {
         id: 'services_clarify', 
-        label: '🔧 View Services',
-        description: 'See what we offer',
-        leadToService: 'services_world_selection'
+        label: '💻 View Services',
+        description: 'See our web development packages',
+        leadToService: 'services'
       },
       {
-        id: 'emergency_clarify',
-        label: '🚨 Emergency Help',
-        description: 'Urgent repair needed',
+        id: 'urgent_clarify',
+        label: '🚨 Urgent Website Issue',
+        description: 'Site down or critical bug',
         leadToService: 'support_ticket'
       },
       {
@@ -134,8 +118,8 @@ const chatbotResponses = {
   supportTicket: {
     introduction: "I'll help you create a service request so our team can assist you directly.",
     confirmationMessage: "Thank you! Your service request has been created. Our team will contact you within 2-4 hours.",
-    complaintConfirmationMessage: "Your complaint has been escalated to our management team. We take service quality seriously and will contact you within 1 business day to address your concerns.",
-    emergencyConfirmationMessage: "Your emergency request has been submitted. We'll call you to arrange immediate assistance.",
+    complaintConfirmationMessage: "Your concern has been escalated to our team. We take project quality seriously and will contact you within 1 business day to address your concerns.",
+    emergencyConfirmationMessage: "Your urgent request has been submitted. We'll contact you to arrange immediate assistance.",
     fields: [
       {
         id: 'name',
@@ -148,7 +132,7 @@ const chatbotResponses = {
         id: 'phone',
         label: 'Phone Number',
         type: 'tel',
-        placeholder: '(303) 578-7551',
+        placeholder: '(555) 123-4567',
         required: true
       },
       {
@@ -160,9 +144,9 @@ const chatbotResponses = {
       },
       {
         id: 'address',
-        label: 'Service Location',
+        label: 'Business / Project URL',
         type: 'text',
-        placeholder: 'Where do you need service? (address, business, etc.)',
+        placeholder: 'Your website URL or business name',
         required: true
       },
       {
@@ -171,13 +155,13 @@ const chatbotResponses = {
         type: 'select',
         required: true,
         options: [
-          { value: 'electrical', label: 'Electrical' },
-          { value: 'plumbing', label: 'Plumbing' },
-          { value: 'carpentry', label: 'Carpentry' },
-          { value: 'painting', label: 'Painting' },
-          { value: 'appliance', label: 'Appliance Installation' },
-          { value: 'general', label: 'General Repair' },
-          { value: 'emergency', label: 'Emergency Repair' },
+          { value: 'custom-web-app', label: 'Custom Web Application' },
+          { value: 'website-design', label: 'Website Design & Development' },
+          { value: 'ecommerce', label: 'E-commerce Solution' },
+          { value: 'seo', label: 'SEO & Performance' },
+          { value: 'ai-integration', label: 'AI Integration' },
+          { value: 'maintenance', label: 'Website Maintenance' },
+          { value: 'bug-fix', label: 'Bug Fix / Site Issue' },
           { value: 'other', label: 'Other' }
         ]
       },
@@ -187,7 +171,7 @@ const chatbotResponses = {
         type: 'select',
         required: true,
         options: [
-          { value: 'emergency', label: 'Emergency (ASAP)' },
+          { value: 'emergency', label: 'Critical (Site down / ASAP)' },
           { value: 'urgent', label: 'Urgent (Within 24 hours)' },
           { value: 'normal', label: 'Normal (Within a week)' },
           { value: 'flexible', label: 'Flexible timing' }
@@ -195,31 +179,31 @@ const chatbotResponses = {
       },
       {
         id: 'description',
-        label: 'Describe the Issue',
+        label: 'Describe Your Project or Issue',
         type: 'textarea',
-        placeholder: 'Please describe what needs to be fixed or installed...',
+        placeholder: 'Tell us about the website, app, or feature you need built or the issue you\'re experiencing...',
         required: true
       }
     ]
   },
 
   // Emergency/Problem detection keywords
-  emergencyKeywords: ['emergency', 'urgent', 'asap', 'immediately', 'right now', 'flooding', 'leak', 'no power', 'no electricity', 'broken pipe', 'gas leak'],
+  emergencyKeywords: ['emergency', 'urgent', 'asap', 'immediately', 'right now', 'site down', 'website down', 'crashed', 'hacked', 'not loading', 'broken site', 'critical bug'],
   complaintKeywords: ['terrible service', 'awful', 'disappointed', 'frustrated', 'upset', 'complaint', 'unhappy', 'dissatisfied', 'poor service', 'bad job', 'not satisfied', 'unsatisfied', 'unacceptable'],
   generalHelpKeywords: ['i need help', 'need help', 'help me', 'can you help', 'need assistance', 'need support', 'help please'],
-  serviceRequestKeywords: ['problem', 'issue', 'not working', 'broken', 'damaged', 'need fixed', 'need repair', 'fix', 'repair'],
+  serviceRequestKeywords: ['problem', 'issue', 'not working', 'broken', 'bug', 'error', 'need built', 'need developed', 'need a website', 'need an app', 'need redesign'],
 
   // Special booking-related responses
   bookingInfo: {
-    standardResponse: "We're a web development company with CS-degree expertise. Book directly through our platform where you can:",
+    standardResponse: "We're a full-stack web development company with CS-degree expertise. Book directly through our platform where you can:",
     features: [
-      "✅ Choose your service type",
+      "✅ Choose your service package",
       "📅 Pick a convenient time slot", 
       "🔒 Make secure payments",
-      "📱 Track your booking status"
+      "📱 Track your project status"
     ],
-    ctaText: "Click below to book your service through our trusted partner:",
-    tipText: "💡 Tip: Create an account to track all your bookings and receive service updates"
+    ctaText: "Click below to book your consultation:",
+    tipText: "💡 Tip: Describe your project in detail to get the most accurate quote"
   },
 
   // Generate response based on user input
@@ -232,7 +216,8 @@ const chatbotResponses = {
       'how do i book', 'how to book', 'how can i book', 
       'where do i book', 'where to book', 'book a service',
       'make a booking', 'schedule service', 'make appointment',
-      'book online', 'booking process', 'how does booking work'
+      'book online', 'booking process', 'how does booking work',
+      'book consultation', 'schedule consultation'
     ].some(phrase => lowerMessage.includes(phrase));
 
     if (isBookingQuestion) {
@@ -254,8 +239,8 @@ const chatbotResponses = {
     if (isEmergency) {
       return {
         type: 'emergency',
-        message: "Note: If your facing a life impacting emergency, please call 911.",
-        followUp: "If this is not a life impacting, please fill out the form below so we can help you as soon as possible."
+        message: "I understand this is urgent. Let's get this handled right away.",
+        followUp: "Please fill out the form below so we can help you as soon as possible."
       };
     }
 
@@ -296,7 +281,7 @@ const chatbotResponses = {
       }
     }
 
-    // Check for service request needs (not complaints)
+    // Check for service request needs
     const isServiceRequest = this.serviceRequestKeywords.some(keyword => 
       lowerMessage.includes(keyword)
     );
@@ -304,7 +289,7 @@ const chatbotResponses = {
     if (isServiceRequest) {
       return {
         type: 'clarification',
-        message: "I can help you with that repair or service need. What would you like to do?",
+        message: "I can help you with that. What would you like to do?",
         showOptions: true
       };
     }

@@ -14,9 +14,7 @@ import chatbotResponses from '../utils/chatbotResponses';
 import { sendSupportTicketEmail } from '../services/emailService';
 import { generateTicketRef } from '../utils/uniqueIdGenerator';
 
-// Lazy load BookingModal since it's only needed when user clicks
-import { lazy, Suspense } from 'react';
-const BookingModal = lazy(() => import('../Components/BookingModal'));
+import { BookingWidget, EstimateWidget } from '../hooks/useWidgetfied';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +27,7 @@ const ChatBot = () => {
   const [isEmergency, setIsEmergency] = useState(false);
   const [isComplaintTicket, setIsComplaintTicket] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  // const [isBookingModalOpen, setIsBookingModalOpen] = useState(false); // Replaced by Widgetfied widgets
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
@@ -251,14 +249,13 @@ const ChatBot = () => {
 
   const handleRedirect = (path) => {
     if (path) {
-      // Check for booking-related paths
-      if (path.includes('dandymen') || path.includes('book')) {
-        setIsBookingModalOpen(true);
-      } else if (path.startsWith('http://') || path.startsWith('https://')) {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
         // Open external URLs in new tab
         window.open(path, '_blank', 'noopener,noreferrer');
       } else {
-        navigate(path);
+        // Always route to /web/ paths — never technician routes
+        const webPath = path.startsWith('/web/') ? path : `/web${path.startsWith('/') ? path : '/' + path}`;
+        navigate(webPath);
       }
       setIsOpen(false);
     }
@@ -345,7 +342,7 @@ const ChatBot = () => {
 
   const resetConversation = () => {
     setConversation([
-      { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your repair or improvement needs today?', type: 'text' }
+      { sender: 'bot', text: 'Hello! I\'m your Quantum Technician assistant. How can I help with your web development needs today?', type: 'text' }
     ]);
     setCurrentStage('initial');
     setIsComplaintTicket(false);
@@ -502,14 +499,11 @@ const ChatBot = () => {
     if (msg.type === 'booking_action') {
       return (
         <div key={index} className="flex justify-start mb-2 chatbot-animate-fade-in">
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setIsBookingModalOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
-            >
-              <FaBolt className="text-sm" />
-              Book Service
-            </button>
+          <div className="flex gap-2 flex-wrap items-center">
+            <BookingWidget 
+              id={`chatbot-booking-action-${index}`}
+              displayMode="button"
+            />
             <button
               onClick={resetConversation}
               className="border border-gray-500 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-800/50 transition-colors duration-300 flex items-center gap-2"
@@ -523,27 +517,35 @@ const ChatBot = () => {
     }
     
     if (msg.type === 'action') {
+      const isBookingService = msg.service.id === 'booking' || msg.service.redirectPath?.includes('book');
+      const isEstimateService = msg.service.id === 'estimate' || msg.service.id === 'ai_estimate';
+      
       return (
         <div key={index} className="flex justify-start mb-2 chatbot-animate-fade-in">
           <div className="space-y-2">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl rounded-bl-none p-3 border border-blue-500/30">
               <p className="text-white text-sm">{msg.text}</p>
             </div>
-            <div className="flex gap-2 flex-wrap">
-              <button
-                onClick={() => {
-                  // Check if this is a booking service
-                  if (msg.service.id === 'booking' || msg.service.redirectPath?.includes('dandymen')) {
-                    setIsBookingModalOpen(true);
-                  } else {
-                    handleRedirect(msg.service.redirectPath);
-                  }
-                }}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
-              >
-                <FaWrench className="text-sm" />
-                {msg.service.id === 'booking' ? 'Book Service' : msg.service.buttonText}
-              </button>
+            <div className="flex gap-2 flex-wrap items-center">
+              {isBookingService ? (
+                <BookingWidget 
+                  id={`chatbot-action-booking-${index}`}
+                  displayMode="button"
+                />
+              ) : isEstimateService ? (
+                <EstimateWidget 
+                  id={`chatbot-action-estimate-${index}`}
+                  displayMode="button"
+                />
+              ) : (
+                <button
+                  onClick={() => handleRedirect(msg.service.redirectPath)}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2"
+                >
+                  <FaWrench className="text-sm" />
+                  {msg.service.buttonText}
+                </button>
+              )}
               <button
                 onClick={resetConversation}
                 className="border border-gray-500 text-gray-300 py-2 px-4 rounded-lg hover:bg-gray-800/50 transition-colors duration-300 flex items-center gap-2"
@@ -753,17 +755,7 @@ const ChatBot = () => {
         </div>
       )}
       
-      {/* Booking Modal */}
-      <Suspense fallback={
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        </div>
-      }>
-        <BookingModal 
-          isOpen={isBookingModalOpen} 
-          onClose={() => setIsBookingModalOpen(false)} 
-        />
-      </Suspense>
+      {/* Booking Modal — Replaced by Widgetfied widgets inline */}
     </div>
   );
 };

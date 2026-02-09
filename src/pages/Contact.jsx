@@ -91,8 +91,8 @@ const CONTENT = {
     title: 'Follow Us',
     links: [
       { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UC5G4Vn8sfs0ywOJPm_573RA' },
-      { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/page/quantumtechnician/' },
-      { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician' },
+      // { name: 'NextDoor', icon: NextDoorIcon, href: 'https://nextdoor.com/page/quantumtechnician/' },
+      // { name: 'TikTok', icon: TikTokIcon, href: 'https://www.tiktok.com/@quantumtechnician' },
       { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/in/morgbeals' }
     ]
   },
