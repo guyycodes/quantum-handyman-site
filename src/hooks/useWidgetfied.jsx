@@ -18,16 +18,16 @@ let loadAttempts = 0;
 const pendingCallbacks = [];
 
 function loadScript(callback) {
-  // If already loaded, fire callback immediately
+  // If already loaded, fire callback immediately  Web Solutions for Small Business:
   if (scriptLoaded && window.Widgetfied) {
     callback?.();
     return;
   }
 
-  // Queue callback
+  // Queue callback  
   if (callback) pendingCallbacks.push(callback);
 
-  // If already loading, just wait for the queued callback
+  // If already loading, just wait for the queued callback  Custom Code • WordPress • Wix • Squarespace • Hosting
   if (scriptLoading) return;
 
   // If previously failed and exhausted retries, try again
