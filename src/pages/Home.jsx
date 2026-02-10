@@ -107,65 +107,48 @@ const CONTENT = {
     tagline: 'Professional Web Development by a CS-Degree Developer',
     description: 'Building modern, performant web applications with a systematic approach. Quantum Technician combines computer science fundamentals with practical business solutions, delivering quality web development with professionalism & efficiency.',
     imageCaption: 'Morgan B. - Quantum Technician',
-    imagePath: '/images/profile/Me-and-Pops.jpg',
+    imagePath: '/images/profile/web_dev.png',
     valueProposition: {
       title: 'Value Proposition',
-      text: 'CS-degree developer with 3+ years experience building web applications, e-commerce solutions, and AI integrations for businesses.'
+      text: 'CS-degree developer with 10+ years experience and 50+ projects delivered — specializing in web applications, e-commerce solutions, and AI integrations for businesses.'
     },
     whyChoose: {
       title: 'Why Choose Us?',
       items: [
         {
-          title: 'CS-Degree Developer',
-          description: 'Computer Science + Business degree with full-stack problem-solving expertise.'
+          title: 'Transparent Pricing',
+          description: '$100/page websites. No hidden fees, no scope creep surprises.'
         },
         {
-          title: 'Modern Tech Stack',
-          description: 'React, Node.js, AI integrations - powered by the latest technologies.'
+          title: '30-Day Support Included',
+          description: 'Every project includes post-launch support so you\'re never left hanging.'
         },
         {
-          title: 'Systematic Approach',
-          description: 'Software engineering principles applied to every project. Quality guaranteed.'
+          title: 'Fast Turnaround',
+          description: 'Most websites delivered in 2 weeks. Quick Fix and Care Plans available.'
         },
         {
-          title: 'Modern-local Problem-Solver',
-          description: 'Quick response times, community focused, Colorado Native.'
+          title: 'Built to Convert',
+          description: 'SEO optimized, mobile responsive, and designed to turn visitors into customers.'
         }
       ]
     },
     credentials: [
-        {
-          title: '10+ Yrs Experience',
-        description: (
-          <>
-            50+ projects completed average{' '}
-            <span className="inline-flex items-center">
-              <span>⭐⭐⭐⭐</span>
-              <span className="inline-block" style={{ clipPath: 'inset(0 50% 0 0)' }}>⭐</span>
-            </span>{' '}
-            rating.
-          </>
-        )
+      {
+        title: 'CS + Business Degree',
+        description: 'B.A. Computer Science + Business Minor, 3.89 GPA. Understands both the code and the business case.'
       },
       {
-        title: 'CS Degree',
-        description: '+ 3 years experience. B.A. Computer Science + Business Minor'
+        title: 'Full-Stack Developer',
+        description: 'React, Node.js, Python, AI — modern tech stack for modern businesses.'
       },
       {
-        title: 'Certified Full-Stack Developer',
-        description: 'AWS, GCP, React, Node.js, Python, SQL, No-SQL, Java, Hibernate, Spring, Swift, Xcode, Vercel, iOS, Android etc.'
-      },
-        {
-          title: 'Business Background',
-          description: 'CS + Business degree. Understanding of both technical and business requirements.'
-        },
-      {
-        title: 'Certified ITIL 4',
-        description: 'Optimized Service Value Chain.'
+        title: '50+ Projects Delivered',
+        description: 'From landing pages to SaaS platforms, with a track record of quality.'
       },
       {
-        title: 'Certified Project Management',
-        description: 'Comptia Project+ & Project management experience.'
+        title: 'Systematic Approach',
+        description: 'Software engineering principles, project management certified, detail-oriented on every line of code.'
       },
     ],
     cta: 'Get Free Quote'
