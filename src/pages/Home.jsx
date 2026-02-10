@@ -460,13 +460,6 @@ const Home = () => {
                   <Sparkles className="w-4 h-4" />
                   <span>{CONTENT.hero.badge}</span>
                 </div>
-                <Link 
-                  to="/portal"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-green-400/30 to-blue-400/30 backdrop-blur-sm rounded-full px-4 py-2 text-sm animate-pulse hover:from-green-400/40 hover:to-blue-400/40 transition-all cursor-pointer"
-                >
-                  <span>{CONTENT.hero.cta.portalText}</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
                 
               </div>
               
