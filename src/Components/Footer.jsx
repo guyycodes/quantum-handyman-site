@@ -16,7 +16,7 @@ const CONTENT = {
     text: 'Quantum',
     highlight: 'Technician'
   },
-  tagline: 'Fixing problems on every level - Your one-stop solution for modern living.',
+  tagline: 'Building digital solutions with code and creativity — Your partner for modern web development.',
   
   sections: {
     services: 'Services',

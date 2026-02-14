@@ -20,9 +20,9 @@ const CONTENT = {
     title: 'The Story Behind',
     brandName: 'Quantum Technician',
     paragraphs: [
-      'A CS-degree developer focused on building modern, performant web applications.',
-      'After graduating with a Computer Science + Business degree from Florida International University, I combined my passion for technology with practical business solutions. What started as freelance projects evolved into Quantum Technician.',
-      'With 10+ years of experience in software development, I specialize in React, Node.js, e-commerce solutions, SEO optimization, and AI integrations. Every project receives the same attention to detail and engineering excellence.'
+      'Founded by a CS-degree developer with a passion for building modern, performant web applications.',
+      'Quantum Technician was born from a simple philosophy: combine computer science fundamentals with practical business solutions. Founded after graduating with a Computer Science + Business degree from Florida International University, we\'ve grown from solo freelance work into a trusted development partner for businesses.',
+      'With 10+ years in software development and 50+ projects delivered, we specialize in React, Node.js, e-commerce platforms, SEO optimization, and AI integrations. Our team brings systematic engineering principles to every line of code, ensuring quality, performance, and results.'
     ],
     mission: {
       title: 'Mission',

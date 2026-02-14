@@ -45,7 +45,7 @@ const CONTENT = {
   
   additionalServices: {
     title: "Don't See What You Need?",
-    description: 'We offer many additional services not listed here. From minor repairs to major projects, if it needs fixing or building, we can probably help!',
+    description: 'We offer many additional web development services not listed here. From simple landing pages to complex custom applications, if you can imagine it, we can build it!',
     cta: 'Contact us with your specific needs'
   },
   
