@@ -340,6 +340,20 @@ const PORTFOLIO_DATA = [
     link: 'https://tug-o-war.vercel.app' 
   },
   {
+    category: 'Web Development',
+    title: 'ProFlow Mechanical - HVAC & Plumbing',
+    description: 'Professional HVAC and plumbing services site with service listings, online booking, Google Reviews integration, and 24/7 emergency scheduling.',
+    image: '/images/web-dev/proflow-mechanical-hvac.png',
+    link: 'https://hvac.quantumtechnician.com/'
+  },
+  {
+    category: 'Web Development',
+    title: 'Serenity Touch - Massage Therapy',
+    description: 'Professional massage therapy website with service menu, online booking, client testimonials, and therapist profile section.',
+    image: '/images/web-dev/serenity-touch-massage.png',
+    link: 'https://massage.quantumtechnician.com/'
+  },
+  {
     category: 'Property Maintenance',
     title: 'Home Setup & Installation',
     description: 'Complete home setup including furniture assembly, security cameras, and smart device installation.',

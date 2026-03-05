@@ -177,6 +177,18 @@ const CONTENT = {
       description: 'Full-stack SaaS platform providing AI-powered estimates, smart booking, customer portals, and secure payments — all in embeddable widgets that integrate in minutes. Built for service businesses with multi-tenant architecture.',
       deliverables: '• AI-powered estimate widget with computer vision\n• Google Calendar booking integration\n• Stripe Connect multi-tenant payments\n• Customer portal with job tracking\n• One-line embed integration',
       client: 'Widgetfied Inc.'
+    },
+    proflowMechanical: {
+      title: 'ProFlow Mechanical - HVAC & Plumbing Template',
+      description: 'Professional HVAC and plumbing services site featuring service listings with transparent pricing, Google Reviews integration, trust badges, 24/7 emergency scheduling, and online booking.',
+      deliverables: '• Service listings with transparent pricing\n• Google Reviews integration & testimonials\n• 24/7 emergency service scheduling\n• Online booking & appointment management\n• Trust-building sections with licensing & certifications',
+      client: 'ProFlow Mechanical (Template)'
+    },
+    serenityTouchMassage: {
+      title: 'Serenity Touch - Massage Therapy Template',
+      description: 'Professional massage therapy website featuring service menu with modality details and pricing, Google Reviews integration, therapist profile section, online booking, and appointment management.',
+      deliverables: '• Service menu with modality details & pricing\n• Google Reviews integration & client testimonials\n• Therapist profile & credentials section\n• Online booking & appointment system\n• Newsletter signup & wellness content',
+      client: 'Serenity Touch Massage (Template)'
     }
   }
 }
@@ -449,6 +461,36 @@ const PROJECTS_DATA = [
     link: 'https://www.youtube.com/watch?v=rKH0egnM4ig',
     projectImg: '/images/web-dev/trivia-app.png',
     videoUrl: 'https://www.youtube.com/embed/rKH0egnM4ig?autoplay=1'
+  },
+  {
+    id: 18,
+    category: 'web-dev',
+    title: CONTENT.projects.proflowMechanical.title,
+    description: CONTENT.projects.proflowMechanical.description,
+    date: '2025',
+    location: 'Remote',
+    duration: 'Template',
+    images: ['/images/web-dev/proflow-mechanical-hvac.png'],
+    testimonial: CONTENT.projects.proflowMechanical.deliverables,
+    client: CONTENT.projects.proflowMechanical.client,
+    rating: 5,
+    link: 'https://hvac.quantumtechnician.com/',
+    projectImg: '/images/web-dev/proflow-mechanical-hvac.png'
+  },
+  {
+    id: 19,
+    category: 'web-dev',
+    title: CONTENT.projects.serenityTouchMassage.title,
+    description: CONTENT.projects.serenityTouchMassage.description,
+    date: '2025',
+    location: 'Remote',
+    duration: 'Template',
+    images: ['/images/web-dev/serenity-touch-massage.png'],
+    testimonial: CONTENT.projects.serenityTouchMassage.deliverables,
+    client: CONTENT.projects.serenityTouchMassage.client,
+    rating: 5,
+    link: 'https://massage.quantumtechnician.com/',
+    projectImg: '/images/web-dev/serenity-touch-massage.png'
   }
 ]
 
