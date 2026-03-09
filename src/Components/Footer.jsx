@@ -8,7 +8,7 @@ import {
 import TikTokIcon from './TikTokIcon'
 import NextDoorIcon from './NextDoorIcon'
 import { useWorld } from '../contexts/WorldContext'
-import { JobPortalWidget } from '../hooks/useWidgetfied'
+import { JobPortalWidget, TourRouterWidget } from '../hooks/useWidgetfied'
 
 // Content Management - All text content in one place
 const CONTENT = {
@@ -207,6 +207,15 @@ const Footer = () => {
                 </div>
               </div>
             </div>
+
+            {/* Tour Router Widget */}
+            <div className="mt-4">
+              <TourRouterWidget 
+                id="footer-router-widget"
+                displayMode="button"
+              />
+              <p className="text-xs text-gray-400 mt-2">VRPTW-optimized route planning</p>
+            </div>
           </div>
 
           {/* Services */}
@@ -291,7 +300,7 @@ const Footer = () => {
               </li>
             </ul>
             
-            {/* Portal Widget - Prominent Placement */}
+            {/* Portal Widget */}
             <div className="mt-6">
               <JobPortalWidget 
                 id="footer-portal-widget"

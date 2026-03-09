@@ -175,6 +175,23 @@ export function JobPortalWidget({ className = '', displayMode = 'button', id = '
   );
 }
 
+// Tour Router Widget Component
+export function TourRouterWidget({ className = '', displayMode = 'button', id = 'tour-router-widget', ...rest }) {
+  useWidgetInit(id);
+
+  return (
+    <div
+      id={id}
+      data-widget="tourRouter"
+      data-tenant={TENANT_ID}
+      data-container={id}
+      data-display-mode={displayMode}
+      className={className}
+      {...rest}
+    />
+  );
+}
+
 // Payment Widget Component
 export function PaymentWidget({ className = '', displayMode = 'button', id = 'payment-widget', ...rest }) {
   useWidgetInit(id);
