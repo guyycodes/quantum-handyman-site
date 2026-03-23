@@ -354,6 +354,27 @@ const PORTFOLIO_DATA = [
     link: 'https://massage.quantumtechnician.com/'
   },
   {
+    category: 'Web Development',
+    title: 'Auto Repair/PDR & Detailing',
+    description: 'Professional auto repair and detailing services site with service listings, online booking, Google Reviews integration, and customer portal.',
+    image: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80',
+    link: 'https://auto.quantumtechnician.com/'
+  },
+  {
+    category: 'Web Development',
+    title: 'Landscaping Services',
+    description: 'Professional landscaping services website with project gallery, before/after showcases, online booking, and seasonal maintenance plans.',
+    image: '/images/landscaping/landscape_after-optimized.webp',
+    link: 'https://landscape.quantumtechnician.com/'
+  },
+  {
+    category: 'Web Development',
+    title: 'Professional Cleaning',
+    description: 'Professional cleaning services site with residential and commercial packages, recurring scheduling, team profiles, and service area mapping.',
+    image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80',
+    link: 'https://cleaning.quantumtechnician.com/'
+  },
+  {
     category: 'Property Maintenance',
     title: 'Home Setup & Installation',
     description: 'Complete home setup including furniture assembly, security cameras, and smart device installation.',

@@ -179,16 +179,34 @@ const CONTENT = {
       client: 'Widgetfied Inc.'
     },
     proflowMechanical: {
-      title: 'ProFlow Mechanical - HVAC & Plumbing Template',
+      title: 'ProFlow Mechanical - HVAC & Plumbing',
       description: 'Professional HVAC and plumbing services site featuring service listings with transparent pricing, Google Reviews integration, trust badges, 24/7 emergency scheduling, and online booking.',
       deliverables: '• Service listings with transparent pricing\n• Google Reviews integration & testimonials\n• 24/7 emergency service scheduling\n• Online booking & appointment management\n• Trust-building sections with licensing & certifications',
-      client: 'ProFlow Mechanical (Template)'
+      client: 'ProFlow Mechanical'
     },
     serenityTouchMassage: {
-      title: 'Serenity Touch - Massage Therapy Template',
+      title: 'Serenity Touch - Massage Therapy',
       description: 'Professional massage therapy website featuring service menu with modality details and pricing, Google Reviews integration, therapist profile section, online booking, and appointment management.',
       deliverables: '• Service menu with modality details & pricing\n• Google Reviews integration & client testimonials\n• Therapist profile & credentials section\n• Online booking & appointment system\n• Newsletter signup & wellness content',
-      client: 'Serenity Touch Massage (Template)'
+      client: 'Serenity Touch Massage'
+    },
+    quantumAuto: {
+      title: 'Auto Repair & Detailing',
+      description: 'Professional auto repair and detailing services site featuring service listings with transparent pricing, online booking system, Google Reviews integration, and customer portal for service history.',
+      deliverables: '• Service listings with transparent pricing\n• Online booking & appointment management\n• Google Reviews integration & testimonials\n• Customer portal with service history\n• Trust-building sections with certifications',
+      client: 'Auto Repair'
+    },
+    quantumLandscape: {
+      title: 'Landscaping Services',
+      description: 'Professional landscaping services website featuring service offerings, project gallery with before/after showcases, online booking, quote requests, and seasonal maintenance plans.',
+      deliverables: '• Service offerings with detailed descriptions\n• Project gallery with before/after showcases\n• Online booking & quote request system\n• Seasonal maintenance plan signups\n• Google Reviews & client testimonials',
+      client: 'Landscaping'
+    },
+    quantumCleaning: {
+      title: 'Professional Cleaning',
+      description: 'Professional cleaning services site featuring residential and commercial cleaning packages, online booking, recurring schedule setup, team profiles, and service area mapping.',
+      deliverables: '• Residential & commercial cleaning packages\n• Online booking with recurring schedule options\n• Team profiles & trust badges\n• Service area mapping\n• Customer testimonials & Google Reviews',
+      client: 'Cleaning'
     }
   }
 }
@@ -491,6 +509,51 @@ const PROJECTS_DATA = [
     rating: 5,
     link: 'https://massage.quantumtechnician.com/',
     projectImg: '/images/web-dev/serenity-touch-massage.png'
+  },
+  {
+    id: 20,
+    category: 'web-dev',
+    title: CONTENT.projects.quantumAuto.title,
+    description: CONTENT.projects.quantumAuto.description,
+    date: '2025',
+    location: 'Remote',
+    duration: 'Template',
+    images: ['https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80'],
+    testimonial: CONTENT.projects.quantumAuto.deliverables,
+    client: CONTENT.projects.quantumAuto.client,
+    rating: 5,
+    link: 'https://auto.quantumtechnician.com/',
+    projectImg: 'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80'
+  },
+  {
+    id: 21,
+    category: 'web-dev',
+    title: CONTENT.projects.quantumLandscape.title,
+    description: CONTENT.projects.quantumLandscape.description,
+    date: '2025',
+    location: 'Remote',
+    duration: 'Template',
+    images: ['/images/landscaping/landscape_after-optimized.webp'],
+    testimonial: CONTENT.projects.quantumLandscape.deliverables,
+    client: CONTENT.projects.quantumLandscape.client,
+    rating: 5,
+    link: 'https://landscape.quantumtechnician.com/',
+    projectImg: '/images/landscaping/landscape_after-optimized.webp'
+  },
+  {
+    id: 22,
+    category: 'web-dev',
+    title: CONTENT.projects.quantumCleaning.title,
+    description: CONTENT.projects.quantumCleaning.description,
+    date: '2025',
+    location: 'Remote',
+    duration: 'Template',
+    images: ['https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80'],
+    testimonial: CONTENT.projects.quantumCleaning.deliverables,
+    client: CONTENT.projects.quantumCleaning.client,
+    rating: 5,
+    link: 'https://cleaning.quantumtechnician.com/',
+    projectImg: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80'
   }
 ]
 
